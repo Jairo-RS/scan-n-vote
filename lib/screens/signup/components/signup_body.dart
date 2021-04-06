@@ -7,7 +7,8 @@ import 'package:scan_n_vote/screens/login/login_screen.dart';
 
 class SignUpBody extends StatelessWidget {
   var _formkey = GlobalKey<FormState>();
-//  TextEditingController _studentNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +117,9 @@ class SignUpBody extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(
+              height: size.height * 0.05,
+            ),
           ],
         ),
       ),
@@ -188,16 +192,16 @@ class SignUpBody extends StatelessWidget {
             return 'Please enter your student number';
           }
           if (!regExp.hasMatch(value)) {
-            return 'Must be only digits';
+            return 'Must be only digits. Format: xxxxxxxxx';
           }
           if (value.contains(new RegExp(r'[a-z]'))) {
-            return 'Must be only digits';
+            return 'Must be only digits. Format: xxxxxxxxx';
           }
           if (value.contains(new RegExp(r'[A-Z]'))) {
-            return 'Must be only digits';
+            return 'Must be only digits. Format: xxxxxxxxx';
           }
-          if (value.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-            return 'Must be only digits';
+          if (value.contains(new RegExp(r'[!@#$%^&*()-_+,./\?":;{}|<>]'))) {
+            return 'Must be only digits. Format: xxxxxxxxx';
           }
           if (value.length < 9 || value.length > 9) {
             return 'Invalid: Must enter 9 digits';
@@ -218,7 +222,7 @@ class SignUpBody extends StatelessWidget {
           if (value.isEmpty) {
             return 'Please enter your username';
           }
-          if (value.contains(new RegExp(r'[!#$%^&*(),?":{}|<>]'))) {
+          if (value.contains(new RegExp(r'[!#$%^&*(),/\?":;{}|<>]'))) {
             return 'Invalid Special Character: Acceptable: @/./_/-/+';
           }
           if (value.length < 6) {
@@ -235,6 +239,7 @@ class SignUpBody extends StatelessWidget {
           labelText: 'Password',
           //border: InputBorder.none,
         ),
+        controller: _passwordController,
         validator: (value) {
           // Pattern pattern =
           //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
@@ -251,7 +256,7 @@ class SignUpBody extends StatelessWidget {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[!@#$%^&*()-_+,.?":{}|<>]'))) {
+          if (!value.contains(new RegExp(r'[!@#$%^&*()-_+,./\?":;{}|<>]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {
@@ -271,9 +276,10 @@ class SignUpBody extends StatelessWidget {
   //Need to make password confirmation compare to password
   Widget buildPasswordConfirmation() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Password Confirmation',
+          labelText: 'Confirm Password',
           //border: InputBorder.none,
         ),
+        controller: _confirmPasswordController,
         validator: (value) {
           // Pattern pattern =
           //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
@@ -290,11 +296,14 @@ class SignUpBody extends StatelessWidget {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[!@#$%^&*()-_+,.?":{}|<>]'))) {
+          if (!value.contains(new RegExp(r'[!@#$%^&*()-_+,./\?":;{}|<>]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {
             return 'Must be between 8 to 16 characters long';
+          }
+          if (value != _passwordController.text) {
+            return 'Passwords do not match';
           } else {
             return null;
             // if (!regex.hasMatch(value)) {

@@ -1,0 +1,31 @@
+[
+    {
+        "past motion": "First motion",
+        "amendments": [
+          "This is amendment",
+          "This is second amendment",
+          "This is third amendment"
+        ],
+        "result": "A favor"
+    },
+    {
+        "past motion": "Second motion",
+        "amendments": "This is its amendment",
+        "result": "En contra"
+    },
+    {
+        "past motion": "Third motion",
+        "amendments": "The amendments for it",
+        "result": "A favor"
+    },
+    {
+        "past motion": "Fourth motion",
+        "amendments": "Its amendment",
+        "result": "En contra"
+    },
+    {
+        "past motion": "Fifth motion",
+        "amendments": "The amendment",
+        "result": " A favor"
+    }
+]
