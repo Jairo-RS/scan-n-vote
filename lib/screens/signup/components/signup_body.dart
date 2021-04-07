@@ -167,6 +167,12 @@ class SignUpBody extends StatelessWidget {
           if (!regExp.hasMatch(value)) {
             return 'Must be all uppercase characters';
           }
+          if (value.contains(new RegExp(r'[a-z]'))) {
+            return 'Must be all uppercase characters';
+          }
+          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>-]'))) {
+            return 'Special characters not allowed';
+          }
           if (value.length < 4 || value.length > 4) {
             return 'Initials should only be 4 characters';
           } else {
@@ -185,7 +191,6 @@ class SignUpBody extends StatelessWidget {
           // border: InputBorder.none,
         ),
         validator: (value) {
-          //Need to make special characters and letters not valid
           String pattern = r'[0-9]';
           RegExp regExp = new RegExp(pattern);
           if (value.isEmpty) {
@@ -200,11 +205,11 @@ class SignUpBody extends StatelessWidget {
           if (value.contains(new RegExp(r'[A-Z]'))) {
             return 'Must be only digits. Format: xxxxxxxxx';
           }
-          if (value.contains(new RegExp(r'[!@#$%^&*()-_+,./\?":;{}|<>]'))) {
+          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>-]'))) {
             return 'Must be only digits. Format: xxxxxxxxx';
           }
           if (value.length < 9 || value.length > 9) {
-            return 'Invalid: Must enter 9 digits';
+            return 'Invalid: Must enter 9 digits. Format: xxxxxxxxx';
           } else {
             return null;
           }
@@ -222,7 +227,7 @@ class SignUpBody extends StatelessWidget {
           if (value.isEmpty) {
             return 'Please enter your username';
           }
-          if (value.contains(new RegExp(r'[!#$%^&*(),/\?":;{}|<>]'))) {
+          if (value.contains(new RegExp(r'[!#$%^&*~(),/?":;{}|<>]'))) {
             return 'Invalid Special Character: Acceptable: @/./_/-/+';
           }
           if (value.length < 6) {
@@ -256,7 +261,7 @@ class SignUpBody extends StatelessWidget {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[!@#$%^&*()-_+,./\?":;{}|<>]'))) {
+          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {
@@ -296,7 +301,7 @@ class SignUpBody extends StatelessWidget {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[!@#$%^&*()-_+,./\?":;{}|<>]'))) {
+          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {

@@ -115,7 +115,7 @@ class LoginBody extends StatelessWidget {
           if (value.isEmpty) {
             return 'Please enter your username';
           }
-          if (value.contains(new RegExp(r'[!#$%^&*(),/\?":;{}|<>]'))) {
+          if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>]'))) {
             return 'Invalid Special Character. Only use: ./@/_/-/+';
           }
           if (value.length < 6) {
@@ -149,7 +149,7 @@ class LoginBody extends StatelessWidget {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[!@#$%^&*()-_+,./\?":;{}|<>]'))) {
+          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {

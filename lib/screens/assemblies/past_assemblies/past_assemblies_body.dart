@@ -144,13 +144,13 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
               ),
               children: [
                 // Container(
-                // margin: EdgeInsets.all(16),
-                // decoration: BoxDecoration(
-                //   color: Colors.white,
-                //   borderRadius: BorderRadius.all(Radius.circular(8)),
-                //   border: Border.all(color: Theme.of(context).primaryColor),
-                // ),
-                // child:
+                //   margin: EdgeInsets.all(16),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.all(Radius.circular(8)),
+                //     border: Border.all(color: Theme.of(context).primaryColor),
+                //   ),
+                //   child:
                 ExpansionTile(
                   // key: PageStorageKey(assembly["motions"]),
                   title: Text(
