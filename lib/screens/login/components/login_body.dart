@@ -15,91 +15,93 @@ class LoginBody extends StatelessWidget {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
 
-    return Backdrop(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Login",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
+    return SafeArea(
+      child: Backdrop(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "Login",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 40,
+                ),
               ),
-            ),
-            SizedBox(
-              height: size.height * 0.05,
-            ),
-            Form(
-              key: _formkey,
-              autovalidateMode: AutovalidateMode.always,
-              child: Column(
-                children: [
-                  TextFieldContainer(
-                    child: Stack(
-                      children: [
-                        buildUsername(),
-                      ],
+              SizedBox(
+                height: size.height * 0.05,
+              ),
+              Form(
+                key: _formkey,
+                autovalidateMode: AutovalidateMode.always,
+                child: Column(
+                  children: [
+                    TextFieldContainer(
+                      child: Stack(
+                        children: [
+                          buildUsername(),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.01,
-                  ),
-                  TextFieldContainer(
-                    child: Stack(
-                      children: [
-                        buildPassword(),
-                      ],
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+                    TextFieldContainer(
+                      child: Stack(
+                        children: [
+                          buildPassword(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: size.height * 0.05,
+              ),
+              RoundButton(
+                text: "LOGIN",
+                press: () {
+                  final isValid = _formkey.currentState.validate();
+                  if (isValid) {
+                    _formkey.currentState.save();
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AssembliesScreen();
+                      },
+                    ),
+                  );
+                },
+              ),
+              SizedBox(
+                height: size.height * 0.02,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => new ForgotPasswordScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Forgot your password?",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: size.height * 0.05,
-            ),
-            RoundButton(
-              text: "LOGIN",
-              press: () {
-                final isValid = _formkey.currentState.validate();
-                if (isValid) {
-                  _formkey.currentState.save();
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return AssembliesScreen();
-                    },
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: size.height * 0.02,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => new ForgotPasswordScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    "Forgot your password?",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

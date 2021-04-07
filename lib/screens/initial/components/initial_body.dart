@@ -11,64 +11,66 @@ class InitialBody extends StatelessWidget {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
 
-    return Backdrop(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Scan-N-Vote",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 36,
+    return SafeArea(
+      child: Backdrop(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Scan-N-Vote",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 36,
+              ),
             ),
-          ),
-          SizedBox(
-            height: size.height * 0.02,
-          ),
-          SvgPicture.asset(
-            "assets/icons/AcceltraProject-logo.svg",
-            height: size.height * 0.28,
-          ),
-          SizedBox(height: size.height * 0.02),
-          Text(
-            "Welcome!",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-          ),
-          SizedBox(height: size.height * 0.02),
-          Text(
-            "Please login or sign up to\n  continue using the app",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          SizedBox(height: size.height * 0.02),
-          RoundButton(
-            text: "LOGIN",
-            press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return LoginScreen();
-                  },
-                ),
-              );
-            },
-          ),
-          RoundButton(
-            text: "SIGN UP",
-            color: Color(0xFFFFABF3F3),
-            textColor: Colors.black,
-            press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return SignUpScreen();
-                  },
-                ),
-              );
-            },
-          ),
-        ],
+            SizedBox(
+              height: size.height * 0.02,
+            ),
+            SvgPicture.asset(
+              "assets/icons/AcceltraProject-logo.svg",
+              height: size.height * 0.28,
+            ),
+            SizedBox(height: size.height * 0.02),
+            Text(
+              "Welcome!",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+            ),
+            SizedBox(height: size.height * 0.02),
+            Text(
+              "Please login or sign up to\n  continue using the app",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            SizedBox(height: size.height * 0.02),
+            RoundButton(
+              text: "LOGIN",
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LoginScreen();
+                    },
+                  ),
+                );
+              },
+            ),
+            RoundButton(
+              text: "SIGN UP",
+              color: Color(0xFFFFABF3F3),
+              textColor: Colors.black,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return SignUpScreen();
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
