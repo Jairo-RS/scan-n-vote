@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/past_motions.dart';
+import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 
 class MotionsBody extends StatefulWidget {
@@ -51,7 +52,14 @@ class _MotionsBodyState extends State<MotionsBody> {
             icon: Icon(
               Icons.arrow_back,
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return HomeScreen();
+                },
+              ),
+            ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
