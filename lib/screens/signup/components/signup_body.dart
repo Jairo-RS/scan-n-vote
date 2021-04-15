@@ -15,113 +15,127 @@ class SignUpBody extends StatelessWidget {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
     return SafeArea(
-      child: Backdrop(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-              Text(
-                'Sign up',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
+        body: Backdrop(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: size.height * 0.05,
                 ),
-              ),
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-              Form(
-                key: _formkey,
-                autovalidateMode: AutovalidateMode.always,
-                child: Column(
-                  children: [
-                    TextFieldContainer(
-                      child: buildFullName(),
+                Text(
+                  'Sign up',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40,
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.05,
+                ),
+                Form(
+                  key: _formkey,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: Column(
+                    children: [
+                      TextFieldContainer(
+                        child: buildFullName(),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      TextFieldContainer(
+                        child: buildMajor(),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      TextFieldContainer(
+                        child: buildStudentNumber(),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      TextFieldContainer(
+                        child: buildUsername(),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      TextFieldContainer(
+                        child: buildPassword(),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      TextFieldContainer(
+                        child: buildPasswordConfirmation(),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                RoundButton(
+                  text: "SIGN UP",
+                  color: signButtonColor,
+                  textColor: Colors.black,
+                  press: () {
+                    final isValid = _formkey.currentState.validate();
+                    if (isValid) {
+                      _formkey.currentState.save();
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Already have an account? ',
                     ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    TextFieldContainer(
-                      child: buildMajor(),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    TextFieldContainer(
-                      child: buildStudentNumber(),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    TextFieldContainer(
-                      child: buildUsername(),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    TextFieldContainer(
-                      child: buildPassword(),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    TextFieldContainer(
-                      child: buildPasswordConfirmation(),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => new LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
-              RoundButton(
-                text: "SIGN UP",
-                color: signButtonColor,
-                textColor: Colors.black,
-                press: () {
-                  final isValid = _formkey.currentState.validate();
-                  if (isValid) {
-                    _formkey.currentState.save();
-                  }
-                },
-              ),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Already have an account? ',
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => new LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-            ],
+                SizedBox(
+                  height: size.height * 0.05,
+                ),
+              ],
+            ),
           ),
         ),
       ),

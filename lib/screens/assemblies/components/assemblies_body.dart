@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/screens/assemblies/past_assemblies/past_assemblies_screen.dart';
+import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 
 class AssembliesBody extends StatelessWidget {
   @override
@@ -69,7 +70,16 @@ class AssembliesBody extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return HomeScreen();
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

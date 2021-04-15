@@ -1,0 +1,127 @@
+{
+    "first assembly": {
+        "date": "First date",
+        "all motions": [
+            {
+                "motion": "First motion"
+            },
+            {
+                "motion": "Second motion"
+            },
+            {
+                "motion": "Third motion"
+            },
+            {
+                "motion": "Fourth motion"
+            }
+        ],
+        "all amendments": [
+            {
+                "amendments": "Amendment for first motion"
+            },
+            {
+                "amendments": [        
+                    "First amendment for second motion",
+                    "Second amendment for second motion",
+                    "Third amendment for second motion"
+                ]
+            },
+            {
+                "amendments": "Amendment for third motion"
+            },
+            {
+                "amendments": [
+                    "First amendment for fourth motion",
+                    "Second amendment for fourth motion"
+                ]
+            }
+        ],
+        "all results": [
+            {
+                "results": "Result of first motion"
+            },
+            {
+                "results": "Result of second motion"
+            },
+            {
+                "results": "Result of second motion"
+            },
+            {
+                "results": "Result of third motion"
+            },
+            {
+                "results": "Result of fourth motion"
+            }
+        ]
+    },
+    "second assembly": {
+            "date": "Second date",
+            "all motions": [
+                {
+                    "motion": "First motion"
+                },
+                {
+                    "motion":"Second motion"
+                }
+            ],
+            "all amendments": [
+                {
+                    "amendments": [
+                        "Amendment for first motion"
+                    ]
+                },
+                {
+                    "amendments": [
+                        "First amendment for second motion",
+                        "Second amendment for second motion"
+                    ]
+                }
+            ],
+            "all results": [
+                {
+                    "results": "Result of first motion"
+                },
+                {
+                    "results": "Result of second motion"
+                }
+            ]
+    },
+    "third assembly": {
+        "date": "Third date",
+        "all motions": [
+            {
+                "motion": "First motion"
+            },
+            {
+                "motion":"Second motion"
+            },
+            {
+                "motion":"Third motion"
+            }
+        ],
+        "all amendments": [
+            {
+                "amendments": [
+                    "Amendment for first motion"
+                ]
+            },
+            {
+                "amendments": [
+                    "Amendment for second motion"
+                ]
+            }
+        ],
+        "all results": [
+            {
+                "results": "Result of first motion"
+            },
+            {
+                "results": "Result of second motion"
+            },
+            {
+                "results": "Result of third motion"
+            }
+        ]
+
+    }
+}

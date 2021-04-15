@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class AgendaEntry {
@@ -7,26 +9,31 @@ class AgendaEntry {
 
   AgendaEntry({this.entry});
 
+  // Converts the unstructured JSON objects to values that can be used by
+  // ...our code
   factory AgendaEntry.fromJson(Map<String, dynamic> json) => AgendaEntry(
         entry: json['entry'],
       );
 
   static Future<List<AgendaEntry>> browse() async {
-    // String content =
-    //     await rootBundle.loadString('assets/json/agenda_entries.json');
+    String content =
+        await rootBundle.loadString('assets/json/agenda_entries.json');
 
     //Mock API to test http response
-    var url = Uri.parse(
-        'https://run.mocky.io/v3/6bcdf2f1-5a3d-4635-a8b6-f9ed46a6d2e6');
-    http.Response response = await http.get(url);
+    // var url = Uri.parse(
+    //     'https://run.mocky.io/v3/6bcdf2f1-5a3d-4635-a8b6-f9ed46a6d2e6');
+    // http.Response response = await http.get(url);
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 500));
 
-    String content = response.body;
+    // if (response.statusCode == 200) {
+    // String content = response.body;
     List collection = json.decode(content);
     List<AgendaEntry> _entries =
         collection.map((json) => AgendaEntry.fromJson(json)).toList();
-
     return _entries;
+    // } else {
+    //   throw Exception(response.statusCode);
+    // }
   }
 }
