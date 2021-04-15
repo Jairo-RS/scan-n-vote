@@ -5,6 +5,7 @@ import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
 import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
+import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 import 'constants.dart';
 
 void main() {
