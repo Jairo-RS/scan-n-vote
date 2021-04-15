@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/screens/agenda/agenda_screen.dart';
+import 'package:scan_n_vote/screens/assemblies/assemblies_screen.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
 import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
@@ -22,7 +23,14 @@ class HomeBody extends StatelessWidget {
               Icons.arrow_back,
               color: Colors.black,
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return AssembliesScreen();
+                },
+              ),
+            ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
