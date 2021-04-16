@@ -12,9 +12,9 @@ class QuorumBody extends StatefulWidget {
 
 class _QuorumBodyState extends State<QuorumBody> {
   var quorum = const [];
-
   Future loadQuorum() async {
-    var content = await rootBundle.loadString('assets/json/quorum_count.json');
+    String content =
+        await rootBundle.loadString('assets/json/quorum_count.json');
     var collection = json.decode(content);
     //print(content);
     setState(() {
