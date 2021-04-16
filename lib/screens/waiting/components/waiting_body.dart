@@ -10,6 +10,7 @@ class WaitingBody extends StatelessWidget {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
+      //when back button is pressed return to desired screen
       onWillPop: () => Navigator.push(
         context,
         MaterialPageRoute(

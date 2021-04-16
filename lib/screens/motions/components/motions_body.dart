@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/past_motions.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
+import 'package:scan_n_vote/screens/results/results_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 
 class MotionsBody extends StatefulWidget {
@@ -175,7 +176,16 @@ class _MotionsBodyState extends State<MotionsBody> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ResultsScreen();
+                                    },
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
