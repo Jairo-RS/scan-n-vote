@@ -5,20 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 
-class QuorumBody extends StatefulWidget {
+class ResultsBody extends StatefulWidget {
   @override
-  _QuorumBodyState createState() => _QuorumBodyState();
+  _ResultsBodyState createState() => _ResultsBodyState();
 }
 
-class _QuorumBodyState extends State<QuorumBody> {
-  var quorum = const [];
+class _ResultsBodyState extends State<ResultsBody> {
+  var results = const [];
   Future loadQuorum() async {
-    String content =
-        await rootBundle.loadString('assets/json/quorum_count.json');
+    String content = await rootBundle.loadString('assets/json/results.json');
     var collection = json.decode(content);
     //print(content);
     setState(() {
-      quorum = collection;
+      results = collection;
     });
   }
 
@@ -52,15 +51,15 @@ class _QuorumBodyState extends State<QuorumBody> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "Quorum Count",
+                "Vote Results",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 36,
                 ),
               ),
-              SizedBox(height: size.height * 0.02),
+              SizedBox(height: size.height * 0.05),
               Container(
-                height: 300,
+                height: 270,
                 width: size.width * 0.8,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
@@ -76,22 +75,21 @@ class _QuorumBodyState extends State<QuorumBody> {
                   ],
                 ),
                 child: ListView.builder(
-                  itemCount: quorum.length,
+                  itemCount: results.length,
                   itemBuilder: (BuildContext context, int index) {
-                    var quorumCount = quorum[index];
-                    if (quorumCount["current quorum"] == null) {
-                      quorumCount["current quorum"] =
-                          "Assembly has not started";
-                    }
+                    var resultsCount = results[index];
+
                     // return Align(
                     //   alignment: Alignment.center,
                     // child:
                     return Column(
                       children: [
                         Align(
-                          alignment: Alignment.topCenter,
+                          alignment: Alignment.topLeft,
                           child: Text(
-                            'The current quorum count is:\n',
+                            'A Favor:                               ' +
+                                resultsCount["a favor"].toString() +
+                                "\n",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -99,9 +97,11 @@ class _QuorumBodyState extends State<QuorumBody> {
                           ),
                         ),
                         Align(
-                          alignment: Alignment.center,
+                          alignment: Alignment.topLeft,
                           child: Text(
-                            quorumCount["current quorum"].toString() + "\n",
+                            'Abstenidos:                         ' +
+                                resultsCount["abstenidos"].toString() +
+                                "\n",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -109,19 +109,11 @@ class _QuorumBodyState extends State<QuorumBody> {
                           ),
                         ),
                         Align(
-                          alignment: Alignment.center,
+                          alignment: Alignment.topLeft,
                           child: Text(
-                            'Total needed to reach quorum:\n',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            quorumCount["quorum needed"].toString() + "\n",
+                            'En Contra:                            ' +
+                                resultsCount["en contra"].toString() +
+                                "\n",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -132,13 +124,6 @@ class _QuorumBodyState extends State<QuorumBody> {
                     );
                   },
                 ),
-              ),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              SvgPicture.asset(
-                "assets/icons/undraw_team.svg",
-                height: size.height * 0.28,
               ),
             ],
           ),
