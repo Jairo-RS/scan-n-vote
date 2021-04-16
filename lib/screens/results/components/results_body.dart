@@ -87,17 +87,9 @@ class _ResultsBodyState extends State<ResultsBody> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            'A Favor:',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Text(
-                            resultsCount["a favor"].toString() + "\n",
+                            'A Favor:                               ' +
+                                resultsCount["a favor"].toString() +
+                                "\n",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -107,17 +99,9 @@ class _ResultsBodyState extends State<ResultsBody> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            'Abstenidos:',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Text(
-                            resultsCount["abstenidos"].toString() + "\n",
+                            'Abstenidos:                         ' +
+                                resultsCount["abstenidos"].toString() +
+                                "\n",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -127,17 +111,9 @@ class _ResultsBodyState extends State<ResultsBody> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            'En Contra:',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Text(
-                            resultsCount["en contra"].toString() + "\n",
+                            'En Contra:                            ' +
+                                resultsCount["en contra"].toString() +
+                                "\n",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
