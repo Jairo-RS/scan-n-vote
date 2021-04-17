@@ -12,7 +12,7 @@ class VotingBody extends StatefulWidget {
 }
 
 class VotingBodyState extends State<VotingBody> {
-  int voteValue = 0; //1 = A favor, 2 = Abstenido, 3 = En Contra
+  int voteValue; //0 = A favor, 1 = En Contra, 2 = Abstenido
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class VotingBodyState extends State<VotingBody> {
     Size size = MediaQuery.of(context).size;
     //Used for the radio button values
 
-    print("First Vote Value: $voteValue ");
+    //print("First Vote Value: $voteValue ");
 
     return SafeArea(
       child: Scaffold(
@@ -71,13 +71,12 @@ class VotingBodyState extends State<VotingBody> {
                   activeColor: Colors.black,
                   tileColor: Colors.green[400],
                   toggleable: true,
-                  value: 1,
+                  value: 0,
                   groupValue: voteValue,
                   onChanged: (value) {
                     setState(() {
                       voteValue = value;
-                      print("voteValue: $voteValue");
-                      print("value: $value");
+                      print("Vote Value: $voteValue selected");
                     });
                   },
                 ),
@@ -102,7 +101,6 @@ class VotingBodyState extends State<VotingBody> {
                     setState(() {
                       voteValue = value;
                       print("Vote Value: $voteValue selected");
-                      print("value: $value ");
                     });
                   },
                 ),
@@ -121,13 +119,12 @@ class VotingBodyState extends State<VotingBody> {
                   activeColor: Colors.black,
                   tileColor: Colors.red[400],
                   toggleable: true,
-                  value: 3,
+                  value: 1,
                   groupValue: voteValue,
                   onChanged: (value) {
                     setState(() {
                       voteValue = value;
                       print("Vote Value: $voteValue selected");
-                      print("value: $value ");
                     });
                   },
                 ),
@@ -144,7 +141,7 @@ class VotingBodyState extends State<VotingBody> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          if (voteValue == 1) {
+                          if (voteValue == 0) {
                             return AlertDialog(
                               title: Text("Cast Vote"),
                               content: Text(
@@ -198,7 +195,7 @@ class VotingBodyState extends State<VotingBody> {
                               ],
                             );
                           } // end else if
-                          else if (voteValue == 3) {
+                          else if (voteValue == 1) {
                             return AlertDialog(
                               title: Text("Cast Vote"),
                               content: Text(

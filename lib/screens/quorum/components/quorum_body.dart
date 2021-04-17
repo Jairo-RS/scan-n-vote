@@ -60,9 +60,9 @@ class _QuorumBodyState extends State<QuorumBody> {
               ),
               SizedBox(height: size.height * 0.02),
               Container(
-                height: 300,
+                height: 225,
                 width: size.width * 0.8,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -83,17 +83,14 @@ class _QuorumBodyState extends State<QuorumBody> {
                       quorumCount["current quorum"] =
                           "Assembly has not started";
                     }
-                    // return Align(
-                    //   alignment: Alignment.center,
-                    // child:
                     return Column(
                       children: [
                         Align(
                           alignment: Alignment.topCenter,
                           child: Text(
-                            'The current quorum count is:\n',
+                            'The current attendance count is:\n',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 19,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -103,7 +100,7 @@ class _QuorumBodyState extends State<QuorumBody> {
                           child: Text(
                             quorumCount["current quorum"].toString() + "\n",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -111,23 +108,25 @@ class _QuorumBodyState extends State<QuorumBody> {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Total needed to reach quorum:\n',
+                            'of ' +
+                                quorumCount["quorum needed"].toString() +
+                                ' total needed \n   to reach quorum.\n',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 19,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            quorumCount["quorum needed"].toString() + "\n",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        // Align(
+                        //   alignment: Alignment.center,
+                        //   child: Text(
+                        //     quorumCount["quorum needed"].toString() + "\n",
+                        //     style: TextStyle(
+                        //       fontSize: 20,
+                        //       fontWeight: FontWeight.bold,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     );
                   },
