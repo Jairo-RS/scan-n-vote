@@ -79,9 +79,6 @@ class _ResultsBodyState extends State<ResultsBody> {
                   itemBuilder: (BuildContext context, int index) {
                     var resultsCount = results[index];
 
-                    // return Align(
-                    //   alignment: Alignment.center,
-                    // child:
                     return Column(
                       children: [
                         Align(
@@ -124,6 +121,11 @@ class _ResultsBodyState extends State<ResultsBody> {
                     );
                   },
                 ),
+              ),
+              SizedBox(height: size.height * 0.05),
+              SvgPicture.asset(
+                "assets/icons/undraw_election.svg",
+                height: size.height * 0.15,
               ),
             ],
           ),
