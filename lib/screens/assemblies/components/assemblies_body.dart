@@ -9,17 +9,17 @@ import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
 
 class AssembliesBody extends StatefulWidget {
-  // final UserRepository userRepository;
-  // AssembliesBody({Key key, @required this.userRepository})
-  //     : assert(userRepository != null),
-  //       super(key: key);
+  final UserRepository userRepository;
+  AssembliesBody({Key key, @required this.userRepository}) : super(key: key);
   @override
-  _AssembliesBodyState createState() => _AssembliesBodyState();
+  _AssembliesBodyState createState() => _AssembliesBodyState(
+        this.userRepository,
+      );
 }
 
 class _AssembliesBodyState extends State<AssembliesBody> {
-  // final UserRepository userRepository;
-  // _AssembliesBodyState(this.userRepository);
+  final UserRepository userRepository;
+  _AssembliesBodyState(this.userRepository);
 
   //This method (widget) is used to ask the user if they want to logout when
   //they press the back button on their phone.
@@ -27,7 +27,7 @@ class _AssembliesBodyState extends State<AssembliesBody> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Do you really want to logout?"),
+        title: Text("Are you sure you want to logout?"),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -40,19 +40,16 @@ class _AssembliesBodyState extends State<AssembliesBody> {
           ),
           TextButton(
             onPressed: () {
-              BlocProvider.of<AuthenticationBloc>(context).add(
-                LoggedOut(),
+              // return Navigator.pop(context); //Dismiss AlertDialog
+              return Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InitialScreen(
+                    userRepository: userRepository,
+                  ),
+                ),
               );
-              return Navigator.pop(context); //Dismiss AlertDialog
             },
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => InitialScreen(
-            //       userRepository: userRepository,
-            //     ),
-            //   ),
-            // ),
             child: Text(
               "Yes",
               style: TextStyle(
@@ -134,14 +131,16 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                           ),
                         ),
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) {
-                          //       return HomeScreen();
-                          //     },
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return HomeScreen(
+                                  userRepository: userRepository,
+                                );
+                              },
+                            ),
+                          );
                         },
                       ),
                     ],
