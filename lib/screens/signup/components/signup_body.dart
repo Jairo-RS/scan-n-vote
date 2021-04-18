@@ -3,17 +3,40 @@ import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
 import 'package:scan_n_vote/constants.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/login/login_screen.dart';
 
-class SignUpBody extends StatelessWidget {
+class SignUpBody extends StatefulWidget {
+  final UserRepository userRepository;
+  SignUpBody({Key key, @required this.userRepository})
+      : assert(userRepository != null),
+        super(key: key);
+
+  @override
+  _SignUpBodyState createState() => _SignUpBodyState(userRepository);
+}
+
+class _SignUpBodyState extends State<SignUpBody> {
+  final UserRepository userRepository;
+  _SignUpBodyState(this.userRepository);
+
   var _formkey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _studentNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  // Used to test that values in each field are being saved
+  String username = '';
+  String studentNumber = '';
+  String password = '';
+  String passwordConfirmation = '';
 
   @override
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
+
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -34,7 +57,7 @@ class SignUpBody extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: size.height * 0.05,
+                  height: size.height * 0.08,
                 ),
                 Text(
                   'Sign up',
@@ -52,25 +75,13 @@ class SignUpBody extends StatelessWidget {
                   child: Column(
                     children: [
                       TextFieldContainer(
-                        child: buildFullName(),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.01,
-                      ),
-                      TextFieldContainer(
-                        child: buildMajor(),
+                        child: buildUsername(),
                       ),
                       SizedBox(
                         height: size.height * 0.01,
                       ),
                       TextFieldContainer(
                         child: buildStudentNumber(),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.01,
-                      ),
-                      TextFieldContainer(
-                        child: buildUsername(),
                       ),
                       SizedBox(
                         height: size.height * 0.01,
@@ -100,7 +111,24 @@ class SignUpBody extends StatelessWidget {
                   press: () {
                     final isValid = _formkey.currentState.validate();
                     if (isValid) {
-                      _formkey.currentState.save();
+                      _formkey.currentState.save(); //Executing onSaved
+
+                      // Testing if information is being stored when sign up
+                      // button is pressed.
+                      final message = 'Username: $username\n' +
+                          'Student Number: $studentNumber\n' +
+                          'Password: $password\n' +
+                          'Confirm Password: $passwordConfirmation';
+                      final snackBar = SnackBar(
+                        content: Text(
+                          message,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        backgroundColor: Colors.green,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   },
                 ),
@@ -112,12 +140,17 @@ class SignUpBody extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       'Already have an account? ',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => new LoginScreen(),
+                            builder: (context) => new LoginScreen(
+                              userRepository: userRepository,
+                            ),
                           ),
                         );
                       },
@@ -126,6 +159,7 @@ class SignUpBody extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -142,61 +176,33 @@ class SignUpBody extends StatelessWidget {
     );
   }
 
-  Widget buildFullName() => TextFormField(
+  // Custom widget that creates username field with validations
+  Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Full Name',
-          // icon: Icon(
-          //   Icons.person,
-          //   color: Colors.blueGrey,
-          // ),
-          // suffixIcon: Icon(
-          //   Icons.person_rounded,
-          //   color: Colors.blueGrey,
-          // ),
-          // border: InputBorder.none,
+          labelText: 'Username',
+          //border: InputBorder.none,
+          // hintText: 'Username',
         ),
+        controller: _usernameController,
         validator: (value) {
-          String pattern = r'^[a-z A-Z,.\-]+$';
-          RegExp regExp = new RegExp(pattern);
-          if (value.length == 0) {
-            return 'Please enter your full name';
-          } else if (!regExp.hasMatch(value)) {
-            return 'Please enter a valid full name';
-          } else {
-            return null;
-          }
-        },
-        keyboardType: TextInputType.name,
-      );
-
-  Widget buildMajor() => TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Major (Initials)',
-          // border: InputBorder.none,
-        ),
-        validator: (value) {
-          String pattern = r'[A-Z]';
-          RegExp regExp = new RegExp(pattern);
           if (value.isEmpty) {
-            return "Please enter your major's initials";
+            return 'Please enter your username';
           }
-          if (!regExp.hasMatch(value)) {
-            return 'Must be all uppercase characters';
+          if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
+            return 'Invalid Special Character: Acceptable: @/./_/-/+';
           }
-          if (value.contains(new RegExp(r'[a-z]'))) {
-            return 'Must be all uppercase characters';
-          }
-          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>-]'))) {
-            return 'Special characters not allowed';
-          }
-          if (value.length < 4 || value.length > 4) {
-            return 'Initials should only be 4 characters';
+          if (value.length < 6) {
+            return 'Enter at least 6 characters';
           } else {
             return null;
           }
         },
+        maxLength: 25,
+        //Testing: save values in username field
+        onSaved: (value) => setState(() => username = value),
       );
 
+  // Custom widget that creates student number field with validations
   Widget buildStudentNumber() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Student Number',
@@ -206,6 +212,7 @@ class SignUpBody extends StatelessWidget {
           // ),
           // border: InputBorder.none,
         ),
+        controller: _studentNumberController,
         validator: (value) {
           String pattern = r'[0-9]';
           RegExp regExp = new RegExp(pattern);
@@ -221,7 +228,7 @@ class SignUpBody extends StatelessWidget {
           if (value.contains(new RegExp(r'[A-Z]'))) {
             return 'Must be only digits. Format: xxxxxxxxx';
           }
-          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>-]'))) {
+          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>=-]'))) {
             return 'Must be only digits. Format: xxxxxxxxx';
           }
           if (value.length < 9 || value.length > 9) {
@@ -231,30 +238,11 @@ class SignUpBody extends StatelessWidget {
           }
         },
         keyboardType: TextInputType.number,
+        //Testing: save values in student number field
+        onSaved: (value) => setState(() => studentNumber = value),
       );
 
-  Widget buildUsername() => TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Username',
-          //border: InputBorder.none,
-          // hintText: 'Username',
-        ),
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter your username';
-          }
-          if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>]'))) {
-            return 'Invalid Special Character: Acceptable: @/./_/-/+';
-          }
-          if (value.length < 6) {
-            return 'Enter at least 6 characters';
-          } else {
-            return null;
-          }
-        },
-        // maxLength: 30,
-      );
-
+  // Custom widget that creates password field with validations
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Password',
@@ -262,9 +250,6 @@ class SignUpBody extends StatelessWidget {
         ),
         controller: _passwordController,
         validator: (value) {
-          // Pattern pattern =
-          //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-          // RegExp regex = new RegExp(pattern);
           if (value.isEmpty) {
             return 'Please enter a password';
           }
@@ -277,34 +262,28 @@ class SignUpBody extends StatelessWidget {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
+          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {
             return 'Must be between 8 to 16 characters long';
           } else {
             return null;
-            // if (!regex.hasMatch(value)) {
-            //   return 'Enter valid password';
-            // } else {
-            // }
           }
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        //Testing: save values in password field
+        onSaved: (value) => setState(() => password = value),
       );
 
-  //Need to make password confirmation compare to password
+  //Custom widget used to create password confirmation that compares with password
   Widget buildPasswordConfirmation() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Confirm Password',
-          //border: InputBorder.none,
         ),
         controller: _confirmPasswordController,
         validator: (value) {
-          // Pattern pattern =
-          //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-          // RegExp regex = new RegExp(pattern);
           if (value.isEmpty) {
             return 'Please enter a password';
           }
@@ -317,7 +296,7 @@ class SignUpBody extends StatelessWidget {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
+          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {
@@ -327,13 +306,11 @@ class SignUpBody extends StatelessWidget {
             return 'Passwords do not match';
           } else {
             return null;
-            // if (!regex.hasMatch(value)) {
-            //   return 'Enter valid password';
-            // } else {
-            // }
           }
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        //Testing: save values in confirm password field
+        onSaved: (value) => setState(() => passwordConfirmation = value),
       );
 }

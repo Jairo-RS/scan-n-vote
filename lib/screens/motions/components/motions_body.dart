@@ -4,17 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/past_motions.dart';
+import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/results/results_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 
 class MotionsBody extends StatefulWidget {
+  final UserRepository userRepository;
+  MotionsBody({Key key, @required this.userRepository}) : super(key: key);
+
   @override
-  _MotionsBodyState createState() => _MotionsBodyState();
+  _MotionsBodyState createState() => _MotionsBodyState(this.userRepository);
 }
 
 //
 class _MotionsBodyState extends State<MotionsBody> {
+  final UserRepository userRepository;
+  _MotionsBodyState(this.userRepository);
+
   var currentMotion = const [
     {
       "Current Motion",
@@ -51,7 +58,9 @@ class _MotionsBodyState extends State<MotionsBody> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return HomeScreen();
+            return HomeScreen(
+              userRepository: userRepository,
+            );
           },
         ),
       ),
@@ -67,7 +76,9 @@ class _MotionsBodyState extends State<MotionsBody> {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return HomeScreen();
+                    return HomeScreen(
+                      userRepository: userRepository,
+                    );
                   },
                 ),
               ),
@@ -153,7 +164,9 @@ class _MotionsBodyState extends State<MotionsBody> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return VotingScreen();
+                                      return VotingScreen(
+                                        userRepository: userRepository,
+                                      );
                                     },
                                   ),
                                 );

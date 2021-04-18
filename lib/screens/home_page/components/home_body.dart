@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/agenda/agenda_screen.dart';
 import 'package:scan_n_vote/screens/assemblies/assemblies_screen.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
@@ -9,6 +10,9 @@ import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
 
 class HomeBody extends StatelessWidget {
+  final UserRepository userRepository;
+  HomeBody({Key key, @required this.userRepository}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
@@ -27,7 +31,9 @@ class HomeBody extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return AssembliesScreen();
+                  return AssembliesScreen(
+                    userRepository: userRepository,
+                  );
                 },
               ),
             ),
@@ -81,7 +87,9 @@ class HomeBody extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return MotionsScreen();
+                            return MotionsScreen(
+                              userRepository: userRepository,
+                            );
                           },
                         ),
                       );
@@ -132,7 +140,9 @@ class HomeBody extends StatelessWidget {
                                               //enviar logout a backend
                                               ////
                                               ///
-                                              return InitialScreen();
+                                              return InitialScreen(
+                                                userRepository: userRepository,
+                                              );
                                             },
                                           ),
                                         );
