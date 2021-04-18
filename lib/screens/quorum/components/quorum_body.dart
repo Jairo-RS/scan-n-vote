@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/models/quorum.dart';
 
 class QuorumBody extends StatefulWidget {
   @override
@@ -11,14 +12,19 @@ class QuorumBody extends StatefulWidget {
 }
 
 class _QuorumBodyState extends State<QuorumBody> {
-  var quorum = const [];
+  List<QuorumCount> quorum = const [];
+
   Future loadQuorum() async {
     String content =
         await rootBundle.loadString('assets/json/quorum_count.json');
-    var collection = json.decode(content);
+    List collection = json.decode(content);
+    List<QuorumCount> _quorum =
+        collection.map((json) => QuorumCount.fromJson(json)).toList();
+
     //print(content);
+
     setState(() {
-      quorum = collection;
+      quorum = _quorum;
     });
   }
 
@@ -78,10 +84,9 @@ class _QuorumBodyState extends State<QuorumBody> {
                 child: ListView.builder(
                   itemCount: quorum.length,
                   itemBuilder: (BuildContext context, int index) {
-                    var quorumCount = quorum[index];
-                    if (quorumCount["current quorum"] == null) {
-                      quorumCount["current quorum"] =
-                          "Assembly has not started";
+                    QuorumCount quorumCount = quorum[index];
+                    if (quorumCount.currentQuorum == null) {
+                      quorumCount.currentQuorum = "Assembly has not started";
                     }
                     return Column(
                       children: [
@@ -98,7 +103,7 @@ class _QuorumBodyState extends State<QuorumBody> {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            quorumCount["current quorum"].toString() + "\n",
+                            quorumCount.currentQuorum + "\n",
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -109,7 +114,7 @@ class _QuorumBodyState extends State<QuorumBody> {
                           alignment: Alignment.center,
                           child: Text(
                             'of ' +
-                                quorumCount["quorum needed"].toString() +
+                                quorumCount.quorumNeeded +
                                 ' total needed \n   to reach quorum.\n',
                             style: TextStyle(
                               fontSize: 19,
@@ -117,16 +122,6 @@ class _QuorumBodyState extends State<QuorumBody> {
                             ),
                           ),
                         ),
-                        // Align(
-                        //   alignment: Alignment.center,
-                        //   child: Text(
-                        //     quorumCount["quorum needed"].toString() + "\n",
-                        //     style: TextStyle(
-                        //       fontSize: 20,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     );
                   },
