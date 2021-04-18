@@ -16,10 +16,11 @@ class AgendaEntry {
       );
 
   static Future<List<AgendaEntry>> browse() async {
+    // Loads local json file (used to test)
     // String content =
     //     await rootBundle.loadString('assets/json/agenda_entries.json');
 
-    //Mock API used to test http response
+    // Mock API used to test http response
     var url = Uri.parse(
         'https://run.mocky.io/v3/6bcdf2f1-5a3d-4635-a8b6-f9ed46a6d2e6');
 

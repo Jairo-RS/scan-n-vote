@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
@@ -11,11 +10,11 @@ class AuthenticationBloc
   final UserRepository userRepository;
 
   AuthenticationBloc({@required this.userRepository})
-      : assert(userRepository != null),
-        super(AuthenticationUninitialized());
+      : assert(userRepository != null);
+  // super(AuthenticationUninitialized());
 
-  // @override
-  // AuthenticationState get initialState => AuthenticationUninitialized();
+  @override
+  AuthenticationState get initialState => AuthenticationUninitialized();
 
   @override
   Stream<AuthenticationState> mapEventToState(

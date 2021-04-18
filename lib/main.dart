@@ -15,7 +15,7 @@ import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 import 'constants.dart';
 
-class SimpleBlocDelegate extends BlocObserver {
+class SimpleBlocDelegate extends BlocDelegate {
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);
@@ -29,14 +29,14 @@ class SimpleBlocDelegate extends BlocObserver {
   }
 
   @override
-  void onError(BlocBase bloc, Object error, StackTrace stacktrace) {
+  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
     super.onError(bloc, error, stacktrace);
     print(error);
   }
 }
 
 void main() {
-  Bloc.observer = SimpleBlocDelegate();
+  BlocSupervisor.delegate = SimpleBlocDelegate();
   final userRepository = UserRepository();
   runApp(
     BlocProvider(
@@ -57,8 +57,6 @@ class MyApp extends StatelessWidget {
   // TO LOGIN:
   // username: eve.holt@reqres.in
   // password: cityslicka
-  // Need to restart app after authentication (pressing login button) to
-  // transition to Assemblies screen
 
   // This widget is the root of your application.
   @override
@@ -72,14 +70,15 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
+          // If current state is authenticated, then display Assemblies screen
           if (state is AuthenticationAuthenticated) {
-            return AssembliesScreen(
-              userRepository: userRepository,
-            );
+            return AssembliesScreen(userRepository: userRepository);
           }
+          // If current state is unauthenticated, then display Initial screen
           if (state is AuthenticationUnauthenticated) {
             return InitialScreen(userRepository: userRepository);
           }
+          // Loading state will display loading indicators
           if (state is AuthenticationLoading) {
             return Scaffold(
               body: Container(

@@ -10,7 +10,10 @@ import 'package:scan_n_vote/screens/initial/initial_screen.dart';
 
 class AssembliesBody extends StatefulWidget {
   final UserRepository userRepository;
-  AssembliesBody({Key key, @required this.userRepository}) : super(key: key);
+  AssembliesBody({Key key, @required this.userRepository})
+      : assert(userRepository != null),
+        super(key: key);
+
   @override
   _AssembliesBodyState createState() => _AssembliesBodyState(
         this.userRepository,
@@ -40,7 +43,6 @@ class _AssembliesBodyState extends State<AssembliesBody> {
           ),
           TextButton(
             onPressed: () {
-              // return Navigator.pop(context); //Dismiss AlertDialog
               return Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -49,6 +51,7 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                   ),
                 ),
               );
+              // return Navigator.pop(context); //Dismiss AlertDialog
             },
             child: Text(
               "Yes",

@@ -21,13 +21,22 @@ class _SignUpBodyState extends State<SignUpBody> {
   _SignUpBodyState(this.userRepository);
 
   var _formkey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _studentNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  // Used to test that values in each field are being saved
+  String username = '';
+  String studentNumber = '';
+  String password = '';
+  String passwordConfirmation = '';
 
   @override
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
+
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -66,25 +75,13 @@ class _SignUpBodyState extends State<SignUpBody> {
                   child: Column(
                     children: [
                       TextFieldContainer(
-                        child: buildFullName(),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.01,
-                      ),
-                      TextFieldContainer(
-                        child: buildMajor(),
+                        child: buildUsername(),
                       ),
                       SizedBox(
                         height: size.height * 0.01,
                       ),
                       TextFieldContainer(
                         child: buildStudentNumber(),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.01,
-                      ),
-                      TextFieldContainer(
-                        child: buildUsername(),
                       ),
                       SizedBox(
                         height: size.height * 0.01,
@@ -114,7 +111,24 @@ class _SignUpBodyState extends State<SignUpBody> {
                   press: () {
                     final isValid = _formkey.currentState.validate();
                     if (isValid) {
-                      _formkey.currentState.save();
+                      _formkey.currentState.save(); //Executing onSaved
+
+                      // Testing if information is being stored when sign up
+                      // button is pressed.
+                      final message = 'Username: $username\n' +
+                          'Student Number: $studentNumber\n' +
+                          'Password: $password\n' +
+                          'Confirm Password: $passwordConfirmation';
+                      final snackBar = SnackBar(
+                        content: Text(
+                          message,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        backgroundColor: Colors.green,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   },
                 ),
@@ -162,61 +176,33 @@ class _SignUpBodyState extends State<SignUpBody> {
     );
   }
 
-  Widget buildFullName() => TextFormField(
+  // Custom widget that creates username field with validations
+  Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Full Name',
-          // icon: Icon(
-          //   Icons.person,
-          //   color: Colors.blueGrey,
-          // ),
-          // suffixIcon: Icon(
-          //   Icons.person_rounded,
-          //   color: Colors.blueGrey,
-          // ),
-          // border: InputBorder.none,
+          labelText: 'Username',
+          //border: InputBorder.none,
+          // hintText: 'Username',
         ),
+        controller: _usernameController,
         validator: (value) {
-          String pattern = r'^[a-z A-Z,.\-]+$';
-          RegExp regExp = new RegExp(pattern);
-          if (value.length == 0) {
-            return 'Please enter your full name';
-          } else if (!regExp.hasMatch(value)) {
-            return 'Please enter a valid full name';
-          } else {
-            return null;
-          }
-        },
-        keyboardType: TextInputType.name,
-      );
-
-  Widget buildMajor() => TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Major (Initials)',
-          // border: InputBorder.none,
-        ),
-        validator: (value) {
-          String pattern = r'[A-Z]';
-          RegExp regExp = new RegExp(pattern);
           if (value.isEmpty) {
-            return "Please enter your major's initials";
+            return 'Please enter your username';
           }
-          if (!regExp.hasMatch(value)) {
-            return 'Must be all uppercase characters';
+          if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
+            return 'Invalid Special Character: Acceptable: @/./_/-/+';
           }
-          if (value.contains(new RegExp(r'[a-z]'))) {
-            return 'Must be all uppercase characters';
-          }
-          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>-]'))) {
-            return 'Special characters not allowed';
-          }
-          if (value.length < 4 || value.length > 4) {
-            return 'Initials should only be 4 characters';
+          if (value.length < 6) {
+            return 'Enter at least 6 characters';
           } else {
             return null;
           }
         },
+        maxLength: 25,
+        //Testing: save values in username field
+        onSaved: (value) => setState(() => username = value),
       );
 
+  // Custom widget that creates student number field with validations
   Widget buildStudentNumber() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Student Number',
@@ -226,6 +212,7 @@ class _SignUpBodyState extends State<SignUpBody> {
           // ),
           // border: InputBorder.none,
         ),
+        controller: _studentNumberController,
         validator: (value) {
           String pattern = r'[0-9]';
           RegExp regExp = new RegExp(pattern);
@@ -241,7 +228,7 @@ class _SignUpBodyState extends State<SignUpBody> {
           if (value.contains(new RegExp(r'[A-Z]'))) {
             return 'Must be only digits. Format: xxxxxxxxx';
           }
-          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>-]'))) {
+          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>=-]'))) {
             return 'Must be only digits. Format: xxxxxxxxx';
           }
           if (value.length < 9 || value.length > 9) {
@@ -251,30 +238,11 @@ class _SignUpBodyState extends State<SignUpBody> {
           }
         },
         keyboardType: TextInputType.number,
+        //Testing: save values in student number field
+        onSaved: (value) => setState(() => studentNumber = value),
       );
 
-  Widget buildUsername() => TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Username',
-          //border: InputBorder.none,
-          // hintText: 'Username',
-        ),
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter your username';
-          }
-          if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>]'))) {
-            return 'Invalid Special Character: Acceptable: @/./_/-/+';
-          }
-          if (value.length < 6) {
-            return 'Enter at least 6 characters';
-          } else {
-            return null;
-          }
-        },
-        // maxLength: 30,
-      );
-
+  // Custom widget that creates password field with validations
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Password',
@@ -282,9 +250,6 @@ class _SignUpBodyState extends State<SignUpBody> {
         ),
         controller: _passwordController,
         validator: (value) {
-          // Pattern pattern =
-          //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-          // RegExp regex = new RegExp(pattern);
           if (value.isEmpty) {
             return 'Please enter a password';
           }
@@ -297,7 +262,7 @@ class _SignUpBodyState extends State<SignUpBody> {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
+          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {
@@ -308,19 +273,17 @@ class _SignUpBodyState extends State<SignUpBody> {
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        //Testing: save values in password field
+        onSaved: (value) => setState(() => password = value),
       );
 
-  //Widget used to create password confirmation that compares with password
+  //Custom widget used to create password confirmation that compares with password
   Widget buildPasswordConfirmation() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Confirm Password',
-          //border: InputBorder.none,
         ),
         controller: _confirmPasswordController,
         validator: (value) {
-          // Pattern pattern =
-          //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-          // RegExp regex = new RegExp(pattern);
           if (value.isEmpty) {
             return 'Please enter a password';
           }
@@ -333,7 +296,7 @@ class _SignUpBodyState extends State<SignUpBody> {
           if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
             return 'Must contain at least one digit';
           }
-          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
+          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
             return 'Must contain at least one special character';
           }
           if (value.length < 8 || value.length > 16) {
@@ -347,5 +310,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        //Testing: save values in confirm password field
+        onSaved: (value) => setState(() => passwordConfirmation = value),
       );
 }
