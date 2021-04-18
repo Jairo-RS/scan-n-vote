@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/models/results.dart';
 
 class ResultsBody extends StatefulWidget {
   @override
@@ -11,18 +12,20 @@ class ResultsBody extends StatefulWidget {
 }
 
 class _ResultsBodyState extends State<ResultsBody> {
-  var results = const [];
-  Future loadQuorum() async {
+  List<VotingResults> results = const [];
+  Future loadResults() async {
     String content = await rootBundle.loadString('assets/json/results.json');
-    var collection = json.decode(content);
+    List collection = json.decode(content);
+    List<VotingResults> _results =
+        collection.map((json) => VotingResults.fromJson(json)).toList();
     //print(content);
     setState(() {
-      results = collection;
+      results = _results;
     });
   }
 
   void initState() {
-    loadQuorum();
+    loadResults();
     super.initState();
   }
 
@@ -77,7 +80,7 @@ class _ResultsBodyState extends State<ResultsBody> {
                 child: ListView.builder(
                   itemCount: results.length,
                   itemBuilder: (BuildContext context, int index) {
-                    var resultsCount = results[index];
+                    VotingResults resultsCount = results[index];
 
                     return Column(
                       children: [
@@ -85,7 +88,7 @@ class _ResultsBodyState extends State<ResultsBody> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'A Favor:                               ' +
-                                resultsCount["a favor"].toString() +
+                                resultsCount.aFavor +
                                 "\n",
                             style: TextStyle(
                               fontSize: 20,
@@ -97,7 +100,7 @@ class _ResultsBodyState extends State<ResultsBody> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'Abstenidos:                         ' +
-                                resultsCount["abstenidos"].toString() +
+                                resultsCount.abstenido +
                                 "\n",
                             style: TextStyle(
                               fontSize: 20,
@@ -109,7 +112,7 @@ class _ResultsBodyState extends State<ResultsBody> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'En Contra:                            ' +
-                                resultsCount["en contra"].toString() +
+                                resultsCount.enContra +
                                 "\n",
                             style: TextStyle(
                               fontSize: 20,
