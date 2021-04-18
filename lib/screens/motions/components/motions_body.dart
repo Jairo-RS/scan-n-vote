@@ -52,14 +52,15 @@ class _MotionsBodyState extends State<MotionsBody> {
             icon: Icon(
               Icons.arrow_back,
             ),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return HomeScreen();
-                },
-              ),
-            ),
+            onPressed: null,
+            // () => Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) {
+            //       return HomeScreen();
+            //     },
+            //   ),
+            // ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,

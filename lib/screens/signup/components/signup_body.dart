@@ -3,9 +3,23 @@ import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
 import 'package:scan_n_vote/constants.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/login/login_screen.dart';
 
-class SignUpBody extends StatelessWidget {
+class SignUpBody extends StatefulWidget {
+  final UserRepository userRepository;
+  SignUpBody({Key key, @required this.userRepository})
+      : assert(userRepository != null),
+        super(key: key);
+
+  @override
+  _SignUpBodyState createState() => _SignUpBodyState(userRepository);
+}
+
+class _SignUpBodyState extends State<SignUpBody> {
+  final UserRepository userRepository;
+  _SignUpBodyState(this.userRepository);
+
   var _formkey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -34,7 +48,7 @@ class SignUpBody extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: size.height * 0.05,
+                  height: size.height * 0.08,
                 ),
                 Text(
                   'Sign up',
@@ -112,12 +126,17 @@ class SignUpBody extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       'Already have an account? ',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => new LoginScreen(),
+                            builder: (context) => new LoginScreen(
+                              userRepository: userRepository,
+                            ),
                           ),
                         );
                       },
@@ -126,6 +145,7 @@ class SignUpBody extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -284,17 +304,13 @@ class SignUpBody extends StatelessWidget {
             return 'Must be between 8 to 16 characters long';
           } else {
             return null;
-            // if (!regex.hasMatch(value)) {
-            //   return 'Enter valid password';
-            // } else {
-            // }
           }
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
       );
 
-  //Need to make password confirmation compare to password
+  //Widget used to create password confirmation that compares with password
   Widget buildPasswordConfirmation() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Confirm Password',
@@ -327,10 +343,6 @@ class SignUpBody extends StatelessWidget {
             return 'Passwords do not match';
           } else {
             return null;
-            // if (!regex.hasMatch(value)) {
-            //   return 'Enter valid password';
-            // } else {
-            // }
           }
         },
         keyboardType: TextInputType.visiblePassword,

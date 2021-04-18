@@ -1,0 +1,20 @@
+{
+    "status_code": 200,
+    "responseMessage": "Ok",
+    "responseData": [
+        {
+            "id": 1,
+            "username": "JairoRS",
+            "student_id": "844127240",
+            "password1": "Uprm1234.",
+            "password2": "Uprm1234."
+        },
+        {
+            "id": 2,
+            "username": "user1",
+            "student_id": "802141234",
+            "password1": "RUM1234-a",
+            "password2": "RUM1234-a"
+        }
+    ]
+}
