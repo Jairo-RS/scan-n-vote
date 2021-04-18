@@ -12,7 +12,7 @@ class ResultsBody extends StatefulWidget {
 
 class _ResultsBodyState extends State<ResultsBody> {
   var results = const [];
-  Future loadQuorum() async {
+  Future loadResults() async {
     String content = await rootBundle.loadString('assets/json/results.json');
     var collection = json.decode(content);
     //print(content);
@@ -22,7 +22,7 @@ class _ResultsBodyState extends State<ResultsBody> {
   }
 
   void initState() {
-    loadQuorum();
+    loadResults();
     super.initState();
   }
 

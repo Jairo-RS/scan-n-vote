@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
-import 'package:scan_n_vote/screens/motions/motions_screen.dart';
+import 'package:scan_n_vote/models/voting_motions.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
 
 class VotingBody extends StatefulWidget {
@@ -12,15 +14,35 @@ class VotingBody extends StatefulWidget {
 }
 
 class VotingBodyState extends State<VotingBody> {
+  //Used for the radio button values
   int voteValue; //0 = A favor, 1 = En Contra, 2 = Abstenido
+
+  List<VotingMotions> motion = const [];
+
+  Future loadMotion() async {
+    String content =
+        await rootBundle.loadString('assets/json/current_voting_motion.json');
+    List collection = json.decode(content);
+    List<VotingMotions> _motions =
+        collection.map((json) => VotingMotions.fromJson(json)).toList();
+    //print(content);
+
+    setState(() {
+      motion = _motions;
+    });
+  }
+
+  void initState() {
+    loadMotion();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
-    //Used for the radio button values
-
-    //print("First Vote Value: $voteValue ");
+    //print("First Vote Value: $voteValue "); //used for testing purposes
+    //print(motion.toString());
 
     return SafeArea(
       child: Scaffold(
@@ -49,16 +71,40 @@ class VotingBodyState extends State<VotingBody> {
                     fontSize: 42,
                   ),
                 ),
-                SizedBox(height: size.height * 0.02),
 
                 //Motion Prompt
-                //
-                //Goes Here
-                //
-                //End prompt
+                ListView.builder(
+                  itemCount: motion.length,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    VotingMotions theMotion = motion[index];
+
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            height: 100,
+                            width: 375,
+                            child: SingleChildScrollView(
+                              child: Text(
+                                theMotion.motion, //displays the motion text
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
 
                 SizedBox(height: size.height * 0.02),
-
                 RadioListTile<int>(
                   title: Text(
                     "A Favor",
@@ -128,11 +174,9 @@ class VotingBodyState extends State<VotingBody> {
                     });
                   },
                 ),
-
                 SizedBox(
                   height: size.height * 0.04,
                 ),
-
                 RoundButton(
                   text: "Cast Vote",
                   color: Colors.black87,
@@ -221,7 +265,7 @@ class VotingBodyState extends State<VotingBody> {
                                     child: Text("Yes"))
                               ],
                             );
-                          } // end if
+                          } // end else if
                           else {
                             return AlertDialog(
                               title: Text("Cast Vote"),
@@ -235,7 +279,7 @@ class VotingBodyState extends State<VotingBody> {
                                     child: Text("OK")),
                               ],
                             );
-                          } // end else if
+                          } // end else
                         },
                       ),
                     );
