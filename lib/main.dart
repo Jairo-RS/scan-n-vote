@@ -54,6 +54,12 @@ class MyApp extends StatelessWidget {
 
   MyApp({Key key, @required this.userRepository}) : super(key: key);
 
+  // TO LOGIN:
+  // username: eve.holt@reqres.in
+  // password: cityslicka
+  // Need to restart app after authentication (pressing login button) to
+  // transition to Assemblies screen
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
