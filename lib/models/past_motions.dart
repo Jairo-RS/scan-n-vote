@@ -3,7 +3,11 @@ class PastMotions {
   dynamic allAmendments;
   final String result;
 
-  PastMotions({this.pastMotion, this.allAmendments, this.result});
+  PastMotions({
+    this.pastMotion,
+    this.allAmendments,
+    this.result,
+  });
 
   factory PastMotions.fromJson(Map<String, dynamic> json) {
     return PastMotions(

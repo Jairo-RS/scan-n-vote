@@ -4,17 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
-import 'package:scan_n_vote/models/voting_motions.dart';
+import 'package:scan_n_vote/models/voting_motions.dart';  
+import 'package:scan_n_vote/repositories/user_repository.dart';
+import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
 import 'package:http/http.dart' as http;
 
 class VotingBody extends StatefulWidget {
-  VotingBody({Key key}) : super(key: key);
+  final UserRepository userRepository;
+  VotingBody({Key key, @required this.userRepository})
+      : assert(userRepository != null),
+        super(key: key);
   @override
-  VotingBodyState createState() => VotingBodyState();
+  VotingBodyState createState() => VotingBodyState(this.userRepository);
 }
 
 class VotingBodyState extends State<VotingBody> {
+
+  final UserRepository userRepository;
+  VotingBodyState(this.userRepository);
+  
   //Used for the radio button values
   int voteValue; //0 = A favor, 1 = En Contra, 2 = Abstenido
 
@@ -214,7 +223,9 @@ class VotingBodyState extends State<VotingBody> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) {
-                                            return WaitingScreen();
+                                            return WaitingScreen(
+                                              userRepository: userRepository,
+                                            );
                                           },
                                         ),
                                       );
@@ -241,7 +252,9 @@ class VotingBodyState extends State<VotingBody> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) {
-                                            return WaitingScreen();
+                                            return WaitingScreen(
+                                              userRepository: userRepository,
+                                            );
                                           },
                                         ),
                                       );
@@ -268,7 +281,9 @@ class VotingBodyState extends State<VotingBody> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) {
-                                            return WaitingScreen();
+                                            return WaitingScreen(
+                                              userRepository: userRepository,
+                                            );
                                           },
                                         ),
                                       );

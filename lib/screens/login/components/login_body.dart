@@ -1,122 +1,221 @@
 import 'package:flutter/material.dart';
-import 'package:scan_n_vote/components/round_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
+import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
+import 'package:scan_n_vote/bloc/login_bloc/login_bloc.dart';
+import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
+import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/assemblies/assemblies_screen.dart';
 import 'package:scan_n_vote/screens/forgot_password/forgot_password_screen.dart';
-import 'package:scan_n_vote/components/backdrop.dart';
 
-class LoginBody extends StatelessWidget {
+class LoginBody extends StatefulWidget {
+  final UserRepository userRepository;
+  LoginBody({Key key, @required this.userRepository})
+      : assert(userRepository != null),
+        super(key: key);
+
+  @override
+  _LoginBodyState createState() => _LoginBodyState(userRepository);
+}
+
+class _LoginBodyState extends State<LoginBody> {
+  final UserRepository userRepository;
+  _LoginBodyState(this.userRepository);
+
   var _formkey = GlobalKey<FormState>();
-  String username = '';
-//  TextEditingController _userNameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
+    _onLoginButtonPressed() {
+      BlocProvider.of<LoginBloc>(context).add(
+        LoginButtonPressed(
+            email: _usernameController.text,
+            password: _passwordController.text),
+      );
+    }
+
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        // When login unsuccessful, display error message
+        if (state is LoginFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Login failed",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              backgroundColor: Colors.red,
             ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
-        ),
-        body: Backdrop(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Login",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40,
+          );
+        }
+        // When login successful transition to next screen
+        if (state is LoginSuccess) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return AssembliesScreen(
+                  userRepository: userRepository,
+                );
+              },
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<LoginBloc, LoginState>(
+        builder: (context, state) {
+          return SafeArea(
+            child: Scaffold(
+              extendBodyBehindAppBar: true,
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
                   ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-                SizedBox(
-                  height: size.height * 0.05,
-                ),
-                Form(
-                  key: _formkey,
-                  // autovalidateMode: AutovalidateMode.always,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                iconTheme: IconThemeData(color: Colors.black),
+              ),
+              body: Backdrop(
+                child: SingleChildScrollView(
                   child: Column(
-                    children: [
-                      TextFieldContainer(
-                        child: Stack(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Login",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.05,
+                      ),
+                      Form(
+                        key: _formkey,
+                        child: Column(
                           children: [
-                            buildUsername(),
+                            TextFieldContainer(
+                              child: buildUsername(),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            TextFieldContainer(
+                              child: buildPassword(),
+                            ),
                           ],
                         ),
                       ),
                       SizedBox(
-                        height: size.height * 0.01,
+                        height: size.height * 0.05,
                       ),
-                      TextFieldContainer(
-                        child: Stack(
-                          children: [
-                            buildPassword(),
-                          ],
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            child: state is LoginLoading
+                                ?
+                                //If loading, then display a progress indicator
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Center(
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 25,
+                                              width: 25,
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                :
+                                // If not loading, then display login button
+                                ConstrainedBox(
+                                    constraints: BoxConstraints.tightFor(
+                                      width: size.width * 0.8,
+                                      height: size.height * 0.085,
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: _onLoginButtonPressed,
+                                      child: Text(
+                                        "LOGIN",
+                                        style: new TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        // background color
+                                        primary: Colors.black,
+                                        // foreground color
+                                        onPrimary: Colors.black,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            29,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                      SizedBox(
+                        height: size.height * 0.05,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      new ForgotPasswordScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "Forgot your password?",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: size.height * 0.05,
-                ),
-                RoundButton(
-                  text: "LOGIN",
-                  press: () {
-                    final isValid = _formkey.currentState.validate();
-                    if (isValid) {
-                      _formkey.currentState.save();
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return AssembliesScreen();
-                        },
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: size.height * 0.02,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => new ForgotPasswordScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Forgot your password?",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -124,60 +223,18 @@ class LoginBody extends StatelessWidget {
   Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Username',
-          //border: InputBorder.none,
           //hintText: "Username",
         ),
-        // validator: (value) {
-        //   if (value.isEmpty) {
-        //     return 'Please enter your username';
-        //   }
-        //   if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>]'))) {
-        //     return 'Invalid Special Character. Only use: ./@/_/-/+';
-        //   }
-        //   if (value.length < 6) {
-        //     return 'Enter at least 6 characters';
-        //   } else {
-        //     return null;
-        //   }
-        // },
-        // maxLength: 30,
+        controller: _usernameController,
+        // maxLength: 25,
         //onSaved: (value) => setState(() => username = value),
       );
 
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Password',
-          //border: InputBorder.none,
         ),
-        // validator: (value) {
-        //   // Pattern pattern =
-        //   //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-        //   // RegExp regex = new RegExp(pattern);
-        //   if (value.isEmpty) {
-        //     return 'Please enter a password';
-        //   }
-        //   if (!value.contains(new RegExp(r'[a-z]'))) {
-        //     return 'Must contain at least one lowercase character';
-        //   }
-        //   if (!value.contains(new RegExp(r'[A-Z]'))) {
-        //     return 'Must contain at least one uppercase character';
-        //   }
-        //   if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
-        //     return 'Must contain at least one digit';
-        //   }
-        //   if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>-]'))) {
-        //     return 'Must contain at least one special character';
-        //   }
-        //   if (value.length < 8 || value.length > 16) {
-        //     return 'Must be between 8 to 16 characters long';
-        //   } else {
-        //     return null;
-        //     // if (!regex.hasMatch(value)) {
-        //     //   return 'Enter valid password';
-        //     // } else {
-        //     // }
-        //   }
-        // },
+        controller: _passwordController,
         // onSaved: (value) => setState(() => password = value),
         keyboardType: TextInputType.visiblePassword,
         obscureText: false,

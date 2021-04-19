@@ -9,10 +9,12 @@ class AgendaBody extends StatefulWidget {
 
 class _AgendaBodyState extends State<AgendaBody> {
   Future<List<AgendaEntry>> agendaEntries;
+  var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   void initState() {
     super.initState();
     agendaEntries = AgendaEntry.browse();
+    // refreshAgenda();
   }
 
   @override
@@ -87,18 +89,9 @@ class _AgendaBodyState extends State<AgendaBody> {
                           //snapshot.data holds the results of the future
                           var entries = snapshot.data;
                           return RefreshIndicator(
-                            onRefresh: () {
-                              var _agendaEntries = AgendaEntry.browse();
-                              return Future.delayed(
-                                Duration(milliseconds: 500), //
-                                () {
-                                  setState(
-                                    () {
-                                      agendaEntries = _agendaEntries;
-                                    },
-                                  );
-                                },
-                              );
+                            key: _refreshIndicatorKey,
+                            onRefresh: () async {
+                              return refreshAgenda();
                             },
                             child: ListView.separated(
                               itemCount: entries.length,
@@ -128,5 +121,15 @@ class _AgendaBodyState extends State<AgendaBody> {
         ),
       ),
     );
+  }
+
+  Future<void> refreshAgenda() async {
+    _refreshIndicatorKey.currentState?.show();
+    await Future.delayed(Duration(seconds: 1));
+
+    Future<List<AgendaEntry>> _agendaEntries = AgendaEntry.browse();
+    setState(() {
+      agendaEntries = _agendaEntries;
+    });
   }
 }
