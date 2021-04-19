@@ -35,11 +35,12 @@ class _MotionsBodyState extends State<MotionsBody> {
   //To see if voting is ready
   Future<VotingModelTest> voteReady2Voting() async {
     Uri url = Uri.parse(
-        'http://slowwly.robertomurray.co.uk/delay/500/url/http://www.google.co.uk');
+        'https://run.mocky.io/v3/a58c1b7a-b688-4d22-8dec-6009a840b1f4'); //code 200
+    //'https://run.mocky.io/v3/53e4748d-d8d4-44e5-bb87-425e9690a866'); //code 404
 
     final response = await http.get(url);
 
-    print("HttpResponseCode = " + response.statusCode.toString());
+    print("\nHttpResponseCode = " + response.statusCode.toString());
     if (response.statusCode == 200) {
       Navigator.push(
         context,
@@ -51,15 +52,8 @@ class _MotionsBodyState extends State<MotionsBody> {
       );
       return null;
     } else {
-      print("Incorrect http code to continue");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return MotionsScreen(userRepository: userRepository);
-          },
-        ),
-      );
+      print("\nIncorrect HTTP Code.\nExpected 200, got ${response.statusCode}");
+      print("Retry with a new URL.");
       return null;
     }
   }
@@ -70,7 +64,7 @@ class _MotionsBodyState extends State<MotionsBody> {
 
     final response = await http.get(url);
 
-    print("HttpResponseCode = " + response.statusCode.toString());
+    print("\nHttpResponseCode = " + response.statusCode.toString());
     if (response.statusCode == 200) {
       Navigator.push(
         context,
@@ -245,6 +239,19 @@ class _MotionsBodyState extends State<MotionsBody> {
                                               ),
                                               onPressed: () {
                                                 voteReady2Voting();
+                                                return AlertDialog(
+                                                  title: Text("Cast Vote"),
+                                                  content: Text(
+                                                      'Incorrect HTTP Code.\n'),
+                                                  actions: [
+                                                    TextButton(
+                                                        //OK Button
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context), //return to motions screen
+                                                        child: Text("OK")),
+                                                  ],
+                                                );
                                               },
                                             ),
                                             SizedBox(
@@ -267,6 +274,19 @@ class _MotionsBodyState extends State<MotionsBody> {
                                               ),
                                               onPressed: () {
                                                 voteReady2Results();
+                                                return AlertDialog(
+                                                  title: Text("Cast Vote"),
+                                                  content: Text(
+                                                      'Incorrect HTTP Code.\n'),
+                                                  actions: [
+                                                    TextButton(
+                                                        //OK Button
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context), //return to motions screen
+                                                        child: Text("OK")),
+                                                  ],
+                                                );
                                               },
                                             ),
                                           ],

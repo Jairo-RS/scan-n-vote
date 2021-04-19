@@ -149,7 +149,9 @@ class VotingBodyState extends State<VotingBody> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: Text("In Favor", style: TextStyle(fontSize: 18)),
+                  subtitle: Text("In Favor",
+                      style:
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
                   activeColor: Colors.black,
                   tileColor: Colors.green[400],
                   toggleable: true,
