@@ -15,7 +15,7 @@ import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 import 'constants.dart';
 
-class SimpleBlocDelegate extends BlocDelegate {
+class SimpleBlocDelegate extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);
@@ -29,14 +29,14 @@ class SimpleBlocDelegate extends BlocDelegate {
   }
 
   @override
-  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
+  void onError(BlocBase bloc, Object error, StackTrace stacktrace) {
     super.onError(bloc, error, stacktrace);
     print(error);
   }
 }
 
 void main() {
-  BlocSupervisor.delegate = SimpleBlocDelegate();
+  Bloc.observer = SimpleBlocDelegate();
   final userRepository = UserRepository();
   runApp(
     BlocProvider(
