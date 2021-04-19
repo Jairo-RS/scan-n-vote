@@ -29,8 +29,14 @@ class PastMotions {
     // Get request from a remote server (Mock API) for past motions
     Uri url = Uri.parse(
         'https://run.mocky.io/v3/30ccd238-4174-4182-8596-4b57ccec5094');
+
+    // Uri url = Uri.parse(
+    //     'https://run.mocky.io/v3/f8b3754d-1c75-40d8-b5a7-0eed5ab904c4');
+
+    // GET request
     http.Response pastMotionsResponse = await http.get(url);
 
+    // Give program time to receive and display information
     await Future.delayed(Duration(seconds: 2));
 
     // Verifying if http request was successfully completed

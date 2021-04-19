@@ -1,5 +1,10 @@
 [
     {
+        "past motion": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm.",
+        "amendments": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm que garantice a toda la comunidad incorporarse de manera libre al paro.",
+        "result": " En contra"
+    },
+    {
         "past motion": "Que se desembolse de inmediato las ayudas que fueron prometidas a los estudiantes.",
         "amendments": [
           "Que se desembolse de inmediato la ayudas que fueron prometidas a los estudiantes y a su vez transparencia...",
@@ -24,5 +29,9 @@
         "past motion": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm.",
         "amendments": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm que garantice a toda la comunidad incorporarse de manera libre al paro.",
         "result": " En contra"
+    },
+    {
+        "past motion": "Que se implemente una política práctica que atienda las sanciones administrativas que serán implementadas a aquellos profesores y empleados agresores sexuales",
+        "result": "A favor"
     }
 ]

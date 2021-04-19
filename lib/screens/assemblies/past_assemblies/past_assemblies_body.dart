@@ -1,4 +1,4 @@
-import 'dart:convert';
+// import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
@@ -21,8 +21,6 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
 
   @override
   Widget build(BuildContext context) {
-    //Used for total height and width of the screen
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,

@@ -6,6 +6,8 @@ import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/login/login_screen.dart';
 
+// Class that contains all the widgets that will be displayed by the Sign up
+// screen
 class SignUpBody extends StatefulWidget {
   final UserRepository userRepository;
   SignUpBody({Key key, @required this.userRepository})
@@ -20,6 +22,7 @@ class _SignUpBodyState extends State<SignUpBody> {
   final UserRepository userRepository;
   _SignUpBodyState(this.userRepository);
 
+  //Variables
   var _formkey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _studentNumberController = TextEditingController();
@@ -40,6 +43,7 @@ class _SignUpBodyState extends State<SignUpBody> {
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
+        //Appbar at the top of screen
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
@@ -52,6 +56,7 @@ class _SignUpBodyState extends State<SignUpBody> {
           iconTheme: IconThemeData(color: Colors.black),
         ),
         body: Backdrop(
+          //Making screen scrollable
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -69,31 +74,34 @@ class _SignUpBodyState extends State<SignUpBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
+                //Widget that creates a container for all form fields
                 Form(
                   key: _formkey,
                   autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: [
                       TextFieldContainer(
-                        child: buildUsername(),
+                        child: buildUsername(), //Creates username field
                       ),
                       SizedBox(
                         height: size.height * 0.01,
                       ),
                       TextFieldContainer(
-                        child: buildStudentNumber(),
+                        child:
+                            buildStudentNumber(), //Creates student number field
                       ),
                       SizedBox(
                         height: size.height * 0.01,
                       ),
                       TextFieldContainer(
-                        child: buildPassword(),
+                        child: buildPassword(), //Creates password field
                       ),
                       SizedBox(
                         height: size.height * 0.01,
                       ),
                       TextFieldContainer(
-                        child: buildPasswordConfirmation(),
+                        child:
+                            buildPasswordConfirmation(), //Creates confirm password field
                       ),
                       SizedBox(
                         height: size.height * 0.01,
@@ -104,6 +112,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                 SizedBox(
                   height: size.height * 0.03,
                 ),
+                //Custom widget that creates the sign up button
                 RoundButton(
                   text: "SIGN UP",
                   color: signButtonColor,
@@ -119,6 +128,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                           'Student Number: $studentNumber\n' +
                           'Password: $password\n' +
                           'Confirm Password: $passwordConfirmation';
+                      // For testing: displays stored valid information
                       final snackBar = SnackBar(
                         content: Text(
                           message,
@@ -144,6 +154,8 @@ class _SignUpBodyState extends State<SignUpBody> {
                         fontSize: 16,
                       ),
                     ),
+                    // Gives Login text functionality to transition to Login
+                    // screen
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
@@ -215,7 +227,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         ),
         controller: _studentNumberController,
         validator: StudentNumberFieldValidator.validate,
-        // Commented for testing
+        // COMMENTED FOR TESTING
         // String pattern = r'[0-9]';
         // RegExp regExp = new RegExp(pattern);
         // if (value.isEmpty) {
@@ -252,7 +264,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         ),
         controller: _passwordController,
         validator: PasswordFieldValidator.validate,
-        // Commented for Testing
+        // COMMENTED FOR TESTING
         // if (value.isEmpty) {
         //   return 'Please enter a password';
         // }
@@ -293,7 +305,7 @@ class _SignUpBodyState extends State<SignUpBody> {
           } else {
             return null;
           }
-
+          // COMMENTED FOR TESTING
           //   if (value.isEmpty) {
           //     return 'Please enter a password';
           //   }
@@ -325,6 +337,7 @@ class _SignUpBodyState extends State<SignUpBody> {
       );
 }
 
+// Class that contains all username validations
 class UsernameFieldValidator {
   static String validate(String value) {
     if (value.isEmpty) {
@@ -341,6 +354,7 @@ class UsernameFieldValidator {
   }
 }
 
+// Class that contains the student number validations
 class StudentNumberFieldValidator {
   static String validate(String value) {
     String pattern = r'[0-9]';
@@ -368,6 +382,7 @@ class StudentNumberFieldValidator {
   }
 }
 
+// Class that contains the password validations
 class PasswordFieldValidator {
   static String validate(String value) {
     if (value.isEmpty) {
@@ -393,7 +408,9 @@ class PasswordFieldValidator {
   }
 }
 
+// Class that contains the confirm password validations
 class PasswordConfirmationFieldValidator {
+  // ignore: missing_return
   static String validate(String value) {
     if (value.isEmpty) {
       return 'Please enter a password';
