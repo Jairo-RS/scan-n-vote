@@ -184,20 +184,21 @@ class _SignUpBodyState extends State<SignUpBody> {
           // hintText: 'Username',
         ),
         controller: _usernameController,
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter your username';
-          }
-          if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
-            return 'Invalid Special Character: Acceptable: @/./_/-/+';
-          }
-          if (value.length < 6) {
-            return 'Enter at least 6 characters';
-          } else {
-            return null;
-          }
-        },
-        maxLength: 25,
+        validator: UsernameFieldValidator.validate,
+        //Commented for Testing
+        // if (value.isEmpty) {
+        //   return 'Please enter your username';
+        // }
+        // if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
+        //   return 'Invalid Special Character: Acceptable: @/./_/-/+';
+        // }
+        // if (value.length < 6) {
+        //   return 'Enter at least 6 characters';
+        // } else {
+        //   return null;
+        // }
+        // },
+        // maxLength: 30,
         //Testing: save values in username field
         onSaved: (value) => setState(() => username = value),
       );
@@ -213,30 +214,31 @@ class _SignUpBodyState extends State<SignUpBody> {
           // border: InputBorder.none,
         ),
         controller: _studentNumberController,
-        validator: (value) {
-          String pattern = r'[0-9]';
-          RegExp regExp = new RegExp(pattern);
-          if (value.isEmpty) {
-            return 'Please enter your student number';
-          }
-          if (!regExp.hasMatch(value)) {
-            return 'Must be only digits. Format: xxxxxxxxx';
-          }
-          if (value.contains(new RegExp(r'[a-z]'))) {
-            return 'Must be only digits. Format: xxxxxxxxx';
-          }
-          if (value.contains(new RegExp(r'[A-Z]'))) {
-            return 'Must be only digits. Format: xxxxxxxxx';
-          }
-          if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-            return 'Must be only digits. Format: xxxxxxxxx';
-          }
-          if (value.length < 9 || value.length > 9) {
-            return 'Invalid: Must enter 9 digits. Format: xxxxxxxxx';
-          } else {
-            return null;
-          }
-        },
+        validator: StudentNumberFieldValidator.validate,
+        // Commented for testing
+        // String pattern = r'[0-9]';
+        // RegExp regExp = new RegExp(pattern);
+        // if (value.isEmpty) {
+        //   return 'Please enter your student number';
+        // }
+        // if (!regExp.hasMatch(value)) {
+        //   return 'Must be only digits. Format: xxxxxxxxx';
+        // }
+        // if (value.contains(new RegExp(r'[a-z]'))) {
+        //   return 'Must be only digits. Format: xxxxxxxxx';
+        // }
+        // if (value.contains(new RegExp(r'[A-Z]'))) {
+        //   return 'Must be only digits. Format: xxxxxxxxx';
+        // }
+        // if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>=-]'))) {
+        //   return 'Must be only digits. Format: xxxxxxxxx';
+        // }
+        // if (value.length < 9 || value.length > 9) {
+        //   return 'Invalid: Must enter 9 digits. Format: xxxxxxxxx';
+        // } else {
+        //   return null;
+        // }
+        // },
         keyboardType: TextInputType.number,
         //Testing: save values in student number field
         onSaved: (value) => setState(() => studentNumber = value),
@@ -249,28 +251,29 @@ class _SignUpBodyState extends State<SignUpBody> {
           //border: InputBorder.none,
         ),
         controller: _passwordController,
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter a password';
-          }
-          if (!value.contains(new RegExp(r'[a-z]'))) {
-            return 'Must contain at least one lowercase character';
-          }
-          if (!value.contains(new RegExp(r'[A-Z]'))) {
-            return 'Must contain at least one uppercase character';
-          }
-          if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
-            return 'Must contain at least one digit';
-          }
-          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-            return 'Must contain at least one special character';
-          }
-          if (value.length < 8 || value.length > 16) {
-            return 'Must be between 8 to 16 characters long';
-          } else {
-            return null;
-          }
-        },
+        validator: PasswordFieldValidator.validate,
+        // Commented for Testing
+        // if (value.isEmpty) {
+        //   return 'Please enter a password';
+        // }
+        // if (!value.contains(new RegExp(r'[a-z]'))) {
+        //   return 'Must contain at least one lowercase character';
+        // }
+        // if (!value.contains(new RegExp(r'[A-Z]'))) {
+        //   return 'Must contain at least one uppercase character';
+        // }
+        // if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
+        //   return 'Must contain at least one digit';
+        // }
+        // if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
+        //   return 'Must contain at least one special character';
+        // }
+        // if (value.length < 8 || value.length > 16) {
+        //   return 'Must be between 8 to 16 characters long';
+        // } else {
+        //   return null;
+        // }
+        // },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
         //Testing: save values in password field
@@ -284,33 +287,131 @@ class _SignUpBodyState extends State<SignUpBody> {
         ),
         controller: _confirmPasswordController,
         validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter a password';
-          }
-          if (!value.contains(new RegExp(r'[a-z]'))) {
-            return 'Must contain at least one lowercase character';
-          }
-          if (!value.contains(new RegExp(r'[A-Z]'))) {
-            return 'Must contain at least one uppercase character';
-          }
-          if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
-            return 'Must contain at least one digit';
-          }
-          if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-            return 'Must contain at least one special character';
-          }
-          if (value.length < 8 || value.length > 16) {
-            return 'Must be between 8 to 16 characters long';
-          }
+          PasswordConfirmationFieldValidator.validate(value);
           if (value != _passwordController.text) {
             return 'Passwords do not match';
           } else {
             return null;
           }
+
+          //   if (value.isEmpty) {
+          //     return 'Please enter a password';
+          //   }
+          //   if (!value.contains(new RegExp(r'[a-z]'))) {
+          //     return 'Must contain at least one lowercase character';
+          //   }
+          //   if (!value.contains(new RegExp(r'[A-Z]'))) {
+          //     return 'Must contain at least one uppercase character';
+          //   }
+          //   if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
+          //     return 'Must contain at least one digit';
+          //   }
+          //   if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
+          //     return 'Must contain at least one special character';
+          //   }
+          //   if (value.length < 8 || value.length > 16) {
+          //     return 'Must be between 8 to 16 characters long';
+          //   }
+          //   if (value != _passwordController.text) {
+          //     return 'Passwords do not match';
+          //   } else {
+          //     return null;
+          //   }
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
         //Testing: save values in confirm password field
         onSaved: (value) => setState(() => passwordConfirmation = value),
       );
+}
+
+class UsernameFieldValidator {
+  static String validate(String value) {
+    if (value.isEmpty) {
+      return 'Please enter your username';
+    }
+    if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
+      return 'Invalid Special Character: Acceptable: @/./_/-/+';
+    }
+    if (value.length < 6) {
+      return 'Enter at least 6 characters';
+    } else {
+      return null;
+    }
+  }
+}
+
+class StudentNumberFieldValidator {
+  static String validate(String value) {
+    String pattern = r'[0-9]';
+    RegExp regExp = new RegExp(pattern);
+    if (value.isEmpty) {
+      return 'Please enter your student number';
+    }
+    if (!regExp.hasMatch(value)) {
+      return 'Must be only digits. Format: xxxxxxxxx';
+    }
+    if (value.contains(new RegExp(r'[a-z]'))) {
+      return 'Must be only digits. Format: xxxxxxxxx';
+    }
+    if (value.contains(new RegExp(r'[A-Z]'))) {
+      return 'Must be only digits. Format: xxxxxxxxx';
+    }
+    if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>=-]'))) {
+      return 'Must be only digits. Format: xxxxxxxxx';
+    }
+    if (value.length < 9 || value.length > 9) {
+      return 'Invalid: Must enter 9 digits. Format: xxxxxxxxx';
+    } else {
+      return null;
+    }
+  }
+}
+
+class PasswordFieldValidator {
+  static String validate(String value) {
+    if (value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (!value.contains(new RegExp(r'[a-z]'))) {
+      return 'Must contain at least one lowercase character';
+    }
+    if (!value.contains(new RegExp(r'[A-Z]'))) {
+      return 'Must contain at least one uppercase character';
+    }
+    if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
+      return 'Must contain at least one digit';
+    }
+    if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
+      return 'Must contain at least one special character';
+    }
+    if (value.length < 8 || value.length > 16) {
+      return 'Must be between 8 to 16 characters long';
+    } else {
+      return null;
+    }
+  }
+}
+
+class PasswordConfirmationFieldValidator {
+  static String validate(String value) {
+    if (value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (!value.contains(new RegExp(r'[a-z]'))) {
+      return 'Must contain at least one lowercase character';
+    }
+    if (!value.contains(new RegExp(r'[A-Z]'))) {
+      return 'Must contain at least one uppercase character';
+    }
+    if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
+      return 'Must contain at least one digit';
+    }
+    if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
+      return 'Must contain at least one special character';
+    }
+    if (value.length < 8 || value.length > 16) {
+      return 'Must be between 8 to 16 characters long';
+    }
+  }
 }

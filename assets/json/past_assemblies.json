@@ -1,127 +1,79 @@
-{
-    "first assembly": {
-        "date": "First date",
-        "all motions": [
-            {
-                "motion": "First motion"
-            },
-            {
-                "motion": "Second motion"
-            },
-            {
-                "motion": "Third motion"
-            },
-            {
-                "motion": "Fourth motion"
-            }
+[
+    {
+        "date": "08/12/2020",
+        "motions": [
+            "Moción para suspender el uso de Response LockDown mientras se conlleva una investigación acerca de los efectos que aparenta tener en los dispositivos de los estudiantes.",
+            "Moción para que el Senado Académico implemente la modalidad Pass/Fail este semestre a todos los estudiantes del RUM para cualquier curso.",
+            "Mocion para pasar al proximo tema ha discutir en la agenda.",
+            "Moción para decretar un receso académico mañana."
         ],
-        "all amendments": [
-            {
-                "amendments": "Amendment for first motion"
-            },
-            {
-                "amendments": [        
-                    "First amendment for second motion",
-                    "Second amendment for second motion",
-                    "Third amendment for second motion"
-                ]
-            },
-            {
-                "amendments": "Amendment for third motion"
-            },
-            {
-                "amendments": [
-                    "First amendment for fourth motion",
-                    "Second amendment for fourth motion"
-                ]
-            }
+        "amendments": [
+            "Moción para suspender el uso de Response LockDown.",
+            "Moción para que el Senado Académico implemente la modalidad Pass/Fail este semestre.",
+            "Moción para que el Senado Académico implemente la modalidad Pass/Fail este semestre a los estudiantes subgraduados.",
+            "Moción para que el Senado Académico implemente la modalidad Pass/Fail este semestre a todos los estudiantes del RUM para cualquier curso.",
+            "Mocion pasar al proximo tema ha discutir en la agenda planeada para esta asamblea general."
         ],
-        "all results": [
-            {
-                "results": "Result of first motion"
-            },
-            {
-                "results": "Result of second motion"
-            },
-            {
-                "results": "Result of second motion"
-            },
-            {
-                "results": "Result of third motion"
-            },
-            {
-                "results": "Result of fourth motion"
-            }
-        ]
+        "results": [
+            "A favor",
+            "A favor",
+            "En contra",
+            "A favor"
+        ],
+        "quorum": "Si"
     },
-    "second assembly": {
-            "date": "Second date",
-            "all motions": [
-                {
-                    "motion": "First motion"
-                },
-                {
-                    "motion":"Second motion"
-                }
-            ],
-            "all amendments": [
-                {
-                    "amendments": [
-                        "Amendment for first motion"
-                    ]
-                },
-                {
-                    "amendments": [
-                        "First amendment for second motion",
-                        "Second amendment for second motion"
-                    ]
-                }
-            ],
-            "all results": [
-                {
-                    "results": "Result of first motion"
-                },
-                {
-                    "results": "Result of second motion"
-                }
-            ]
+    {
+        "date": "03/15/2020",
+        "motions": [
+            "Mocion para enmendar punto en la agenda sobre reforma universitaria.",
+            "Moción a que se extienda una hora adicional el receso académico  ya que faltan tres puntos en agenda"
+        ],
+        "amendments": [
+            "Eliminar punto sobre la reforma universitaria para tener tiempo adicional para los otros temas.",
+            "Se extienda dos horas adicionales el receso academico."
+        ],
+        "results": [
+            "A favor",
+            "A favor"
+        ],
+        "quorum": "Si"
     },
-    "third assembly": {
-        "date": "Third date",
-        "all motions": [
-            {
-                "motion": "First motion"
-            },
-            {
-                "motion":"Second motion"
-            },
-            {
-                "motion":"Third motion"
-            }
+    {
+        "date": "09/20/2019",
+        "motions": [
+            "Moción para enmendar la agenda.",
+            "Moción procesal para pasar al proximo punto.",
+            "Mocion que el decano de estudiantes excuse de sus clases a todos los estudiantes que decidan continuar en la asamblea. "
         ],
-        "all amendments": [
-            {
-                "amendments": [
-                    "Amendment for first motion"
-                ]
-            },
-            {
-                "amendments": [
-                    "Amendment for second motion"
-                ]
-            }
+        "amendments": [
+            "Eliminar el punto de los informes de los comités en la agenda.",
+            "Excusar a todos los estudiantes que decidan continuar en la asamblea."
         ],
-        "all results": [
-            {
-                "results": "Result of first motion"
-            },
-            {
-                "results": "Result of second motion"
-            },
-            {
-                "results": "Result of third motion"
-            }
-        ]
-
+        "results": [
+            "A favor",
+            "En contra",
+            "A favor"
+        ],
+        "quorum": "No"
+    },
+    {
+        "date": "08/16/2019",
+        "motions": [
+            "Moción para enmendar la agenda.",
+            "Moción para que el Senado Académico implemente la modalidad Pass/Fail este semestre a todos los estudiantes del RUM.",
+            "Mocion para pasar al proximo tema ha discutir en la agenda.",
+            "Moción para decretar un receso académico despues que se acabe la asamblea."
+        ],
+        "amendments": [
+            "Que el Senado Académico implemente la modalidad Pass/Fail este semestre a todos los estudiantes del RUM para cualquier curso.",
+            "Pasar al proximo tema ha discutir en la agenda planeada para esta asamblea general."
+        ],
+        "results": [
+            "A favor",
+            "A favor",
+            "En contra",
+            "A favor"
+        ],
+        "quorum": "Si"
     }
-}
+]
