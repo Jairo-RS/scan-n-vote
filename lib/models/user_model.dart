@@ -1,3 +1,4 @@
+//User model class used to map user json data
 class UserModel {
   final int id;
   final String userName;

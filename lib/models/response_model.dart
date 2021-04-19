@@ -1,3 +1,4 @@
+//Response model class that will be used to map http responses
 class ResponseModel {
   final int responseCode;
   final String responseMessage;

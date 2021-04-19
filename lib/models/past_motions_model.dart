@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+//Model class for past motions. Includes all http and json functionalities
 class PastMotions {
   final String pastMotion;
   dynamic allAmendments;

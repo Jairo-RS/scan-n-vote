@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+//Model class for past assemblies. Includes all http and json functionalities
 class PastAssemblies {
   final String date;
   final dynamic motions;
