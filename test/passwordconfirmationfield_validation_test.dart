@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scan_n_vote/screens/signup/components/signup_body.dart';
 
+//Unit test to verify password confirmation validations
 void main() {
   test('empty password confirmation returns error string', () {
     var result = PasswordConfirmationFieldValidator.validate('');
