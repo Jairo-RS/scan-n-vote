@@ -6,6 +6,7 @@ import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/models/voting_motions.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
+import 'package:http/http.dart' as http;
 
 class VotingBody extends StatefulWidget {
   VotingBody({Key key}) : super(key: key);
@@ -20,8 +21,18 @@ class VotingBodyState extends State<VotingBody> {
   List<VotingMotions> motion = const [];
 
   Future loadMotion() async {
-    String content =
-        await rootBundle.loadString('assets/json/current_voting_motion.json');
+    // Reading from local JSON file
+    //  String content =
+    //     await rootBundle.loadString('assets/json/current_voting_motion.json');
+    //  End Reading from local JSON file
+
+    // Reading from a remote server/file
+    Uri url = Uri.parse(
+        'https://run.mocky.io/v3/a58c1b7a-b688-4d22-8dec-6009a840b1f4');
+    http.Response response = await http.get(url);
+    String content = response.body;
+    // End reading from a remote server/file
+
     List collection = json.decode(content);
     List<VotingMotions> _motions =
         collection.map((json) => VotingMotions.fromJson(json)).toList();

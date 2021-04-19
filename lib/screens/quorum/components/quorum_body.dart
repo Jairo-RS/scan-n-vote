@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/quorum.dart';
+import 'package:http/http.dart' as http;
 
 class QuorumBody extends StatefulWidget {
   @override
@@ -15,13 +16,28 @@ class _QuorumBodyState extends State<QuorumBody> {
   List<QuorumCount> quorum = const [];
 
   Future loadQuorum() async {
-    String content =
-        await rootBundle.loadString('assets/json/quorum_count.json');
+    // Reading from local JSON file
+    // String content =
+    //     await rootBundle.loadString('assets/json/quorum_count.json');
+    //  End Reading from local JSON file
+
+    // Reading from a remote server/file
+    Uri url = Uri.parse(
+        'https://run.mocky.io/v3/4f0b1c90-4de3-4d96-b84c-74e1814b1be4');
+    http.Response response = await http.get(url);
+    String content = response.body;
+    // End reading from a remote server/file
+
     List collection = json.decode(content);
     List<QuorumCount> _quorum =
         collection.map((json) => QuorumCount.fromJson(json)).toList();
 
     //print(content);
+    //
+    //Link with associated json file
+    //https://run.mocky.io/v3/4f0b1c90-4de3-4d96-b84c-74e1814b1be4
+    //
+    //
 
     setState(() {
       quorum = _quorum;

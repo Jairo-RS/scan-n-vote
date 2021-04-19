@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/results.dart';
+import 'package:http/http.dart' as http;
 
 class ResultsBody extends StatefulWidget {
   @override
@@ -14,11 +15,23 @@ class ResultsBody extends StatefulWidget {
 class _ResultsBodyState extends State<ResultsBody> {
   List<VotingResults> results = const [];
   Future loadResults() async {
-    String content = await rootBundle.loadString('assets/json/results.json');
+    // Reading from local JSON file
+    //  String content = await rootBundle.loadString('assets/json/results.json');
+    //  End Reading from local JSON file
+
+    // Reading from a remote server/file
+    Uri url = Uri.parse(
+        'https://run.mocky.io/v3/210d6c65-c964-42ea-9a60-d4e6af3e1fee');
+    http.Response response = await http.get(url);
+    String content = response.body;
+    // End reading from a remote server/file
+
     List collection = json.decode(content);
     List<VotingResults> _results =
         collection.map((json) => VotingResults.fromJson(json)).toList();
+
     //print(content);
+
     setState(() {
       results = _results;
     });
