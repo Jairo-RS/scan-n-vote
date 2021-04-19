@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
-import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
+// import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
+// import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/bloc/login_bloc/login_bloc.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
@@ -9,6 +9,7 @@ import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/assemblies/assemblies_screen.dart';
 import 'package:scan_n_vote/screens/forgot_password/forgot_password_screen.dart';
 
+// Class that contains all widgets being displayed in login screen
 class LoginBody extends StatefulWidget {
   final UserRepository userRepository;
   LoginBody({Key key, @required this.userRepository})
@@ -23,6 +24,7 @@ class _LoginBodyState extends State<LoginBody> {
   final UserRepository userRepository;
   _LoginBodyState(this.userRepository);
 
+  //Variables
   var _formkey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -31,7 +33,7 @@ class _LoginBodyState extends State<LoginBody> {
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
-
+    //when login button is pressed stores credentials
     _onLoginButtonPressed() {
       BlocProvider.of<LoginBloc>(context).add(
         LoginButtonPressed(
@@ -40,6 +42,7 @@ class _LoginBodyState extends State<LoginBody> {
       );
     }
 
+    //Listens to Login events and states
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         // When login unsuccessful, display error message
@@ -71,6 +74,7 @@ class _LoginBodyState extends State<LoginBody> {
           );
         }
       },
+      // Builds widget in response to a new states
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           return SafeArea(
@@ -88,6 +92,7 @@ class _LoginBodyState extends State<LoginBody> {
                 iconTheme: IconThemeData(color: Colors.black),
               ),
               body: Backdrop(
+                //Makes screen scrollable
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -102,6 +107,7 @@ class _LoginBodyState extends State<LoginBody> {
                       SizedBox(
                         height: size.height * 0.05,
                       ),
+                      // Builds container with text fields
                       Form(
                         key: _formkey,
                         child: Column(
@@ -189,6 +195,7 @@ class _LoginBodyState extends State<LoginBody> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
+                          //Gives functionality to forgot password text
                           GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(
@@ -220,6 +227,7 @@ class _LoginBodyState extends State<LoginBody> {
     );
   }
 
+  //Custom widget that creates username textfield
   Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Username',
@@ -230,6 +238,7 @@ class _LoginBodyState extends State<LoginBody> {
         //onSaved: (value) => setState(() => username = value),
       );
 
+  //Custom widget that creates password textfield
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Password',
@@ -237,6 +246,6 @@ class _LoginBodyState extends State<LoginBody> {
         controller: _passwordController,
         // onSaved: (value) => setState(() => password = value),
         keyboardType: TextInputType.visiblePassword,
-        obscureText: false,
+        obscureText: true,
       );
 }
