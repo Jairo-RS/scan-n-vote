@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
-import 'package:scan_n_vote/models/voting_motions.dart';  
+import 'package:scan_n_vote/models/voting_model.dart';
+import 'package:scan_n_vote/models/voting_model_test.dart';
+import 'package:scan_n_vote/models/voting_motions.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
@@ -20,14 +22,30 @@ class VotingBody extends StatefulWidget {
 }
 
 class VotingBodyState extends State<VotingBody> {
-
   final UserRepository userRepository;
+
+  VotingModelTest _vote;
+
   VotingBodyState(this.userRepository);
-  
+
   //Used for the radio button values
   int voteValue; //0 = A favor, 1 = En Contra, 2 = Abstenido
 
   List<VotingMotions> motion = const [];
+
+  Future<VotingModelTest> addVote(String choice, String choiceDesc) async {
+    Uri url = Uri.parse('https://reqres.in/api/users');
+
+    final response =
+        await http.post(url, body: {"name": choice, "job": choiceDesc});
+
+    if (response.statusCode == 201) {
+      final String responseString = response.body;
+
+      return votingModelTestFromJson(responseString);
+    } else
+      return null;
+  }
 
   Future loadMotion() async {
     // Reading from local JSON file
@@ -218,7 +236,29 @@ class VotingBodyState extends State<VotingBody> {
                                     child: Text("No")),
                                 TextButton(
                                     //Yes Button
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      final String choice = "0";
+                                      final String choiceDesc = "voto a favor";
+
+                                      final VotingModelTest vote =
+                                          await addVote(choice, choiceDesc);
+
+                                      setState(() {
+                                        _vote = vote;
+                                      });
+
+                                      if (_vote == null) {
+                                        print("no user");
+                                      } else {
+                                        print(
+                                            "The voter selected: ${_vote.name}\n");
+                                        print(
+                                            "Therefore user voted for: ${_vote.job}\n");
+                                        print(
+                                            "Created at time: ${_vote.createdAt.toIso8601String()}");
+                                      }
+
+                                      //go to next screen
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
