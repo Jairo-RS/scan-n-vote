@@ -1,6 +1,8 @@
+// import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
-import 'package:scan_n_vote/constants.dart';
+import 'package:scan_n_vote/models/past_assemblies_model.dart';
 
 class PastAssembliesBody extends StatefulWidget {
   @override
@@ -8,113 +10,17 @@ class PastAssembliesBody extends StatefulWidget {
 }
 
 class _PastAssembliesBodyState extends State<PastAssembliesBody> {
-  //This list is used for early testing (not final)
-  var assemblies = const [
-    {
-      "date": "First date",
-      "motions": [
-        [
-          "First motion",
-        ],
-        [
-          "Second motion",
-        ],
-        [
-          "Third motion",
-        ],
-        [
-          "Fourth motion",
-        ],
-      ],
-      "amendments": [
-        [
-          "Amendment for first motion",
-        ],
-        [
-          "First amendment for second motion",
-          "Second amendment for second motion",
-          "Third amendment for second motion",
-        ],
-        [
-          "Amendment for third motion",
-        ],
-        [
-          "First amendment for fourth motion",
-          "Second amendment for fourth motion"
-        ],
-      ],
-      "results": [
-        [
-          "Result of first motion",
-        ],
-        [
-          "Result of second motion",
-        ],
-        [
-          "Result of third motion",
-        ],
-        [
-          "Result of fourth motion",
-        ],
-      ],
-    },
-    {
-      "date": "Second date",
-      "motions": [
-        "First motion",
-        "Second motion",
-      ],
-      "amendments": [
-        [
-          "Amendment for first motion",
-        ],
-        [
-          "First amendment for second motion",
-          "Second amendment for second motion",
-        ],
-      ],
-      "results": [
-        [
-          "Result of first motion",
-        ],
-        [
-          "Result of second motion",
-        ],
-      ],
-    },
-    {
-      "date": "Third date",
-      "motions": [
-        "First motion",
-        "Second motion",
-        "Third motion",
-      ],
-      "amendments": [
-        [
-          "Amendment for first motion",
-        ],
-        [
-          "Amendment for second motion",
-        ],
-      ],
-      "results": [
-        [
-          "Result of first motion",
-        ],
-        [
-          "Result of second motion",
-        ],
-        [
-          "Result of third motion",
-        ],
-      ],
-    },
-  ];
+  Future<List<PastAssemblies>> pastAssemblies;
+  var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    pastAssemblies = PastAssemblies.browsePastAssemblies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    //Used for total height and width of the screen
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -135,96 +41,142 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
           iconTheme: IconThemeData(color: Colors.black),
         ),
         body: Backdrop(
-          child: ListView.separated(
-            itemCount: assemblies.length,
-            separatorBuilder: (BuildContext context, int index) => Divider(),
-            itemBuilder: (BuildContext context, int index) {
-              var assembly = assemblies[index];
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                margin: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  border: Border.all(color: Theme.of(context).primaryColor),
-                ),
-                child: ExpansionTile(
-                  title: Text(
-                    "${index + 1}. " + assembly["date"],
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  children: [
-                    // Container(
-                    //   margin: EdgeInsets.all(16),
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.white,
-                    //     borderRadius: BorderRadius.all(Radius.circular(8)),
-                    //     border: Border.all(color: Theme.of(context).primaryColor),
-                    //   ),
-                    //   child:
-                    ExpansionTile(
-                      // key: PageStorageKey(assembly["motions"]),
-                      title: Text(
-                        "Motions",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+          child: Center(
+            child: FutureBuilder(
+              future: pastAssemblies,
+              // ignore: missing_return
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                  case ConnectionState.waiting:
+                  case ConnectionState.active:
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case ConnectionState.done:
+                    if (snapshot.hasError) {
+                      return Text(
+                        "There was an error: ${snapshot.error}",
+                      );
+                    }
+                    //snapshot.data holds the results of the future
+                    var pastAssemblies = snapshot.data;
+                    return RefreshIndicator(
+                      key: _refreshIndicatorKey,
+                      onRefresh: () async {
+                        return refreshPastAssemblies();
+                      },
+                      child: ListView.separated(
+                        itemCount: pastAssemblies.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(),
+                        itemBuilder: (BuildContext context, int index) {
+                          PastAssemblies assembly = pastAssemblies[index];
+                          return Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            margin: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                              border: Border.all(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            child: ExpansionTile(
+                              title: Text(
+                                "Date: " + assembly.date,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              children: <Widget>[
+                                ExpansionTile(
+                                  title: Text(
+                                    "Motions",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  children: [
+                                    Text(
+                                      assembly.motions.toString(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // ),
+                                ExpansionTile(
+                                  title: Text(
+                                    "Amendments",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  children: [
+                                    Text(
+                                      assembly.amendments.toString(),
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                ),
+                                ExpansionTile(
+                                  title: Text(
+                                    "Results",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  children: [
+                                    Text(
+                                      assembly.results.toString(),
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, top: 20, bottom: 20),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Quorum: " + assembly.quorum,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                      children: [
-                        Text(assembly["motions"].toString()),
-                      ],
-                    ),
-                    // ),
-                    ExpansionTile(
-                      title: Text(
-                        "Amendments",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      children: [
-                        Text(assembly["amendments"].toString()),
-                      ],
-                    ),
-                    ExpansionTile(
-                      title: Text(
-                        "Results",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      children: [
-                        Text(assembly["results"].toString()),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, top: 20, bottom: 20),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Quorum: ",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-
-            // children:
-            //     basicTiles.map((tile) => BasicTileWidget(tile: tile)).toList(),
+                    );
+                }
+              },
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> refreshPastAssemblies() async {
+    _refreshIndicatorKey.currentState?.show();
+    await Future.delayed(Duration(seconds: 1));
+
+    Future<List<PastAssemblies>> _pastAssemblies =
+        PastAssemblies.browsePastAssemblies();
+    setState(() {
+      pastAssemblies = _pastAssemblies;
+    });
   }
 }
 

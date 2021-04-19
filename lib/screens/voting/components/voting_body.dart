@@ -1,14 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/models/voting_model.dart';
 import 'package:scan_n_vote/models/voting_model_test.dart';
 import 'package:scan_n_vote/models/voting_motions.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
-import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
 import 'package:http/http.dart' as http;
 

@@ -1,30 +1,37 @@
 [
     {
-        "past motion": "First motion",
+        "past motion": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm.",
+        "amendments": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm que garantice a toda la comunidad incorporarse de manera libre al paro.",
+        "result": " En contra"
+    },
+    {
+        "past motion": "Que se desembolse de inmediato las ayudas que fueron prometidas a los estudiantes.",
         "amendments": [
-          "This is amendment",
-          "This is second amendment",
-          "This is third amendment"
+          "Que se desembolse de inmediato la ayudas que fueron prometidas a los estudiantes y a su vez transparencia...",
+          "Que se desembolse de inmediato la ayudas que fueron prometidas a los estudiantes y a su vez el rector demuestre transparencia sobre el proceso para obtener la ayuda."
         ],
         "result": "A favor"
     },
     {
-        "past motion": "Second motion",
-        "amendments": "This is its amendment",
+        "past motion": "Moción para que el rector del recinto realice una conferencia en la próxima semana.",
         "result": "En contra"
     },
     {
-        "past motion": "Third motion",
-        "amendments": "The amendments for it",
+        "past motion": "Crear un sistema de cero tolerancia al acoso sexual dentro y fuera del recinto.",
+        "amendments": "Moción crear un sistema de acompañamiento entre estudiantes para minimizar el acoso callejero por las alrededores del recinto.",
         "result": "A favor"
     },
     {
-        "past motion": "Fourth motion",
-        "amendments": "Its amendment",
-        "result": "En contra"
+        "past motion": "Que se implemente una política práctica que atienda las sanciones administrativas que serán implementadas a aquellos profesores y empleados agresores sexuales",
+        "result": "A favor"
     },
     {
-        "past motion": "Fifth motion",
-        "result": " A favor"
+        "past motion": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm.",
+        "amendments": "Solicitar a la administración del RUM que otorgue un receso académico y administrativo este próximo viernes a las 4pm que garantice a toda la comunidad incorporarse de manera libre al paro.",
+        "result": " En contra"
+    },
+    {
+        "past motion": "Que se implemente una política práctica que atienda las sanciones administrativas que serán implementadas a aquellos profesores y empleados agresores sexuales",
+        "result": "A favor"
     }
 ]

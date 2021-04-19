@@ -6,15 +6,11 @@ import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/constants.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
-import 'package:scan_n_vote/screens/agenda/agenda_screen.dart';
 import 'package:scan_n_vote/screens/assemblies/assemblies_screen.dart';
-import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
-import 'package:scan_n_vote/screens/motions/motions_screen.dart';
-import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
-import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 import 'constants.dart';
 
+// Class that helps display the transitions, events, and errors
 class SimpleBlocDelegate extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object event) {
@@ -35,6 +31,7 @@ class SimpleBlocDelegate extends BlocObserver {
   }
 }
 
+//Main class that starts the application
 void main() {
   Bloc.observer = SimpleBlocDelegate();
   final userRepository = UserRepository();
@@ -49,6 +46,7 @@ void main() {
   );
 }
 
+//App class displays the application when it is started
 class MyApp extends StatelessWidget {
   final UserRepository userRepository;
 

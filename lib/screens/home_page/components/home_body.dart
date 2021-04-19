@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scan_n_vote/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
@@ -133,13 +136,19 @@ class HomeBody extends StatelessWidget {
                                   TextButton(
                                       //Yes Button
                                       onPressed: () {
+                                        BlocProvider.of<AuthenticationBloc>(
+                                                context)
+                                            .add(LoggedOut());
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) {
                                               //enviar logout a backend
-                                              ////
-                                              ///
+                                              BlocProvider.of<
+                                                          AuthenticationBloc>(
+                                                      context)
+                                                  .add(LoggedOut());
                                               return InitialScreen(
                                                 userRepository: userRepository,
                                               );

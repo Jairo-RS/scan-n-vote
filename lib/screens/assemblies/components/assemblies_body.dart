@@ -43,6 +43,7 @@ class _AssembliesBodyState extends State<AssembliesBody> {
           ),
           TextButton(
             onPressed: () {
+              BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
               return Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -109,8 +110,7 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                       Align(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          'Current Assembly\n'
-                          'Assembly Date: \n',
+                          'Current Assembly\n',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
