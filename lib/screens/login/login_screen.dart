@@ -5,6 +5,7 @@ import 'package:scan_n_vote/bloc/login_bloc/login_bloc.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/login/components/login_body.dart';
 
+//Class that respresent the initial screen when application starts
 class LoginScreen extends StatelessWidget {
   final UserRepository userRepository;
 
@@ -15,6 +16,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //Provides login bloc to test login states in LoginBody class
       body: BlocProvider(
         create: (context) {
           return LoginBloc(
