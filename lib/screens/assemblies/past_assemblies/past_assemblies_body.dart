@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/past_assemblies_model.dart';
 
+//Class contains all the widgets that will be displayed in PastAssemblies screen
 class PastAssembliesBody extends StatefulWidget {
   @override
   _PastAssembliesBodyState createState() => _PastAssembliesBodyState();
@@ -42,6 +43,7 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
         ),
         body: Backdrop(
           child: Center(
+            //Widget that builds itself based on latest snapshot (obtained state)
             child: FutureBuilder(
               future: pastAssemblies,
               // ignore: missing_return
@@ -54,6 +56,7 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                       child: CircularProgressIndicator(),
                     );
                   case ConnectionState.done:
+                    //If receive error from latest snapshot, display the error
                     if (snapshot.hasError) {
                       return Text(
                         "There was an error: ${snapshot.error}",
@@ -61,15 +64,17 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                     }
                     //snapshot.data holds the results of the future
                     var pastAssemblies = snapshot.data;
+                    //RefreshIndicator: Pull to refresh feature
                     return RefreshIndicator(
                       key: _refreshIndicatorKey,
                       onRefresh: () async {
                         return refreshPastAssemblies();
                       },
+                      //Creates a list of all past assemblies
                       child: ListView.separated(
                         itemCount: pastAssemblies.length,
                         separatorBuilder: (BuildContext context, int index) =>
-                            Divider(),
+                            Divider(), //Separates each item on the list
                         itemBuilder: (BuildContext context, int index) {
                           PastAssemblies assembly = pastAssemblies[index];
                           return Container(
@@ -82,6 +87,7 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                               border: Border.all(
                                   color: Theme.of(context).primaryColor),
                             ),
+                            //Dropdown feature for each past assembly
                             child: ExpansionTile(
                               title: Text(
                                 "Date: " + assembly.date,
@@ -168,6 +174,7 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
     );
   }
 
+  //Method that helps refresh the screen. Builds a new state
   Future<void> refreshPastAssemblies() async {
     _refreshIndicatorKey.currentState?.show();
     await Future.delayed(Duration(seconds: 1));
@@ -179,39 +186,3 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
     });
   }
 }
-
-// class BasicTileWidget extends StatelessWidget {
-//   final BasicTile tile;
-
-//   const BasicTileWidget({
-//     Key key,
-//     @required this.tile,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final title = tile.title;
-//     final tiles = tile.tiles;
-
-//     if (tiles.isEmpty) {
-//       return ListTile(
-//         title: Text(title),
-//         onTap: () {},
-//       );
-//     } else {
-//       return Container(
-//         margin: EdgeInsets.all(16),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.all(Radius.circular(8)),
-//           border: Border.all(color: Theme.of(context).primaryColor),
-//         ),
-//         child: ExpansionTile(
-//           key: PageStorageKey(title),
-//           title: Text(title),
-//           children: tiles.map((tile) => BasicTileWidget(tile: tile)).toList(),
-//         ),
-//       );
-//     }
-//   }
-// }

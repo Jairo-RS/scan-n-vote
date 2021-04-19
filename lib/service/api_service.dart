@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:scan_n_vote/constants.dart';
 
+//Class will be used to receive request from API
 class APIService<T> {
   final String url;
   final dynamic body;
@@ -12,9 +13,10 @@ class APIService<T> {
 }
 
 class APIWeb {
-  //get method
+  //GET method
   Future<T> getRequest<T>(APIService<T> resource) async {
     final response = await http.get(Uri.parse(userUrl + resource.url));
+    // If OK response, parses response. If not OK, display statuscode exception
     if (response.statusCode == 200) {
       return resource.parse(response);
     } else {
@@ -22,7 +24,7 @@ class APIWeb {
     }
   }
 
-  //post method
+  //POST method
   Future<T> postRequest<T>(APIService<T> resource) async {
     Map<String, String> header = {"Content-Type": "application/json"};
 
@@ -31,6 +33,7 @@ class APIWeb {
       body: jsonEncode(resource.body),
       headers: header,
     );
+    // If OK response, parses response. If not OK, display statuscode exception
     if (response.statusCode == 200) {
       return resource.parse(response);
     } else {
