@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numerus/numerus.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/agenda_entry.dart';
 
@@ -99,9 +100,13 @@ class _AgendaBodyState extends State<AgendaBody> {
                               itemBuilder: (BuildContext context, int index) {
                                 AgendaEntry agenda = entries[index];
                                 // return Text('$index Test');
+                                int indexPlusOne = index + 1; //Start at one
+                                //Translating index value to roman numerals
+                                var romanNumerals =
+                                    indexPlusOne.toRomanNumeralString();
                                 return ListTile(
                                   title: Text(
-                                    agenda.entry,
+                                    "$romanNumerals. " + agenda.entry,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,

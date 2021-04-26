@@ -33,6 +33,7 @@ class _LoginBodyState extends State<LoginBody> {
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
+
     //when login button is pressed stores credentials
     _onLoginButtonPressed() {
       BlocProvider.of<LoginBloc>(context).add(
@@ -45,12 +46,12 @@ class _LoginBodyState extends State<LoginBody> {
     //Listens to Login events and states
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        // When login unsuccessful, display error message
+        // When login is unsuccessful, display error message
         if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                "Login failed",
+                "Invalid credentials",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -60,7 +61,8 @@ class _LoginBodyState extends State<LoginBody> {
             ),
           );
         }
-        // When login successful transition to next screen
+
+        // When login is successful transition to next screen
         if (state is LoginSuccess) {
           Navigator.push(
             context,
@@ -74,6 +76,7 @@ class _LoginBodyState extends State<LoginBody> {
           );
         }
       },
+
       // Builds widget in response to a new states
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
@@ -231,7 +234,6 @@ class _LoginBodyState extends State<LoginBody> {
   Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Username',
-          //hintText: "Username",
         ),
         controller: _usernameController,
         // maxLength: 25,

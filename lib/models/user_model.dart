@@ -1,4 +1,4 @@
-//User model class used to map user json data
+//User Signup model class used to map user json data
 class UserModel {
   final int id;
   final String userName;
@@ -20,7 +20,7 @@ class UserModel {
       id: json["id"],
       userName: json["username"],
       studentNumber: json["student_id"],
-      password: json["password"],
+      password: json["password1"],
       passwordConfirmation: json["password2"],
     );
     return data;

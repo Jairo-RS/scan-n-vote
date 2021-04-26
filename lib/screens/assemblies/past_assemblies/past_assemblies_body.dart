@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/past_assemblies_model.dart';
+import 'package:scan_n_vote/screens/assemblies/past_assemblies/past_assemblies_details.dart';
 
 //Class contains all the widgets that will be displayed in PastAssemblies screen
 class PastAssembliesBody extends StatefulWidget {
@@ -79,7 +80,7 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                           PastAssemblies assembly = pastAssemblies[index];
                           return Container(
                             padding: EdgeInsets.symmetric(horizontal: 15),
-                            margin: EdgeInsets.all(16),
+                            margin: EdgeInsets.all(15),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius:
@@ -88,7 +89,7 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                                   color: Theme.of(context).primaryColor),
                             ),
                             //Dropdown feature for each past assembly
-                            child: ExpansionTile(
+                            child: ListTile(
                               title: Text(
                                 "Date: " + assembly.date,
                                 style: TextStyle(
@@ -96,70 +97,83 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                                   fontSize: 18,
                                 ),
                               ),
-                              children: <Widget>[
-                                ExpansionTile(
-                                  title: Text(
-                                    "Motions",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                              trailing: IconButton(
+                                icon: Icon(Icons.arrow_forward),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PastAssembliesDetailsScreen(
+                                              pastAssembly: assembly),
                                     ),
-                                  ),
-                                  children: [
-                                    Text(
-                                      assembly.motions.toString(),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // ),
-                                ExpansionTile(
-                                  title: Text(
-                                    "Amendments",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  children: [
-                                    Text(
-                                      assembly.amendments.toString(),
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                                ExpansionTile(
-                                  title: Text(
-                                    "Results",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  children: [
-                                    Text(
-                                      assembly.results.toString(),
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 15, top: 20, bottom: 20),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Quorum: " + assembly.quorum,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                  );
+                                },
+                              ),
+                              // children: <Widget>[
+                              //   ExpansionTile(
+                              //     title: Text(
+                              //       "Motions",
+                              //       style: TextStyle(
+                              //         fontWeight: FontWeight.bold,
+                              //         fontSize: 18,
+                              //       ),
+                              //     ),
+                              //     children: [
+                              //       Text(
+                              //         assembly.motions.toString(),
+                              //         style: TextStyle(
+                              //           fontSize: 18,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              //   // ),
+                              //   ExpansionTile(
+                              //     title: Text(
+                              //       "Amendments",
+                              //       style: TextStyle(
+                              //         fontWeight: FontWeight.bold,
+                              //         fontSize: 18,
+                              //       ),
+                              //     ),
+                              //     children: [
+                              //       Text(
+                              //         assembly.amendments.toString(),
+                              //         style: TextStyle(fontSize: 18),
+                              //       ),
+                              //     ],
+                              //   ),
+                              //   ExpansionTile(
+                              //     title: Text(
+                              //       "Results",
+                              //       style: TextStyle(
+                              //         fontWeight: FontWeight.bold,
+                              //         fontSize: 18,
+                              //       ),
+                              //     ),
+                              //     children: [
+                              //       Text(
+                              //         assembly.results.toString(),
+                              //         style: TextStyle(fontSize: 18),
+                              //       ),
+                              //     ],
+                              //   ),
+                              //   Padding(
+                              //     padding: EdgeInsets.only(
+                              //         left: 15, top: 20, bottom: 20),
+                              //     child: Align(
+                              //       alignment: Alignment.centerLeft,
+                              //       child: Text(
+                              //         "Quorum: " + assembly.quorum,
+                              //         style: TextStyle(
+                              //           fontSize: 18,
+                              //           fontWeight: FontWeight.bold,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ],
                             ),
                           );
                         },

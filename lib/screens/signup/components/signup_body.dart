@@ -74,10 +74,11 @@ class _SignUpBodyState extends State<SignUpBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
+
                 //Widget that creates a container for all form fields
                 Form(
                   key: _formkey,
-                  autovalidateMode: AutovalidateMode.always,
+                  // autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: [
                       TextFieldContainer(
@@ -210,7 +211,8 @@ class _SignUpBodyState extends State<SignUpBody> {
         //   return null;
         // }
         // },
-        // maxLength: 30,
+        maxLength: 16,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in username field
         onSaved: (value) => setState(() => username = value),
       );
@@ -252,6 +254,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         // }
         // },
         keyboardType: TextInputType.number,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in student number field
         onSaved: (value) => setState(() => studentNumber = value),
       );
@@ -288,6 +291,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         // },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in password field
         onSaved: (value) => setState(() => password = value),
       );
@@ -332,6 +336,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        autovalidateMode: AutovalidateMode.disabled,
         //Testing: save values in confirm password field
         onSaved: (value) => setState(() => passwordConfirmation = value),
       );
@@ -343,11 +348,11 @@ class UsernameFieldValidator {
     if (value.isEmpty) {
       return 'Please enter your username';
     }
-    if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
-      return 'Invalid Special Character: Acceptable: @/./_/-/+';
-    }
-    if (value.length < 6) {
-      return 'Enter at least 6 characters';
+    // if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
+    //   return 'Invalid Special Character: Acceptable: @/./_/-/+';
+    // }
+    if (value.length < 8 || value.length > 16) {
+      return 'Must be between 8 to 16 characters long';
     } else {
       return null;
     }
@@ -400,8 +405,8 @@ class PasswordFieldValidator {
     if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
       return 'Must contain at least one special character';
     }
-    if (value.length < 8 || value.length > 16) {
-      return 'Must be between 8 to 16 characters long';
+    if (value.length < 8 || value.length > 24) {
+      return 'Must be between 8 to 24 characters long';
     } else {
       return null;
     }
@@ -427,8 +432,8 @@ class PasswordConfirmationFieldValidator {
     if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
       return 'Must contain at least one special character';
     }
-    if (value.length < 8 || value.length > 16) {
-      return 'Must be between 8 to 16 characters long';
+    if (value.length < 8 || value.length > 24) {
+      return 'Must be between 8 to 24 characters long';
     }
   }
 }
