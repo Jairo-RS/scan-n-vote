@@ -1,3 +1,4 @@
+//OLD MODEL CLASS (Will be removed)
 class QuorumCount {
   String currentQuorum;
   final String quorumNeeded;

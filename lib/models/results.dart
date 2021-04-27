@@ -1,3 +1,4 @@
+//OLD MODEL CLASS (Will probably be removed)
 class VotingResults {
   final String aFavor;
   final String abstenido;

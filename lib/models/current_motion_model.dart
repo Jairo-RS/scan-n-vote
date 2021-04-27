@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+//OLD MODEL CLASS (Will be removed)
 //Model class for current motion. Includes all http and json functionalities
 class CurrentMotion {
   final String motion;
