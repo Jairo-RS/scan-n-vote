@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 //Model class for assemblies. Includes all http and json functionalities
@@ -22,8 +24,25 @@ class Assemblies {
   }
 
   //GET Request
-  Future<Assemblies> fetchAssemblies() async {
-    //Need to finish implementation when url is available
-    return null;
+  static Future<List<Assemblies>> fetchAssemblies() async {
+    var url = Uri.parse(
+        'https://scannvote.herokuapp.com/api/assemblies/?format=json');
+
+    http.Response response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    String content = response.body;
+    List jsonReponse = json.decode(content);
+
+    // Verifying if http request was successfully completed
+    if (response.statusCode == 200) {
+      return jsonReponse.map((job) => new Assemblies.fromJson(job)).toList();
+    } else {
+      // If not successful, display error code
+      throw Exception(response.statusCode);
+    }
   }
 }

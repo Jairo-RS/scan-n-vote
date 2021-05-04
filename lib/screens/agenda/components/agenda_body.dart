@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:numerus/numerus.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
-import 'package:scan_n_vote/models/agenda_entry.dart';
+import 'package:scan_n_vote/models/assemblies_model.dart';
 
 class AgendaBody extends StatefulWidget {
   @override
@@ -9,12 +9,15 @@ class AgendaBody extends StatefulWidget {
 }
 
 class _AgendaBodyState extends State<AgendaBody> {
-  Future<List<AgendaEntry>> agendaEntries;
+  Future<List<Assemblies>> futureAssemblies;
+  // Future<List<AgendaEntry>> agendaEntries;
   var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
+  @override
   void initState() {
     super.initState();
-    agendaEntries = AgendaEntry.browse();
+    // agendaEntries = AgendaEntry.browse();
+    futureAssemblies = Assemblies.fetchAssemblies();
     // refreshAgenda();
   }
 
@@ -70,55 +73,104 @@ class _AgendaBodyState extends State<AgendaBody> {
                       )
                     ],
                   ),
-                  child: FutureBuilder(
-                    future: agendaEntries,
-                    // ignore: missing_return
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.none:
-                        case ConnectionState.waiting:
-                        case ConnectionState.active:
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        case ConnectionState.done:
-                          if (snapshot.hasError) {
-                            return Text(
-                              "There was an error: ${snapshot.error}",
+                  child: Center(
+                    child: FutureBuilder(
+                      future: futureAssemblies,
+                      // ignore: missing_return
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                          case ConnectionState.waiting:
+                          case ConnectionState.active:
+                            return Center(
+                              child: CircularProgressIndicator(),
                             );
-                          }
-                          //snapshot.data holds the results of the future
-                          var entries = snapshot.data;
-                          return RefreshIndicator(
-                            key: _refreshIndicatorKey,
-                            onRefresh: () async {
-                              return refreshAgenda();
-                            },
-                            child: ListView.separated(
-                              itemCount: entries.length,
-                              separatorBuilder: (context, index) => Divider(),
-                              itemBuilder: (BuildContext context, int index) {
-                                AgendaEntry agenda = entries[index];
-                                // return Text('$index Test');
-                                int indexPlusOne = index + 1; //Start at one
-                                //Translating index value to roman numerals
-                                var romanNumerals =
-                                    indexPlusOne.toRomanNumeralString();
-                                return ListTile(
-                                  title: Text(
-                                    "$romanNumerals. " + agenda.entry,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                );
+                          case ConnectionState.done:
+                            if (snapshot.hasError) {
+                              return Text(
+                                "There was an error: ${snapshot.error}",
+                              );
+                            }
+
+                            //snapshot.data holds the results of the future
+                            var agenda = snapshot.data;
+                            return RefreshIndicator(
+                              key: _refreshIndicatorKey,
+                              onRefresh: () async {
+                                return refreshAgenda();
                               },
-                            ),
-                          );
-                      }
-                    },
+                              child: ListView.separated(
+                                itemCount: agenda.length,
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  Assemblies assemblies = agenda[index];
+                                  if (assemblies.archived == false) {
+                                    return Text(
+                                      assemblies.agenda,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                        }
+                      },
+                    ),
                   ),
+                  // child: FutureBuilder(
+                  //   future: agendaEntries,
+                  //   // ignore: missing_return
+                  //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  //     switch (snapshot.connectionState) {
+                  //       case ConnectionState.none:
+                  //       case ConnectionState.waiting:
+                  //       case ConnectionState.active:
+                  //         return Center(
+                  //           child: CircularProgressIndicator(),
+                  //         );
+                  //       case ConnectionState.done:
+                  //         if (snapshot.hasError) {
+                  //           return Text(
+                  //             "There was an error: ${snapshot.error}",
+                  //           );
+                  //         }
+                  //         //snapshot.data holds the results of the future
+                  //         var entries = snapshot.data;
+                  //         return RefreshIndicator(
+                  //           key: _refreshIndicatorKey,
+                  //           onRefresh: () async {
+                  //             return refreshAgenda();
+                  //           },
+                  //           child: ListView.separated(
+                  //             itemCount: entries.length,
+                  //             separatorBuilder: (context, index) => Divider(),
+                  //             itemBuilder: (BuildContext context, int index) {
+                  //               AgendaEntry agenda = entries[index];
+                  //               // return Text('$index Test');
+                  //               int indexPlusOne = index + 1; //Start at one
+                  //               //Translating index value to roman numerals
+                  //               var romanNumerals =
+                  //                   indexPlusOne.toRomanNumeralString();
+                  //               return ListTile(
+                  //                 title: Text(
+                  //                   "$romanNumerals. " + agenda.entry,
+                  //                   style: TextStyle(
+                  //                     fontWeight: FontWeight.bold,
+                  //                     fontSize: 18,
+                  //                   ),
+                  //                 ),
+                  //               );
+                  //             },
+                  //           ),
+                  //         );
+                  //     }
+                  //   },
+                  // ),
                 ),
               ],
             ),
@@ -132,9 +184,11 @@ class _AgendaBodyState extends State<AgendaBody> {
     _refreshIndicatorKey.currentState?.show();
     await Future.delayed(Duration(seconds: 1));
 
-    Future<List<AgendaEntry>> _agendaEntries = AgendaEntry.browse();
+    // Future<List<AgendaEntry>> _agendaEntries = AgendaEntry.browse();
+    Future<List<Assemblies>> _assemblies = Assemblies.fetchAssemblies();
     setState(() {
-      agendaEntries = _agendaEntries;
+      // agendaEntries = _agendaEntries;
+      futureAssemblies = _assemblies;
     });
   }
 }

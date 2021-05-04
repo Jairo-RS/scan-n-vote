@@ -38,7 +38,7 @@ class _LoginBodyState extends State<LoginBody> {
     _onLoginButtonPressed() {
       BlocProvider.of<LoginBloc>(context).add(
         LoginButtonPressed(
-            email: _usernameController.text,
+            username: _usernameController.text,
             password: _passwordController.text),
       );
     }

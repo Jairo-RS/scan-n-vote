@@ -1,8 +1,10 @@
+import 'dart:convert' show utf8;
+
 import 'package:flutter/material.dart';
-import 'package:scan_n_vote/models/past_assemblies_model.dart';
+import 'package:scan_n_vote/models/assemblies_model.dart';
 
 class PastAssembliesDetailsScreen extends StatelessWidget {
-  final PastAssemblies pastAssembly;
+  final Assemblies pastAssembly;
 
   const PastAssembliesDetailsScreen({Key key, @required this.pastAssembly})
       : super(key: key);
@@ -14,7 +16,7 @@ class PastAssembliesDetailsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            pastAssembly.date,
+            pastAssembly.assemblyName,
             style: TextStyle(fontSize: 26),
           ),
           centerTitle: true,
@@ -25,7 +27,7 @@ class PastAssembliesDetailsScreen extends StatelessWidget {
                 text: "Motions",
               ),
               Tab(
-                text: "Amendments",
+                text: "Agenda",
               ),
               Tab(
                 text: "Quorum",
@@ -39,10 +41,23 @@ class PastAssembliesDetailsScreen extends StatelessWidget {
               child: Text('Test: Motions'),
             ),
             Center(
-              child: Text('Test: Amendments'),
+              child: Text(
+                "Agenda:\n\n" + utf8.decode(utf8.encode(pastAssembly.agenda)),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             Center(
-              child: Text('Test: Quorum'),
+              child: Text(
+                "The quorum for this assembly was: " +
+                    pastAssembly.quorum.toString(),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

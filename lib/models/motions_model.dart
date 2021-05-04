@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:scan_n_vote/models/original_motion_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,8 +49,20 @@ class Motions {
   }
 
   //GET Request
-  Future<Motions> fetchMotions() async {
-    //Need to finish implementation when url is available
-    return null;
+  Future<List<Motions>> fetchMotions() async {
+    var url =
+        Uri.parse('https://scannvote.herokuapp.com/api/motions/?format=json');
+
+    http.Response response = await http.get(url);
+    String content = response.body;
+    List jsonReponse = json.decode(content);
+
+    // Verifying if http request was successfully completed
+    if (response.statusCode == 200) {
+      return jsonReponse.map((job) => new Motions.fromJson(job)).toList();
+    } else {
+      // If not successful, display error code
+      throw Exception(response.statusCode);
+    }
   }
 }

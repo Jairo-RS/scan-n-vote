@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/past_assemblies_model.dart';
 import 'package:scan_n_vote/screens/assemblies/past_assemblies/past_assemblies_details.dart';
 
@@ -12,13 +13,13 @@ class PastAssembliesBody extends StatefulWidget {
 }
 
 class _PastAssembliesBodyState extends State<PastAssembliesBody> {
-  Future<List<PastAssemblies>> pastAssemblies;
+  Future<List<Assemblies>> pastAssemblies;
   var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    pastAssemblies = PastAssemblies.browsePastAssemblies();
+    pastAssemblies = Assemblies.fetchAssemblies();
   }
 
   @override
@@ -77,105 +78,143 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                         separatorBuilder: (BuildContext context, int index) =>
                             Divider(), //Separates each item on the list
                         itemBuilder: (BuildContext context, int index) {
-                          PastAssemblies assembly = pastAssemblies[index];
-                          return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            margin: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                              border: Border.all(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            //Dropdown feature for each past assembly
-                            child: ListTile(
-                              title: Text(
-                                "Date: " + assembly.date,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                          Assemblies assembly = pastAssemblies[index];
+                          if (assembly.archived == true) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              margin: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                border: Border.all(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              //Dropdown feature for each past assembly
+                              child: ListTile(
+                                title: Text(
+                                  assembly.assemblyName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.arrow_forward),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PastAssembliesDetailsScreen(
+                                                pastAssembly: assembly),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.arrow_forward),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          PastAssembliesDetailsScreen(
-                                              pastAssembly: assembly),
-                                    ),
-                                  );
-                                },
-                              ),
-                              // children: <Widget>[
-                              //   ExpansionTile(
-                              //     title: Text(
-                              //       "Motions",
-                              //       style: TextStyle(
-                              //         fontWeight: FontWeight.bold,
-                              //         fontSize: 18,
-                              //       ),
-                              //     ),
-                              //     children: [
-                              //       Text(
-                              //         assembly.motions.toString(),
-                              //         style: TextStyle(
-                              //           fontSize: 18,
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              //   // ),
-                              //   ExpansionTile(
-                              //     title: Text(
-                              //       "Amendments",
-                              //       style: TextStyle(
-                              //         fontWeight: FontWeight.bold,
-                              //         fontSize: 18,
-                              //       ),
-                              //     ),
-                              //     children: [
-                              //       Text(
-                              //         assembly.amendments.toString(),
-                              //         style: TextStyle(fontSize: 18),
-                              //       ),
-                              //     ],
-                              //   ),
-                              //   ExpansionTile(
-                              //     title: Text(
-                              //       "Results",
-                              //       style: TextStyle(
-                              //         fontWeight: FontWeight.bold,
-                              //         fontSize: 18,
-                              //       ),
-                              //     ),
-                              //     children: [
-                              //       Text(
-                              //         assembly.results.toString(),
-                              //         style: TextStyle(fontSize: 18),
-                              //       ),
-                              //     ],
-                              //   ),
-                              //   Padding(
-                              //     padding: EdgeInsets.only(
-                              //         left: 15, top: 20, bottom: 20),
-                              //     child: Align(
-                              //       alignment: Alignment.centerLeft,
-                              //       child: Text(
-                              //         "Quorum: " + assembly.quorum,
-                              //         style: TextStyle(
-                              //           fontSize: 18,
-                              //           fontWeight: FontWeight.bold,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ],
-                            ),
-                          );
+                            );
+                          } else {
+                            return Text("");
+                          }
+                          // return Container(
+                          //   padding: EdgeInsets.symmetric(horizontal: 15),
+                          //   margin: EdgeInsets.all(15),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius:
+                          //         BorderRadius.all(Radius.circular(8)),
+                          //     border: Border.all(
+                          //         color: Theme.of(context).primaryColor),
+                          //   ),
+                          //   //Dropdown feature for each past assembly
+                          //   child: ListTile(
+                          //     title: Text(
+                          //       "Date: " + assembly.assemblyName,
+                          //       style: TextStyle(
+                          //         fontWeight: FontWeight.bold,
+                          //         fontSize: 18,
+                          //       ),
+                          //     ),
+                          //     trailing: IconButton(
+                          //       icon: Icon(Icons.arrow_forward),
+                          //       onPressed: () {
+                          //         Navigator.push(
+                          //           context,
+                          //           MaterialPageRoute(
+                          //             builder: (context) =>
+                          //                 PastAssembliesDetailsScreen(
+                          //                     pastAssembly: assembly),
+                          //           ),
+                          //         );
+                          //       },
+                          //     ),
+                          //     // children: <Widget>[
+                          //     //   ExpansionTile(
+                          //     //     title: Text(
+                          //     //       "Motions",
+                          //     //       style: TextStyle(
+                          //     //         fontWeight: FontWeight.bold,
+                          //     //         fontSize: 18,
+                          //     //       ),
+                          //     //     ),
+                          //     //     children: [
+                          //     //       Text(
+                          //     //         assembly.motions.toString(),
+                          //     //         style: TextStyle(
+                          //     //           fontSize: 18,
+                          //     //         ),
+                          //     //       ),
+                          //     //     ],
+                          //     //   ),
+                          //     //   // ),
+                          //     //   ExpansionTile(
+                          //     //     title: Text(
+                          //     //       "Amendments",
+                          //     //       style: TextStyle(
+                          //     //         fontWeight: FontWeight.bold,
+                          //     //         fontSize: 18,
+                          //     //       ),
+                          //     //     ),
+                          //     //     children: [
+                          //     //       Text(
+                          //     //         assembly.amendments.toString(),
+                          //     //         style: TextStyle(fontSize: 18),
+                          //     //       ),
+                          //     //     ],
+                          //     //   ),
+                          //     //   ExpansionTile(
+                          //     //     title: Text(
+                          //     //       "Results",
+                          //     //       style: TextStyle(
+                          //     //         fontWeight: FontWeight.bold,
+                          //     //         fontSize: 18,
+                          //     //       ),
+                          //     //     ),
+                          //     //     children: [
+                          //     //       Text(
+                          //     //         assembly.results.toString(),
+                          //     //         style: TextStyle(fontSize: 18),
+                          //     //       ),
+                          //     //     ],
+                          //     //   ),
+                          //     //   Padding(
+                          //     //     padding: EdgeInsets.only(
+                          //     //         left: 15, top: 20, bottom: 20),
+                          //     //     child: Align(
+                          //     //       alignment: Alignment.centerLeft,
+                          //     //       child: Text(
+                          //     //         "Quorum: " + assembly.quorum,
+                          //     //         style: TextStyle(
+                          //     //           fontSize: 18,
+                          //     //           fontWeight: FontWeight.bold,
+                          //     //         ),
+                          //     //       ),
+                          //     //     ),
+                          //     //   ),
+                          //     // ],
+                          //   ),
+                          // );
                         },
                       ),
                     );
@@ -188,13 +227,12 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
     );
   }
 
-  //Method that helps refresh the screen. Builds a new state
+  //Method that helps refresh the screen. Builds a new state.
   Future<void> refreshPastAssemblies() async {
     _refreshIndicatorKey.currentState?.show();
     await Future.delayed(Duration(seconds: 1));
 
-    Future<List<PastAssemblies>> _pastAssemblies =
-        PastAssemblies.browsePastAssemblies();
+    Future<List<Assemblies>> _pastAssemblies = Assemblies.fetchAssemblies();
     setState(() {
       pastAssemblies = _pastAssemblies;
     });
