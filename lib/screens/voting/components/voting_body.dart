@@ -216,141 +216,138 @@ class VotingBodyState extends State<VotingBody> {
                   height: size.height * 0.04,
                 ),
                 RoundButton(
-                  text: "Cast Vote",
-                  color: Colors.black87,
-                  press: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          if (voteValue == 0) {
-                            return AlertDialog(
-                              title: Text("Cast Vote"),
-                              content: Text(
-                                  'Are you sure you want to vote "A Favor" to the current motion?'),
-                              actions: [
-                                TextButton(
-                                    //No Button
-                                    onPressed: () => Navigator.pop(
-                                        context), //return to voting screen
-                                    child: Text("No")),
-                                TextButton(
-                                    //Yes Button
-                                    onPressed: () async {
-                                      final String choice = "0";
-                                      final String choiceDesc = "voto a favor";
+                    text: "Cast Vote",
+                    color: Colors.black87,
+                    press: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            if (voteValue == 0) {
+                              return AlertDialog(
+                                title: Text("Cast Vote"),
+                                content: Text(
+                                    'Are you sure you want to vote "A Favor" to the current motion?'),
+                                actions: [
+                                  TextButton(
+                                      //No Button
+                                      onPressed: () => Navigator.pop(
+                                          context), //return to voting screen
+                                      child: Text("No")),
+                                  TextButton(
+                                      //Yes Button
+                                      onPressed: () async {
+                                        final String choice = "0";
+                                        final String choiceDesc =
+                                            "voto a favor";
 
-                                      final VotingModelTest vote =
-                                          await addVote(choice, choiceDesc);
+                                        final VotingModelTest vote =
+                                            await addVote(choice, choiceDesc);
 
-                                      setState(() {
-                                        _vote = vote;
-                                      });
+                                        setState(() {
+                                          _vote = vote;
+                                        });
 
-                                      if (_vote == null) {
-                                        print("no user");
-                                      } else {
-                                        print(
-                                            "The voter selected: ${_vote.name}\n");
-                                        print(
-                                            "Therefore user voted for: ${_vote.job}\n");
-                                        print(
-                                            "Created at time: ${_vote.createdAt.toIso8601String()}");
-                                      }
+                                        if (_vote == null) {
+                                          print("no user");
+                                        } else {
+                                          print(
+                                              "The voter selected: ${_vote.name}\n");
+                                          print(
+                                              "Therefore user voted for: ${_vote.job}\n");
+                                          print(
+                                              "Created at time: ${_vote.createdAt.toIso8601String()}");
+                                        }
 
-                                      //go to next screen
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return WaitingScreen(
-                                              userRepository: userRepository,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text("Yes"))
-                              ],
-                            );
-                          } // end if
-                          else if (voteValue == 2) {
-                            return AlertDialog(
-                              title: Text("Cast Vote"),
-                              content: Text(
-                                  'Are you sure you want to vote "Abstenido" to the current motion?'),
-                              actions: [
-                                TextButton(
-                                    //No Button
-                                    onPressed: () => Navigator.pop(
-                                        context), //return to voting screen
-                                    child: Text("No")),
-                                TextButton(
-                                    //Yes Button
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return WaitingScreen(
-                                              userRepository: userRepository,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text("Yes"))
-                              ],
-                            );
-                          } // end else if
-                          else if (voteValue == 1) {
-                            return AlertDialog(
-                              title: Text("Cast Vote"),
-                              content: Text(
-                                  'Are you sure you want to vote \n"En Contra" to the current motion?'),
-                              actions: [
-                                TextButton(
-                                    //No Button
-                                    onPressed: () => Navigator.pop(
-                                        context), //return to voting screen
-                                    child: Text("No")),
-                                TextButton(
-                                    //Yes Button
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return WaitingScreen(
-                                              userRepository: userRepository,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text("Yes"))
-                              ],
-                            );
-                          } // end else if
-                          else {
-                            return AlertDialog(
-                              title: Text("Cast Vote"),
-                              content: Text(
-                                  'No vote has been cast.\nPlease cast a vote.'),
-                              actions: [
-                                TextButton(
-                                    //OK Button
-                                    onPressed: () => Navigator.pop(
-                                        context), //return to voting screen
-                                    child: Text("OK")),
-                              ],
-                            );
-                          } // end else
-                        },
-                      ),
-                    );
-                  },
-                ),
+                                        //go to next screen
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return WaitingScreen(
+                                                userRepository: userRepository,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text("Yes"))
+                                ],
+                              );
+                            } // end if
+                            else if (voteValue == 2) {
+                              return AlertDialog(
+                                title: Text("Cast Vote"),
+                                content: Text(
+                                    'Are you sure you want to vote "Abstenido" to the current motion?'),
+                                actions: [
+                                  TextButton(
+                                      //No Button
+                                      onPressed: () => Navigator.pop(
+                                          context), //return to voting screen
+                                      child: Text("No")),
+                                  TextButton(
+                                      //Yes Button
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return WaitingScreen(
+                                                userRepository: userRepository,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text("Yes"))
+                                ],
+                              );
+                            } // end else if
+                            else if (voteValue == 1) {
+                              return AlertDialog(
+                                title: Text("Cast Vote"),
+                                content: Text(
+                                    'Are you sure you want to vote \n"En Contra" to the current motion?'),
+                                actions: [
+                                  TextButton(
+                                      //No Button
+                                      onPressed: () => Navigator.pop(
+                                          context), //return to voting screen
+                                      child: Text("No")),
+                                  TextButton(
+                                      //Yes Button
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return WaitingScreen(
+                                                userRepository: userRepository,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text("Yes"))
+                                ],
+                              );
+                            } // end else if
+                            else {
+                              return AlertDialog(
+                                title: Text("Cast Vote"),
+                                content: Text(
+                                    'No vote has been cast.\nPlease cast a vote.'),
+                                actions: [
+                                  TextButton(
+                                      //OK Button
+                                      onPressed: () => Navigator.pop(
+                                          context), //return to voting screen
+                                      child: Text("OK")),
+                                ],
+                              );
+                            } // end else
+                          }); // end showDialog builder
+                    }),
               ],
             ),
           ),
