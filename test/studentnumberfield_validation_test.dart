@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scan_n_vote/screens/signup/components/signup_body.dart';
 
+//Unit test used to verify student number text field validations
 void main() {
   test('empty student number returns error string', () {
     var result = StudentNumberFieldValidator.validate('');

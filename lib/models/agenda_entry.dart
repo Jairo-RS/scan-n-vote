@@ -4,13 +4,15 @@ import 'dart:convert';
 // import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+//OLD MODEL CLASS (Will be removed)
+//Model class used to map Agenda points with http and json functionalities
 class AgendaEntry {
   final String entry;
 
   AgendaEntry({this.entry});
 
   // Converts the unstructured JSON objects to values that can be used by
-  // our code
+  // our code (maps the data)
   factory AgendaEntry.fromJson(Map<String, dynamic> json) => AgendaEntry(
         entry: json['entry'],
       );

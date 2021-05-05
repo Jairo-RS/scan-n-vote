@@ -3,8 +3,10 @@ import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
 import 'package:scan_n_vote/constants.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/models/user_model.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/login/login_screen.dart';
+import 'package:http/http.dart' as http;
 
 // Class that contains all the widgets that will be displayed by the Sign up
 // screen
@@ -21,6 +23,8 @@ class SignUpBody extends StatefulWidget {
 class _SignUpBodyState extends State<SignUpBody> {
   final UserRepository userRepository;
   _SignUpBodyState(this.userRepository);
+
+  UserModel _user;
 
   //Variables
   var _formkey = GlobalKey<FormState>();
@@ -74,10 +78,11 @@ class _SignUpBodyState extends State<SignUpBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
+
                 //Widget that creates a container for all form fields
                 Form(
                   key: _formkey,
-                  autovalidateMode: AutovalidateMode.always,
+                  // autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: [
                       TextFieldContainer(
@@ -94,14 +99,15 @@ class _SignUpBodyState extends State<SignUpBody> {
                         height: size.height * 0.01,
                       ),
                       TextFieldContainer(
-                        child: buildPassword(), //Creates password field
+                        //Creates password field
+                        child: buildPassword(),
                       ),
                       SizedBox(
                         height: size.height * 0.01,
                       ),
                       TextFieldContainer(
-                        child:
-                            buildPasswordConfirmation(), //Creates confirm password field
+                        //Creates confirm password field
+                        child: buildPasswordConfirmation(),
                       ),
                       SizedBox(
                         height: size.height * 0.01,
@@ -117,29 +123,42 @@ class _SignUpBodyState extends State<SignUpBody> {
                   text: "SIGN UP",
                   color: signButtonColor,
                   textColor: Colors.black,
-                  press: () {
-                    final isValid = _formkey.currentState.validate();
-                    if (isValid) {
-                      _formkey.currentState.save(); //Executing onSaved
+                  press: () async {
+                    final String username = _usernameController.text;
+                    final String studentNumber = _studentNumberController.text;
+                    final String password = _passwordController.text;
+                    final String passwordConfirmation =
+                        _confirmPasswordController.text;
 
-                      // Testing if information is being stored when sign up
-                      // button is pressed.
-                      final message = 'Username: $username\n' +
-                          'Student Number: $studentNumber\n' +
-                          'Password: $password\n' +
-                          'Confirm Password: $passwordConfirmation';
-                      // For testing: displays stored valid information
-                      final snackBar = SnackBar(
-                        content: Text(
-                          message,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        backgroundColor: Colors.green,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    }
+                    final UserModel user = await createUser(username,
+                        studentNumber, password, passwordConfirmation);
+
+                    setState(() {
+                      _user = user;
+                    });
+
+                    // final isValid = _formkey.currentState.validate();
+                    // if (isValid) {
+                    //   _formkey.currentState.save(); //Executing onSaved
+
+                    // // Testing if information is being stored when sign up
+                    // // button is pressed.
+                    // final message = 'Username: $username\n' +
+                    //     'Student Number: $studentNumber\n' +
+                    //     'Password: $password\n' +
+                    //     'Confirm Password: $passwordConfirmation';
+                    // // For testing: displays stored valid information
+                    // final snackBar = SnackBar(
+                    //   content: Text(
+                    //     message,
+                    //     style: TextStyle(
+                    //       fontSize: 20,
+                    //     ),
+                    //   ),
+                    //   backgroundColor: Colors.green,
+                    // );
+                    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    // }
                   },
                 ),
                 SizedBox(
@@ -210,7 +229,8 @@ class _SignUpBodyState extends State<SignUpBody> {
         //   return null;
         // }
         // },
-        // maxLength: 30,
+        maxLength: 16,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in username field
         onSaved: (value) => setState(() => username = value),
       );
@@ -252,6 +272,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         // }
         // },
         keyboardType: TextInputType.number,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in student number field
         onSaved: (value) => setState(() => studentNumber = value),
       );
@@ -288,6 +309,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         // },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in password field
         onSaved: (value) => setState(() => password = value),
       );
@@ -332,6 +354,7 @@ class _SignUpBodyState extends State<SignUpBody> {
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
+        autovalidateMode: AutovalidateMode.disabled,
         //Testing: save values in confirm password field
         onSaved: (value) => setState(() => passwordConfirmation = value),
       );
@@ -343,11 +366,11 @@ class UsernameFieldValidator {
     if (value.isEmpty) {
       return 'Please enter your username';
     }
-    if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
-      return 'Invalid Special Character: Acceptable: @/./_/-/+';
-    }
-    if (value.length < 6) {
-      return 'Enter at least 6 characters';
+    // if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
+    //   return 'Invalid Special Character: Acceptable: @/./_/-/+';
+    // }
+    if (value.length < 8 || value.length > 16) {
+      return 'Must be between 8 to 16 characters long';
     } else {
       return null;
     }
@@ -400,8 +423,8 @@ class PasswordFieldValidator {
     if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
       return 'Must contain at least one special character';
     }
-    if (value.length < 8 || value.length > 16) {
-      return 'Must be between 8 to 16 characters long';
+    if (value.length < 8 || value.length > 24) {
+      return 'Must be between 8 to 24 characters long';
     } else {
       return null;
     }
@@ -427,8 +450,30 @@ class PasswordConfirmationFieldValidator {
     if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
       return 'Must contain at least one special character';
     }
-    if (value.length < 8 || value.length > 16) {
-      return 'Must be between 8 to 16 characters long';
+    if (value.length < 8 || value.length > 24) {
+      return 'Must be between 8 to 24 characters long';
     }
+  }
+}
+
+//POST Request
+Future<UserModel> createUser(String userName, String studentNumber,
+    String password, String passwordConfirmation) async {
+  //Need to finish implementation when url is available
+  final String apiUrl = "https://scannvote.herokuapp.com/api/signup/";
+
+  final response = await http.post(apiUrl, body: {
+    "username": userName,
+    "student_id": studentNumber,
+    "password1": password,
+    "password2": passwordConfirmation,
+  });
+
+  if (response.statusCode == 201) {
+    final String responseString = response.body;
+    return userModelFromJson(responseString);
+  } else {
+    // If not successful, display error status code (409)
+    throw Exception(response.statusCode);
   }
 }

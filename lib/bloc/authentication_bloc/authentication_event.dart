@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
+//Class that contains all the login events
 abstract class AuthenticationEvent extends Equatable {
   const AuthenticationEvent();
 
@@ -15,9 +16,11 @@ class LoggedIn extends AuthenticationEvent {
 
   const LoggedIn({@required this.token});
 
+  //Used to determine if token is equal to the present value
   @override
   List<Object> get props => [token];
 
+  //Print Logged in event and stored token
   @override
   String toString() => 'LoggedIn { token: $token }';
 }

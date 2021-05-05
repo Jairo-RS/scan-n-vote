@@ -52,9 +52,7 @@ class MyApp extends StatelessWidget {
 
   MyApp({Key key, @required this.userRepository}) : super(key: key);
 
-  // TO LOGIN:
-  // username: eve.holt@reqres.in
-  // password: cityslicka
+  // TO LOGIN: Create an admin account in heroku
 
   // This widget is the root of your application.
   @override

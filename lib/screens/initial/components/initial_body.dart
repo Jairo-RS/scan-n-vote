@@ -7,6 +7,8 @@ import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/login/login_screen.dart';
 import 'package:scan_n_vote/screens/signup/signup_screen.dart';
 
+//Class that builds all the widgets that will be displayed in the initial
+//screen.
 class InitialBody extends StatefulWidget {
   final UserRepository userRepository;
   InitialBody({Key key, @required this.userRepository})
@@ -60,10 +62,12 @@ class _InitialBodyState extends State<InitialBody> {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
 
+    //Widget that provides specific functionality to Android back button
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: SafeArea(
         child: Backdrop(
+          //Provides scrollable functionality to screen
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -78,6 +82,7 @@ class _InitialBodyState extends State<InitialBody> {
                 SizedBox(
                   height: size.height * 0.02,
                 ),
+                //Displays image (team logo) stored in assets folder
                 SvgPicture.asset(
                   "assets/icons/AcceltraProject-logo.svg",
                   height: size.height * 0.28,
