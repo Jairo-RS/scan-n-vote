@@ -145,8 +145,10 @@ class HomeBody extends StatelessWidget {
                                           MaterialPageRoute(
                                             builder: (context) {
                                               //enviar logout a backend
-                                              ////
-                                              ///
+                                              BlocProvider.of<
+                                                          AuthenticationBloc>(
+                                                      context)
+                                                  .add(LoggedOut());
                                               return InitialScreen(
                                                 userRepository: userRepository,
                                               );

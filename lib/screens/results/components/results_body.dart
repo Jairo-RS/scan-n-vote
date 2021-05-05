@@ -133,6 +133,17 @@ class _ResultsBodyState extends State<ResultsBody> {
                             ),
                           ),
                         ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            announceWinner(resultsCount.aFavor,
+                                resultsCount.abstenido, resultsCount.enContra),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
                       ],
                     );
                   },
@@ -148,5 +159,45 @@ class _ResultsBodyState extends State<ResultsBody> {
         ),
       ),
     );
+  }
+
+  String announceWinner(String aFavor, String abstenido, String enContra) {
+    String result;
+    //Announce winners
+    //Gano A Favor
+    if (int.parse(aFavor) > int.parse(enContra) &&
+        int.parse(aFavor) > int.parse(abstenido)) {
+      result = "Pasa la mocion con $aFavor votos a favor.";
+    }
+    //Gano En Contra
+    else if (int.parse(enContra) > int.parse(aFavor) &&
+        int.parse(enContra) > int.parse(abstenido)) {
+      result = "No pasa la mocion con $enContra votos en contra.";
+    }
+    //Gano Abstenido
+    else if (int.parse(abstenido) > int.parse(enContra) &&
+        int.parse(abstenido) > int.parse(aFavor)) {
+      result = "No se decide en la mocion con $abstenido votos abtenidos.";
+    }
+    // Hubo empate
+    // A favor = En Contra
+    else if (int.parse(aFavor) == int.parse(enContra) &&
+        int.parse(aFavor) > int.parse(abstenido)) {
+      result =
+          "No hay decision en mocion por empate a $aFavor votos a favor y en contra";
+    }
+    // A favor = abstenido
+    else if (int.parse(aFavor) == int.parse(abstenido) &&
+        int.parse(aFavor) > int.parse(enContra)) {
+      result =
+          "No hay decision en mocion por empate a $aFavor votos a favor y abstenidos";
+    }
+    // Abstenido = en contra
+    else if (int.parse(enContra) == int.parse(abstenido) &&
+        int.parse(enContra) > int.parse(abstenido)) {
+      result =
+          "No hay decision en mocion por empate a $enContra votos en contra y abstenidos";
+    }
+    return result;
   }
 }

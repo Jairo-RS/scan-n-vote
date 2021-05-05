@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/current_motion_model.dart';
 import 'package:scan_n_vote/models/past_motions_model.dart';
+import 'package:scan_n_vote/models/voting_model.dart';
+import 'package:scan_n_vote/models/voting_model_test.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/results/results_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
+import 'package:http/http.dart' as http;
 
 class MotionsBody extends StatefulWidget {
   final UserRepository userRepository;
@@ -17,16 +20,123 @@ class MotionsBody extends StatefulWidget {
 
 class _MotionsBodyState extends State<MotionsBody> {
   final UserRepository userRepository;
+
+  Future<VotingModel> futureVotingModel;
   _MotionsBodyState(this.userRepository);
 
   Future<List<CurrentMotion>> currentMotion;
   Future<List<PastMotions>> pastMotions;
+  Future<List<VotingModel>> code;
 
   @override
   void initState() {
     super.initState();
     currentMotion = CurrentMotion.browseCurrentMotion();
     pastMotions = PastMotions.browsePastMotions();
+    code = VotingModel.browseCode();
+  }
+
+  String readCode(http.Response response) {
+    String toBeReturned;
+    FutureBuilder<VotingModel>(
+        future: futureVotingModel,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            toBeReturned = snapshot.data.choice;
+            return Text(snapshot.data.choice);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        });
+    return toBeReturned;
+  }
+
+  //To see if voting is ready
+  Future<VotingModelTest> voteReady2Voting() async {
+    Uri url = Uri.parse(
+        //  'https://run.mocky.io/v3/dd14f21e-1f8d-4975-a8d1-3e8d8cb5eef0'); //code 200
+        'https://run.mocky.io/v3/53e4748d-d8d4-44e5-bb87-425e9690a866'); //code 404
+
+    final response = await http.get(url);
+
+    print("\nHttpResponseCode = " + response.statusCode.toString());
+    if (response.statusCode == 200) {
+      //////////////////////////////////////
+      ///
+      String theCode =
+          readCode(response); //string that contains the content of the url
+      ///
+      //////////////////////////////////////
+      if (theCode != "3") {
+        print("entered the if");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return VotingScreen(userRepository: userRepository);
+            },
+          ),
+        );
+      }
+    } else {
+      print("\nIncorrect HTTP Code.\nExpected 200, got ${response.statusCode}");
+      print("Retry with a new URL.");
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Cast Vote"),
+              content: Text('Incorrect HTTP Code.\n'),
+              actions: [
+                TextButton(
+                    //OK Button
+                    onPressed: () =>
+                        Navigator.pop(context), //return to motions screen
+                    child: Text("OK")),
+              ],
+            );
+          });
+    }
+
+    return null;
+  }
+
+  Future<VotingModelTest> voteReady2Results() async {
+    Uri url = Uri.parse(
+        'https://run.mocky.io/v3/a58c1b7a-b688-4d22-8dec-6009a840b1f4'); //code200
+
+    final response = await http.get(url);
+
+    print("\nHttpResponseCode = " + response.statusCode.toString());
+    if (response.statusCode == 200) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return ResultsScreen();
+          },
+        ),
+      );
+    } else {
+      print("Incorrect http code to continue");
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Cast Vote"),
+              content: Text('Incorrect HTTP Code.\n'),
+              actions: [
+                TextButton(
+                    //OK Button
+                    onPressed: () =>
+                        Navigator.pop(context), //return to motions screen
+                    child: Text("OK")),
+              ],
+            );
+          });
+    }
+    return null;
   }
 
   @override
@@ -72,10 +182,12 @@ class _MotionsBodyState extends State<MotionsBody> {
                 onPressed: () {
                   var _currentMotion = CurrentMotion.browseCurrentMotion();
                   var _pastMotions = PastMotions.browsePastMotions();
+                  var _code = VotingModel.browseCode();
 
                   setState(() {
                     currentMotion = _currentMotion;
                     pastMotions = _pastMotions;
+                    code = _code;
                   });
                 },
               ),
@@ -163,34 +275,23 @@ class _MotionsBodyState extends State<MotionsBody> {
                                               MainAxisAlignment.center,
                                           children: [
                                             ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                primary: Colors.blue,
-                                                onPrimary: Colors.white,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 20, right: 20),
-                                                child: Text(
-                                                  'Vote',
-                                                  style: TextStyle(
-                                                    fontSize: 18,
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Colors.blue,
+                                                  onPrimary: Colors.white,
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 20, right: 20),
+                                                  child: Text(
+                                                    'Vote',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return VotingScreen(
-                                                        userRepository:
-                                                            userRepository,
-                                                      );
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                                onPressed: () {
+                                                  voteReady2Voting();
+                                                }),
                                             SizedBox(
                                               width: size.width * 0.1,
                                             ),
@@ -210,14 +311,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                                                 ),
                                               ),
                                               onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return ResultsScreen();
-                                                    },
-                                                  ),
-                                                );
+                                                voteReady2Results();
                                               },
                                             ),
                                           ],
