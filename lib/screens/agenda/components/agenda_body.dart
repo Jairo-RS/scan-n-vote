@@ -103,6 +103,7 @@ class _AgendaBodyState extends State<AgendaBody> {
                                 itemCount: agenda.length,
                                 separatorBuilder: (context, index) =>
                                     SizedBox(),
+                                // ignore: missing_return
                                 itemBuilder: (BuildContext context, int index) {
                                   Assemblies assemblies = agenda[index];
                                   if (assemblies.archived == false) {
@@ -122,55 +123,6 @@ class _AgendaBodyState extends State<AgendaBody> {
                       },
                     ),
                   ),
-                  // child: FutureBuilder(
-                  //   future: agendaEntries,
-                  //   // ignore: missing_return
-                  //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  //     switch (snapshot.connectionState) {
-                  //       case ConnectionState.none:
-                  //       case ConnectionState.waiting:
-                  //       case ConnectionState.active:
-                  //         return Center(
-                  //           child: CircularProgressIndicator(),
-                  //         );
-                  //       case ConnectionState.done:
-                  //         if (snapshot.hasError) {
-                  //           return Text(
-                  //             "There was an error: ${snapshot.error}",
-                  //           );
-                  //         }
-                  //         //snapshot.data holds the results of the future
-                  //         var entries = snapshot.data;
-                  //         return RefreshIndicator(
-                  //           key: _refreshIndicatorKey,
-                  //           onRefresh: () async {
-                  //             return refreshAgenda();
-                  //           },
-                  //           child: ListView.separated(
-                  //             itemCount: entries.length,
-                  //             separatorBuilder: (context, index) => Divider(),
-                  //             itemBuilder: (BuildContext context, int index) {
-                  //               AgendaEntry agenda = entries[index];
-                  //               // return Text('$index Test');
-                  //               int indexPlusOne = index + 1; //Start at one
-                  //               //Translating index value to roman numerals
-                  //               var romanNumerals =
-                  //                   indexPlusOne.toRomanNumeralString();
-                  //               return ListTile(
-                  //                 title: Text(
-                  //                   "$romanNumerals. " + agenda.entry,
-                  //                   style: TextStyle(
-                  //                     fontWeight: FontWeight.bold,
-                  //                     fontSize: 18,
-                  //                   ),
-                  //                 ),
-                  //               );
-                  //             },
-                  //           ),
-                  //         );
-                  //     }
-                  //   },
-                  // ),
                 ),
               ],
             ),
@@ -180,14 +132,13 @@ class _AgendaBodyState extends State<AgendaBody> {
     );
   }
 
+  //Used to refresh and fetch any new data from the agenda
   Future<void> refreshAgenda() async {
     _refreshIndicatorKey.currentState?.show();
     await Future.delayed(Duration(seconds: 1));
 
-    // Future<List<AgendaEntry>> _agendaEntries = AgendaEntry.browse();
     Future<List<Assemblies>> _assemblies = Assemblies.fetchAssemblies();
     setState(() {
-      // agendaEntries = _agendaEntries;
       futureAssemblies = _assemblies;
     });
   }

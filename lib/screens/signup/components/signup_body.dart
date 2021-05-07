@@ -462,7 +462,9 @@ Future<UserModel> createUser(String userName, String studentNumber,
   //Need to finish implementation when url is available
   final String apiUrl = "https://scannvote.herokuapp.com/api/signup/";
 
-  final response = await http.post(apiUrl, body: {
+  final response = await http.post(apiUrl, headers: <String, String>{
+    'Content-Type': 'application/json',
+  }, body: {
     "username": userName,
     "student_id": studentNumber,
     "password1": password,

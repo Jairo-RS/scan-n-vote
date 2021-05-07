@@ -15,9 +15,6 @@ class UserRepository {
   //Used to store information about login functionality
   final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-  //Advanced http packaged with additonal features
-  // final Dio _dio = Dio();
-
   //Verify if token exist in local storage
   Future<bool> hasToken() async {
     var value = await storage.read(key: 'set-cookie');
@@ -62,4 +59,15 @@ class UserRepository {
     }
     return null; //Unreachable unless if error occurs
   }
+
+  //Idea for logout token post request
+  // Future<String> logout(String csrftoken) async {
+  //   // csrftoken =
+  //   final response = await http.post(
+  //     csrftoken,
+  //     body: jsonEncode(<String, String>{
+  //       "csrfmiddlewaretoken": csrftoken,
+  //     }),
+  //   );
+  // }
 }
