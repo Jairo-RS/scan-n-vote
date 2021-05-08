@@ -13,7 +13,6 @@ class Motions {
   final int abstained;
   final int assemblyID;
   final List<OriginalMotion> originalMotion;
-  // final dynamic originalMotion;
 
   Motions(
       {this.pk,
@@ -49,12 +48,12 @@ class Motions {
   }
 
   //GET Request
-  Future<List<Motions>> fetchMotions() async {
+  static Future<List<Motions>> fetchMotions() async {
     var url =
         Uri.parse('https://scannvote.herokuapp.com/api/motions/?format=json');
 
     http.Response response = await http.get(url);
-    String content = response.body;
+    String content = utf8.decode(response.bodyBytes);
     List jsonReponse = json.decode(content);
 
     // Verifying if http request was successfully completed

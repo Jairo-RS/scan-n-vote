@@ -90,7 +90,8 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
                                 border: Border.all(
                                     color: Theme.of(context).primaryColor),
                               ),
-                              //Dropdown feature for each past assembly
+
+                              //Each tile with navigation to next screen
                               child: ListTile(
                                 title: Text(
                                   assembly.assemblyName,
