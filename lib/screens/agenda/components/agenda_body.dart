@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:numerus/numerus.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
 

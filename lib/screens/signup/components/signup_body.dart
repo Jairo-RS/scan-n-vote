@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
 import 'package:scan_n_vote/constants.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/models/token_model.dart';
 import 'package:scan_n_vote/models/user_model.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
+import 'package:scan_n_vote/screens/initial/initial_screen.dart';
 import 'package:scan_n_vote/screens/login/login_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,6 +30,7 @@ class _SignUpBodyState extends State<SignUpBody> {
   _SignUpBodyState(this.userRepository);
 
   UserModel _user;
+  TokenModel futureToken;
 
   //Variables
   var _formkey = GlobalKey<FormState>();
@@ -38,6 +44,51 @@ class _SignUpBodyState extends State<SignUpBody> {
   String studentNumber = '';
   String password = '';
   String passwordConfirmation = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // futureToken = TokenModel.getToken();
+    TokenModel.getToken().then(
+      (data) => setState(() {
+        futureToken = data;
+      }),
+    );
+  }
+
+  // //display message alert
+  void messageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Tu cuenta ha sido creada exitosamente!\n"),
+          actions: [
+            TextButton(
+              child: Text(
+                "Ok",
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InitialScreen(
+                      userRepository: userRepository,
+                    ),
+                  ),
+                );
+                ;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +171,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                 ),
                 //Custom widget that creates the sign up button
                 RoundButton(
-                  text: "SIGN UP",
+                  text: "REGISTRARTE",
                   color: signButtonColor,
                   textColor: Colors.black,
                   press: () async {
@@ -129,13 +180,53 @@ class _SignUpBodyState extends State<SignUpBody> {
                     final String password = _passwordController.text;
                     final String passwordConfirmation =
                         _confirmPasswordController.text;
-
-                    final UserModel user = await createUser(username,
-                        studentNumber, password, passwordConfirmation);
-
-                    setState(() {
-                      _user = user;
-                    });
+                    // Future<String> token = UserModel.getToken();
+                    // String csrfmiddlewaretoken = token.toString();
+                    TokenModel csrfmiddlewaretoken = futureToken;
+                    //Verifying validation of all forms
+                    final isValid = _formkey.currentState.validate();
+                    if (isValid) {
+                      final UserModel user = await UserModel.createUser(
+                        username,
+                        studentNumber,
+                        password,
+                        passwordConfirmation,
+                        csrfmiddlewaretoken,
+                      );
+                      setState(() {
+                        _user = user;
+                      });
+                      messageDialog(context);
+                    } else {
+                      Flushbar(
+                        title: "Credenciales invalidos",
+                        message:
+                            "Por favor, complete el formulario correctamente.",
+                        duration: Duration(seconds: 5),
+                      ).show(context);
+                    }
+                    // //Verifying validation of all forms
+                    // final isValid = _formkey.currentState.validate();
+                    // if (isValid) {
+                    //   final UserModel user = await UserModel.createUser(
+                    //     username,
+                    //     studentNumber,
+                    //     password,
+                    //     passwordConfirmation,
+                    //     csrfmiddlewaretoken,
+                    //   );
+                    //   setState(() {
+                    //     _user = user;
+                    //   });
+                    //   messageDialog(context);
+                    // } else {
+                    //   Flushbar(
+                    //     title: "Credenciales invalidos",
+                    //     message:
+                    //         "Por favor, complete el formulario correctamente.",
+                    //     duration: Duration(seconds: 5),
+                    //   ).show(context);
+                    // }
 
                     // final isValid = _formkey.currentState.validate();
                     // if (isValid) {
@@ -168,7 +259,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'Already have an account? ',
+                      '¿Ya tienes una cuenta? ',
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -186,7 +277,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                         );
                       },
                       child: Text(
-                        'Login',
+                        'Iniciar sesión',
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
@@ -453,29 +544,5 @@ class PasswordConfirmationFieldValidator {
     if (value.length < 8 || value.length > 24) {
       return 'Must be between 8 to 24 characters long';
     }
-  }
-}
-
-//POST Request
-Future<UserModel> createUser(String userName, String studentNumber,
-    String password, String passwordConfirmation) async {
-  //Need to finish implementation when url is available
-  final String apiUrl = "https://scannvote.herokuapp.com/api/signup/";
-
-  final response = await http.post(apiUrl, headers: <String, String>{
-    'Content-Type': 'application/json',
-  }, body: {
-    "username": userName,
-    "student_id": studentNumber,
-    "password1": password,
-    "password2": passwordConfirmation,
-  });
-
-  if (response.statusCode == 201) {
-    final String responseString = response.body;
-    return userModelFromJson(responseString);
-  } else {
-    // If not successful, display error status code (409)
-    throw Exception(response.statusCode);
   }
 }

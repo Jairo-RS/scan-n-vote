@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
-// import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/bloc/login_bloc/login_bloc.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
@@ -51,7 +49,7 @@ class _LoginBodyState extends State<LoginBody> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                "Invalid credentials",
+                "Credenciales inválidos",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -209,7 +207,7 @@ class _LoginBodyState extends State<LoginBody> {
                               );
                             },
                             child: Text(
-                              "Forgot your password?",
+                              "¿Olvidaste tu contraseña?",
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,6 +36,7 @@ class UserRepository {
   }
 
   //POST method for login
+  // ignore: missing_return
   Future<String> login(String username, String password) async {
     final response = await http.post(
       loginUrl,
@@ -49,25 +49,37 @@ class UserRepository {
       }),
     );
 
-    //Obtains crsf token that is used to determine if user is logged in or
-    //logged out
-    String rawCookie = response.headers['set-cookie'];
-    if (rawCookie != null) {
-      int firstIndex = rawCookie.indexOf('=');
-      int secondIndex = rawCookie.indexOf(';');
-      return rawCookie.substring(firstIndex + 1, secondIndex);
+    if (response.statusCode == 200) {
+      //Obtains crsf token that is used to determine if user is logged in or
+      //logged out
+      String rawCookie = response.headers['set-cookie'];
+      if (rawCookie != null) {
+        int firstIndex = rawCookie.indexOf('=');
+        int secondIndex = rawCookie.indexOf(';');
+        return rawCookie.substring(firstIndex + 1, secondIndex);
+      }
+    } else {
+      // If not successful, display error status code (409)
+      throw Exception(response.statusCode);
     }
-    return null; //Unreachable unless if error occurs
   }
 
-  //Idea for logout token post request
+  // // Logout token post request
   // Future<String> logout(String csrftoken) async {
-  //   // csrftoken =
+  //   String csrftoken = await storage.read(key: 'set-cookie');
   //   final response = await http.post(
   //     csrftoken,
   //     body: jsonEncode(<String, String>{
   //       "csrfmiddlewaretoken": csrftoken,
   //     }),
   //   );
+
+  //   if (response.statusCode == 200) {
+  //     final String responseString = response.body;
+  //     return json.decode(responseString);
+  //   } else {
+  //     // If not successful, display error status code (403)
+  //     throw Exception(response.statusCode);
+  //   }
   // }
 }

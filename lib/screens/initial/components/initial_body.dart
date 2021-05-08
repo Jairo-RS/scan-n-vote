@@ -89,13 +89,15 @@ class _InitialBodyState extends State<InitialBody> {
                 ),
                 SizedBox(height: size.height * 0.02),
                 Text(
-                  "Welcome!",
+                  "¡Bienvenido!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
                 ),
                 SizedBox(height: size.height * 0.02),
+
                 Text(
-                  "Please login or sign up to\n  continue using the app",
+                  "Por favor, conéctese a su cuenta (Login)\n o regístrese (Sign up) para seguir\n usando la aplicación.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: size.height * 0.02),
                 RoundButton(

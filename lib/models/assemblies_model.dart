@@ -35,7 +35,6 @@ class Assemblies {
       },
     );
     String content = utf8.decode(response.bodyBytes);
-    // String content = response.body;
     List jsonReponse = json.decode(content);
 
     // Verifying if http request was successfully completed
