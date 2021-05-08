@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
-import 'package:scan_n_vote/models/results.dart';
-import 'package:http/http.dart' as http;
+import 'package:scan_n_vote/models/motions_model.dart';
 
 class ResultsBody extends StatefulWidget {
   @override
@@ -13,33 +9,14 @@ class ResultsBody extends StatefulWidget {
 }
 
 class _ResultsBodyState extends State<ResultsBody> {
-  List<VotingResults> results = const [];
-  Future loadResults() async {
-    // Reading from local JSON file
-    //  String content = await rootBundle.loadString('assets/json/results.json');
-    //  End Reading from local JSON file
+  List<Motions> results = const [];
 
-    // Reading from a remote server/file
-    Uri url = Uri.parse(
-        'https://run.mocky.io/v3/210d6c65-c964-42ea-9a60-d4e6af3e1fee');
-    http.Response response = await http.get(url);
-    String content = response.body;
-    // End reading from a remote server/file
-
-    List collection = json.decode(content);
-    List<VotingResults> _results =
-        collection.map((json) => VotingResults.fromJson(json)).toList();
-
-    //print(content);
-
-    setState(() {
-      results = _results;
-    });
-  }
+  Future<List<Motions>> futureAssemblies;
+  var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   void initState() {
-    loadResults();
     super.initState();
+    futureAssemblies = Motions.fetchMotions();
   }
 
   @override
@@ -75,9 +52,9 @@ class _ResultsBodyState extends State<ResultsBody> {
               ),
               SizedBox(height: size.height * 0.05),
               Container(
-                height: 270,
+                height: 310,
                 width: size.width * 0.8,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -90,70 +67,115 @@ class _ResultsBodyState extends State<ResultsBody> {
                     )
                   ],
                 ),
-                child: ListView.builder(
-                  itemCount: results.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    VotingResults resultsCount = results[index];
+                child: Center(
+                  child: FutureBuilder(
+                      future: futureAssemblies,
+                      builder:
+                          // ignore: missing_return
+                          (BuildContext context, AsyncSnapshot snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                          case ConnectionState.waiting:
+                          case ConnectionState.active:
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          case ConnectionState.done:
+                            if (snapshot.hasError) {
+                              return Text(
+                                "There was an error: ${snapshot.error}",
+                              );
+                            }
+                            //snapshot.data holds the results of the future
+                            var mociones = snapshot.data;
+                            return RefreshIndicator(
+                              key: _refreshIndicatorKey,
+                              onRefresh: () async {
+                                return refreshResults();
+                              },
+                              child: ListView.builder(
+                                itemCount: mociones.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  Motions resultsCount = mociones[index];
 
-                    return Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'A Favor:                               ' +
-                                resultsCount.aFavor +
-                                "\n",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Abstenidos:                         ' +
-                                resultsCount.abstenido +
-                                "\n",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'En Contra:                            ' +
-                                resultsCount.enContra +
-                                "\n",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            announceWinner(resultsCount.aFavor,
-                                resultsCount.abstenido, resultsCount.enContra),
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  },
+                                  return Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          'Moción:                               ' +
+                                              resultsCount.motion +
+                                              "\n",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          'A Favor:                               ' +
+                                              resultsCount.favor.toString() +
+                                              "\n",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          'Abstenidos:                         ' +
+                                              resultsCount.abstained
+                                                  .toString() +
+                                              "\n",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          'En Contra:                            ' +
+                                              resultsCount.agaisnt.toString() +
+                                              "\n",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          announceWinner(
+                                              resultsCount.favor,
+                                              resultsCount.abstained,
+                                              resultsCount.agaisnt),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            );
+                        }
+                      }),
                 ),
               ),
               SizedBox(height: size.height * 0.05),
               SvgPicture.asset(
                 "assets/icons/undraw_election.svg",
                 height: size.height * 0.15,
-              ),
+              )
             ],
           ),
         ),
@@ -161,43 +183,51 @@ class _ResultsBodyState extends State<ResultsBody> {
     );
   }
 
-  String announceWinner(String aFavor, String abstenido, String enContra) {
+  String announceWinner(int aFavor, int abstenido, int enContra) {
     String result;
     //Announce winners
     //Gano A Favor
-    if (int.parse(aFavor) > int.parse(enContra) &&
-        int.parse(aFavor) > int.parse(abstenido)) {
-      result = "Pasa la mocion con $aFavor votos a favor.";
+    if (aFavor > enContra && aFavor > abstenido) {
+      result = "Pasa la mocion con $aFavor votos a favor.\n";
     }
     //Gano En Contra
-    else if (int.parse(enContra) > int.parse(aFavor) &&
-        int.parse(enContra) > int.parse(abstenido)) {
-      result = "No pasa la mocion con $enContra votos en contra.";
+    else if (enContra > aFavor && enContra > abstenido) {
+      result = "No pasa la mocion con $enContra votos en contra.\n";
     }
     //Gano Abstenido
-    else if (int.parse(abstenido) > int.parse(enContra) &&
-        int.parse(abstenido) > int.parse(aFavor)) {
-      result = "No se decide en la mocion con $abstenido votos abtenidos.";
+    else if ((abstenido > enContra) && (abstenido > aFavor)) {
+      result = "No se decide en la mocion con $abstenido votos abtenidos.\n";
     }
     // Hubo empate
     // A favor = En Contra
-    else if (int.parse(aFavor) == int.parse(enContra) &&
-        int.parse(aFavor) > int.parse(abstenido)) {
+    else if ((aFavor) == (enContra) && (aFavor) > (abstenido)) {
       result =
-          "No hay decision en mocion por empate a $aFavor votos a favor y en contra";
+          "No hay decision en mocion por empate a $aFavor votos a favor y en contra\n";
     }
     // A favor = abstenido
-    else if (int.parse(aFavor) == int.parse(abstenido) &&
-        int.parse(aFavor) > int.parse(enContra)) {
+    else if ((aFavor) == (abstenido) && (aFavor) > (enContra)) {
       result =
-          "No hay decision en mocion por empate a $aFavor votos a favor y abstenidos";
+          "No hay decision en mocion por empate a $aFavor votos a favor y abstenidos\n";
     }
     // Abstenido = en contra
-    else if (int.parse(enContra) == int.parse(abstenido) &&
-        int.parse(enContra) > int.parse(abstenido)) {
+    else if ((enContra) == (abstenido) && (enContra) > (abstenido)) {
       result =
-          "No hay decision en mocion por empate a $enContra votos en contra y abstenidos";
+          "No hay decision en mocion por empate a $enContra votos en contra y abstenidos\n";
+    }
+    //Triple empate
+    else if ((enContra) == (abstenido) && (enContra) == (aFavor)) {
+      result = "Hay un triple empate a $enContra votos.\n";
     }
     return result;
+  }
+
+  Future<void> refreshResults() async {
+    _refreshIndicatorKey.currentState?.show();
+    await Future.delayed(Duration(seconds: 1));
+
+    Future<List<Motions>> _motions = Motions.fetchMotions();
+    setState(() {
+      futureAssemblies = _motions;
+    });
   }
 }

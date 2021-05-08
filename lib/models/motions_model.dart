@@ -49,7 +49,7 @@ class Motions {
   }
 
   //GET Request
-  Future<List<Motions>> fetchMotions() async {
+  static Future<List<Motions>> fetchMotions() async {
     var url =
         Uri.parse('https://scannvote.herokuapp.com/api/motions/?format=json');
 

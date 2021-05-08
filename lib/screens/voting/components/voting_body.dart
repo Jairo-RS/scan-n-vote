@@ -149,9 +149,6 @@ class VotingBodyState extends State<VotingBody> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: Text("In Favor",
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
                   activeColor: Colors.black,
                   tileColor: Colors.green[400],
                   toggleable: true,
@@ -169,13 +166,12 @@ class VotingBodyState extends State<VotingBody> {
                 ),
                 RadioListTile<int>(
                   title: Text(
-                    "Abstenido",
+                    "Abstenidx",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: Text("Abstained", style: TextStyle(fontSize: 18)),
                   activeColor: Colors.black,
                   tileColor: Colors.yellow[400],
                   toggleable: true,
@@ -199,7 +195,6 @@ class VotingBodyState extends State<VotingBody> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: Text("Against", style: TextStyle(fontSize: 18)),
                   activeColor: Colors.black,
                   tileColor: Colors.red[400],
                   toggleable: true,
@@ -278,7 +273,7 @@ class VotingBodyState extends State<VotingBody> {
                               return AlertDialog(
                                 title: Text("Cast Vote"),
                                 content: Text(
-                                    'Are you sure you want to vote "Abstenido" to the current motion?'),
+                                    'Are you sure you want to vote "Abstenidx" to the current motion?'),
                                 actions: [
                                   TextButton(
                                       //No Button
