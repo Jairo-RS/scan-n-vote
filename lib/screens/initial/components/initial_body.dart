@@ -44,7 +44,6 @@ class _InitialBodyState extends State<InitialBody> {
           ),
           TextButton(
             onPressed: () => SystemNavigator.pop(),
-            // Navigator.pop(context, true),
             child: Text(
               "Yes",
               style: TextStyle(
@@ -87,11 +86,6 @@ class _InitialBodyState extends State<InitialBody> {
                   'assets/images/scan-n-vote.png',
                   height: size.height * 0.28,
                 ),
-
-                // SvgPicture.asset(
-                //   "assets/icons/AcceltraProject-logo.svg",
-                //   height: size.height * 0.28,
-                // ),
                 SizedBox(height: size.height * 0.02),
                 Text(
                   "¡Bienvenido!",
