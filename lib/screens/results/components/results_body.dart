@@ -95,75 +95,78 @@ class _ResultsBodyState extends State<ResultsBody> {
                               },
                               child: ListView.builder(
                                 itemCount: mociones.length,
+                                // ignore: missing_return
                                 itemBuilder: (BuildContext context, int index) {
                                   Motions resultsCount = mociones[index];
-
-                                  return Column(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          'Moción:                               ' +
-                                              resultsCount.motion +
-                                              "\n",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                  if (resultsCount.archived == false) {
+                                    return Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            'Moción:                               ' +
+                                                resultsCount.motion +
+                                                "\n",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          'A Favor:                               ' +
-                                              resultsCount.favor.toString() +
-                                              "\n",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            'A Favor:                               ' +
+                                                resultsCount.favor.toString() +
+                                                "\n",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          'Abstenidos:                         ' +
-                                              resultsCount.abstained
-                                                  .toString() +
-                                              "\n",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            'Abstenidos:                         ' +
+                                                resultsCount.abstained
+                                                    .toString() +
+                                                "\n",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          'En Contra:                            ' +
-                                              resultsCount.agaisnt.toString() +
-                                              "\n",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            'En Contra:                            ' +
+                                                resultsCount.agaisnt
+                                                    .toString() +
+                                                "\n",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          announceWinner(
-                                              resultsCount.favor,
-                                              resultsCount.abstained,
-                                              resultsCount.agaisnt),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            announceWinner(
+                                                resultsCount.favor,
+                                                resultsCount.abstained,
+                                                resultsCount.agaisnt),
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  );
+                                      ],
+                                    );
+                                  }
                                 },
                               ),
                             );

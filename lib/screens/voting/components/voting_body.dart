@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scan_n_vote/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
+import 'package:scan_n_vote/models/motions_model.dart';
 import 'package:scan_n_vote/models/voting_model.dart';
-import 'package:scan_n_vote/models/voting_model_test.dart';
-import 'package:scan_n_vote/models/voting_motions.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
 import 'package:http/http.dart' as http;
@@ -22,45 +25,65 @@ class VotingBody extends StatefulWidget {
 class VotingBodyState extends State<VotingBody> {
   final UserRepository userRepository;
 
-  VotingModelTest _vote;
+  int currentMotionPK;
+
+  VotingModel _vote;
 
   VotingBodyState(this.userRepository);
 
   //Used for the radio button values
   int voteValue; //0 = A favor, 1 = En Contra, 2 = Abstenido
 
-  List<VotingMotions> motion = const [];
+  List<Motions> motion = const [];
 
-  Future<VotingModelTest> addVote(String choice, String choiceDesc) async {
-    Uri url = Uri.parse('https://reqres.in/api/users');
+  // ignore: missing_return
+  Future<VotingModel> addVote(String choice, int currentMotionPK) async {
+    //////////////////////////////////////
+    BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+      // If current state is authenticated, then display Assemblies screen
+      if (state is AuthenticationAuthenticated) {
+        print("IM LOGGED IN");
+      }
+      // If current state is unauthenticated, then display Initial screen
+      if (state is AuthenticationUnauthenticated) {
+        print("IM LOGGED OUT");
+      }
+    });
+    ///////////////////////////////////////
 
-    final response =
-        await http.post(url, body: {"name": choice, "job": choiceDesc});
+    Uri url = Uri.parse //('https://reqres.in/api/users');
+        ("https://scannvote.herokuapp.com/api/motions/" +
+            currentMotionPK.toString() +
+            "/vote");
 
-    if (response.statusCode == 201) {
+    print("**** $choice *******");
+    print("**** $currentMotionPK");
+
+    final response = await http.post(url, body: {"choice": choice});
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
       final String responseString = response.body;
-
-      return votingModelTestFromJson(responseString);
-    } else
-      return null;
+      print("SUCCESS!!!!!!!!!!!!!!!!");
+      return votingModelFromJson(responseString);
+    }
   }
 
   Future loadMotion() async {
-    // Reading from local JSON file
-    //  String content =
-    //     await rootBundle.loadString('assets/json/current_voting_motion.json');
-    //  End Reading from local JSON file
-
     // Reading from a remote server/file
-    Uri url = Uri.parse(
-        'https://run.mocky.io/v3/a58c1b7a-b688-4d22-8dec-6009a840b1f4');
+    Uri url =
+        Uri.parse('https://scannvote.herokuapp.com/api/motions/?format=json');
+    // 'https://run.mocky.io/v3/a58c1b7a-b688-4d22-8dec-6009a840b1f4');
     http.Response response = await http.get(url);
     String content = response.body;
     // End reading from a remote server/file
 
     List collection = json.decode(content);
-    List<VotingMotions> _motions =
-        collection.map((json) => VotingMotions.fromJson(json)).toList();
+    List<Motions> _motions =
+        collection.map((json) => Motions.fromJson(json)).toList();
     //print(content);
 
     setState(() {
@@ -104,7 +127,15 @@ class VotingBodyState extends State<VotingBody> {
                   "VOTE",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
                     fontSize: 42,
+                  ),
+                ),
+                Text(
+                  "Por favor seleccione su voto para la siguiente moción:",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
 
@@ -113,30 +144,36 @@ class VotingBodyState extends State<VotingBody> {
                   itemCount: motion.length,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
+                  // ignore: missing_return
                   itemBuilder: (BuildContext context, int index) {
-                    VotingMotions theMotion = motion[index];
+                    Motions theMotion = motion[index];
 
-                    return SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            height: 100,
-                            width: 375,
-                            child: SingleChildScrollView(
-                              child: Text(
-                                theMotion.motion, //displays the motion text
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                    if (theMotion.archived == false) {
+                      currentMotionPK = theMotion.pk;
+                      return SingleChildScrollView(
+                        child: Column(
+                          //mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              color: Colors.white,
+                              alignment: Alignment.center,
+                              height: 100,
+                              width: 375,
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  theMotion.motion, //displays the motion text
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
+                          ],
+                        ),
+                      );
+                    }
                   },
                 ),
 
@@ -232,11 +269,8 @@ class VotingBodyState extends State<VotingBody> {
                                       //Yes Button
                                       onPressed: () async {
                                         final String choice = "0";
-                                        final String choiceDesc =
-                                            "voto a favor";
-
-                                        final VotingModelTest vote =
-                                            await addVote(choice, choiceDesc);
+                                        final VotingModel vote = await addVote(
+                                            choice, currentMotionPK);
 
                                         setState(() {
                                           _vote = vote;
@@ -246,11 +280,7 @@ class VotingBodyState extends State<VotingBody> {
                                           print("no user");
                                         } else {
                                           print(
-                                              "The voter selected: ${_vote.name}\n");
-                                          print(
-                                              "Therefore user voted for: ${_vote.job}\n");
-                                          print(
-                                              "Created at time: ${_vote.createdAt.toIso8601String()}");
+                                              "Therefore user voted for: ${_vote.choice}\n");
                                         }
 
                                         //go to next screen

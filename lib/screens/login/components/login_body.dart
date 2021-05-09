@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
-// import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/bloc/login_bloc/login_bloc.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
@@ -51,7 +49,7 @@ class _LoginBodyState extends State<LoginBody> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                "Invalid credentials",
+                "Credenciales inválidos",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -101,7 +99,7 @@ class _LoginBodyState extends State<LoginBody> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Login",
+                        "Iniciar sesión",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
@@ -166,7 +164,7 @@ class _LoginBodyState extends State<LoginBody> {
                                     child: ElevatedButton(
                                       onPressed: _onLoginButtonPressed,
                                       child: Text(
-                                        "LOGIN",
+                                        "Iniciar sesión",
                                         style: new TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -175,7 +173,7 @@ class _LoginBodyState extends State<LoginBody> {
                                       ),
                                       style: ElevatedButton.styleFrom(
                                         // background color
-                                        primary: Colors.black,
+                                        primary: Colors.green[700],
                                         // foreground color
                                         onPrimary: Colors.black,
                                         shape: RoundedRectangleBorder(
@@ -209,7 +207,7 @@ class _LoginBodyState extends State<LoginBody> {
                               );
                             },
                             child: Text(
-                              "Forgot your password?",
+                              "¿Olvidaste tu contraseña?",
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,
@@ -233,7 +231,7 @@ class _LoginBodyState extends State<LoginBody> {
   //Custom widget that creates username textfield
   Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Username',
+          labelText: 'Nombre de usuario (Username)',
         ),
         controller: _usernameController,
         // maxLength: 25,
@@ -243,7 +241,7 @@ class _LoginBodyState extends State<LoginBody> {
   //Custom widget that creates password textfield
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Password',
+          labelText: 'Contraseña',
         ),
         controller: _passwordController,
         // onSaved: (value) => setState(() => password = value),

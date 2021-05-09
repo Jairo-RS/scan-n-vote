@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
-import 'package:scan_n_vote/models/current_motion_model.dart';
+import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
-import 'package:scan_n_vote/models/past_motions_model.dart';
-import 'package:scan_n_vote/models/voting_model.dart';
 import 'package:scan_n_vote/models/voting_model_test.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
@@ -13,7 +11,9 @@ import 'package:http/http.dart' as http;
 
 class MotionsBody extends StatefulWidget {
   final UserRepository userRepository;
-  MotionsBody({Key key, @required this.userRepository}) : super(key: key);
+  final Assemblies currentAssembly;
+  MotionsBody({Key key, @required this.userRepository, this.currentAssembly})
+      : super(key: key);
 
   @override
   _MotionsBodyState createState() => _MotionsBodyState(this.userRepository);
@@ -35,7 +35,6 @@ class _MotionsBodyState extends State<MotionsBody> {
   //To see if voting is ready
   Future<VotingModelTest> voteReady2Voting(bool voteable, bool archived) async {
     if (voteable == true && archived == false) {
-      print("entered the if");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -62,36 +61,13 @@ class _MotionsBodyState extends State<MotionsBody> {
             );
           });
     }
-    // } else {
-    //   print("\nIncorrect HTTP Code.\nExpected 200, got ${response.statusCode}");
-    //   print("Retry with a new URL.");
-    //   return showDialog(
-    //       context: context,
-    //       builder: (context) {
-    //         return AlertDialog(
-    //           title: Text("Cast Vote"),
-    //           content: Text('Incorrect HTTP Code.\n'),
-    //           actions: [
-    //             TextButton(
-    //                 //OK Button
-    //                 onPressed: () =>
-    //                     Navigator.pop(context), //return to motions screen
-    //                 child: Text("OK")),
-    //           ],
-    //         );
-    //       });
-
     return null;
   }
 
-  Future<VotingModelTest> voteReady2Results() async {
-    Uri url = Uri.parse(
-        'https://run.mocky.io/v3/a58c1b7a-b688-4d22-8dec-6009a840b1f4'); //code200
-
-    final response = await http.get(url);
-
-    print("\nHttpResponseCode = " + response.statusCode.toString());
-    if (response.statusCode == 200) {
+  //FIX THIS METHOD BY ADDING PARAMETERS
+  Future<VotingModelTest> voteReady2Results(
+      bool voteable, bool archived) async {
+    if (voteable == false && archived == false) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -101,30 +77,30 @@ class _MotionsBodyState extends State<MotionsBody> {
         ),
       );
     } else {
-      print("Incorrect http code to continue");
-      return showDialog(
+      showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text("Cast Vote"),
-              content: Text('Incorrect HTTP Code.\n'),
+              title: Text("Aviso!"),
+              content:
+                  Text('Favor esperar a que se finalicen las votaciones.\n'),
               actions: [
                 TextButton(
                     //OK Button
                     onPressed: () =>
                         Navigator.pop(context), //return to motions screen
-                    child: Text("OK")),
+                    child: Text("Regresar")),
               ],
             );
           });
     }
-    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
+    // ignore: unused_local_variable
     final ScrollController _scrollController = ScrollController();
     return WillPopScope(
       //when back button is pressed return to desired screen
@@ -180,7 +156,7 @@ class _MotionsBodyState extends State<MotionsBody> {
               children: <Widget>[
                 Center(
                   child: Text(
-                    'Motions',
+                    'Mociones',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
@@ -193,7 +169,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: Container(
-                    height: 150,
+                    height: 250,
                     child: FutureBuilder(
                       future: motions,
                       // ignore: missing_return
@@ -215,91 +191,131 @@ class _MotionsBodyState extends State<MotionsBody> {
                             var currentMotion = snapshot.data;
                             return ListView.builder(
                               itemCount: currentMotion.length,
+                              // ignore: missing_return
                               itemBuilder: (BuildContext context, int index) {
                                 Motions currMotion = currentMotion[index];
-                                return Padding(
-                                  padding: EdgeInsets.only(left: 5, right: 5),
-                                  child: Container(
-                                    width: size.width * 0.8,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 5,
-                                          blurRadius: 7,
-                                          offset:
-                                              Offset(0, 3), //Position of shadow
-                                        )
-                                      ],
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            currMotion.motion + '\n',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+                                if (currMotion.archived == false)
+                                  return Padding(
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    child: Container(
+                                      width: size.width * 0.8,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: Offset(
+                                                0, 3), //Position of shadow
+                                          )
+                                        ],
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topCenter,
+                                            child: Text(
+                                              'Moción actual',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            ElevatedButton(
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              currMotion.motion + '\n',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.topCenter,
+                                            child: Text(
+                                              'Enmiendas',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          for (int i = 0;
+                                              i <
+                                                  currMotion
+                                                      .originalMotion.length;
+                                              i++)
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                currMotion
+                                                    .originalMotion[i].motion,
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ),
+                                          Text("\n"),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: Colors.blue,
+                                                    onPrimary: Colors.white,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 20, right: 20),
+                                                    child: Text(
+                                                      'Votar',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    voteReady2Voting(
+                                                        currMotion.voteable,
+                                                        currMotion.archived);
+                                                  }),
+                                              SizedBox(
+                                                width: size.width * 0.1,
+                                              ),
+                                              ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                  primary: Colors.blue,
+                                                  primary: Colors.green,
                                                   onPrimary: Colors.white,
                                                 ),
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 20, right: 20),
                                                   child: Text(
-                                                    'Vote',
+                                                    'Resultados',
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                     ),
                                                   ),
                                                 ),
                                                 onPressed: () {
-                                                  voteReady2Voting(
+                                                  voteReady2Results(
                                                       currMotion.voteable,
                                                       currMotion.archived);
-                                                }),
-                                            SizedBox(
-                                              width: size.width * 0.1,
-                                            ),
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                primary: Colors.green,
-                                                onPrimary: Colors.white,
+                                                },
                                               ),
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 20, right: 20),
-                                                child: Text(
-                                                  'Results',
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                voteReady2Results();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
                               },
                             );
                         }
@@ -312,7 +328,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                 ),
                 Center(
                   child: Text(
-                    'Past Motions',
+                    'Mociones Pasadas',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,

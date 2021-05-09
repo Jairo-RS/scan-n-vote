@@ -83,23 +83,31 @@ class _InitialBodyState extends State<InitialBody> {
                   height: size.height * 0.02,
                 ),
                 //Displays image (team logo) stored in assets folder
-                SvgPicture.asset(
-                  "assets/icons/AcceltraProject-logo.svg",
+                Image.asset(
+                  'assets/images/scan-n-vote.png',
                   height: size.height * 0.28,
                 ),
+
+                // SvgPicture.asset(
+                //   "assets/icons/AcceltraProject-logo.svg",
+                //   height: size.height * 0.28,
+                // ),
                 SizedBox(height: size.height * 0.02),
                 Text(
-                  "Welcome!",
+                  "¡Bienvenido!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
                 ),
                 SizedBox(height: size.height * 0.02),
+
                 Text(
-                  "Please login or sign up to\n  continue using the app",
+                  "Por favor, conéctese a su cuenta \n o regístrese para seguir\n usando la aplicación.",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: size.height * 0.02),
                 RoundButton(
-                  text: "LOGIN",
+                  text: "Iniciar sesión",
+                  color: Colors.green[700],
                   press: () {
                     Navigator.push(
                       context,
@@ -112,9 +120,9 @@ class _InitialBodyState extends State<InitialBody> {
                   },
                 ),
                 RoundButton(
-                  text: "SIGN UP",
-                  color: Color(0xFFFFABF3F3),
-                  textColor: Colors.black,
+                  text: "Registrarse",
+                  color: Colors.purple[700],
+                  textColor: Colors.white,
                   press: () {
                     Navigator.push(
                       context,

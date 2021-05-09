@@ -34,7 +34,7 @@ class Assemblies {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    String content = response.body;
+    String content = utf8.decode(response.bodyBytes);
     List jsonReponse = json.decode(content);
 
     // Verifying if http request was successfully completed

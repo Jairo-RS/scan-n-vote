@@ -26,11 +26,12 @@ class ForgotPasswordBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Forgot Password',
+                '¿Olvidaste tu contraseña?',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 40,
                 ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(
                 height: size.height * 0.05,
@@ -38,10 +39,13 @@ class ForgotPasswordBody extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 25, right: 25),
                 child: Text(
-                  'Please, get in physical contact with a member of the CGE. '
-                  'They will ask for your student ID to verify your information. '
-                  'If your information matches the profile they will provide you '
-                  'with a temporary password.',
+                  "Trate de contactar a un miembro del CGE físicamente o por "
+                  "correo electrónico (cge@uprm.edu). Ellos te ayudaran a "
+                  "recuperar tu cuenta. Por favor, tenga su identificación de "
+                  "estudiante disponible para poder verificar su información. "
+                  "Si su información coincide con la de su perfil, le "
+                  "proporcionarán una contraseña temporal para poder "
+                  "participar en la asamblea.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

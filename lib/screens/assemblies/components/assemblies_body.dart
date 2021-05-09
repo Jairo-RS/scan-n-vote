@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
@@ -7,6 +10,7 @@ import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/assemblies/past_assemblies/past_assemblies_screen.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
+import 'package:http/http.dart' as http;
 
 class AssembliesBody extends StatefulWidget {
   final UserRepository userRepository;
@@ -23,6 +27,34 @@ class AssembliesBody extends StatefulWidget {
 class _AssembliesBodyState extends State<AssembliesBody> {
   final UserRepository userRepository;
   _AssembliesBodyState(this.userRepository);
+
+  //Used to store information about login functionality
+  final FlutterSecureStorage storage = new FlutterSecureStorage();
+
+  Future<String> _logoutFuture;
+
+  var logoutUrl = "https://scannvote.herokuapp.com/api/logout/";
+
+  // Logout token POST request
+  Future<String> logout(String csrftoken) async {
+    String csrftoken = await storage.read(key: 'set-cookie');
+    final response = await http.post(
+      logoutUrl,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, String>{
+        "csrfmiddlewaretoken": csrftoken,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      // If not successful, display error status code (403)
+      throw Exception(response.statusCode);
+    }
+  }
 
   //This method (widget) is used to ask the user if they want to logout when
   //they press the back button on their phone.
@@ -42,8 +74,13 @@ class _AssembliesBodyState extends State<AssembliesBody> {
             ),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              String csrftoken = await storage.read(key: 'set-cookie');
               BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+              setState(() {
+                _logoutFuture = logout(csrftoken);
+              });
+
               return Navigator.push(
                 context,
                 MaterialPageRoute(
