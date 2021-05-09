@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
 import 'package:scan_n_vote/constants.dart';
@@ -48,7 +47,6 @@ class _SignUpBodyState extends State<SignUpBody> {
   @override
   void initState() {
     super.initState();
-    // futureToken = TokenModel.getToken();
     TokenModel.getToken().then(
       (data) => setState(() {
         futureToken = data;
@@ -182,7 +180,8 @@ class _SignUpBodyState extends State<SignUpBody> {
                         _confirmPasswordController.text;
                     // Future<String> token = UserModel.getToken();
                     // String csrfmiddlewaretoken = token.toString();
-                    TokenModel csrfmiddlewaretoken = futureToken;
+                    var csrfmiddlewaretoken =
+                        futureToken.csrfmiddlewaretoken.toString();
                     //Verifying validation of all forms
                     final isValid = _formkey.currentState.validate();
                     if (isValid) {
@@ -198,12 +197,18 @@ class _SignUpBodyState extends State<SignUpBody> {
                       });
                       messageDialog(context);
                     } else {
-                      Flushbar(
-                        title: "Credenciales invalidos",
-                        message:
-                            "Por favor, complete el formulario correctamente.",
-                        duration: Duration(seconds: 5),
-                      ).show(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Credenciales inválidos\n Complete el formulario correctamente.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                     // //Verifying validation of all forms
                     // final isValid = _formkey.currentState.validate();

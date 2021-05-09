@@ -31,7 +31,6 @@ dependencies:
   rxdart: ^0.24.0
   equatable: ^2.0.0
   flutter_secure_storage: ^3.3.3
-  flushbar: ^1.10.4
 
 
   # Older versions of packges used for testing
