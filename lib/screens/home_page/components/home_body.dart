@@ -121,46 +121,47 @@ class HomeBody extends StatelessWidget {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => new AlertDialog(
-                                title: Text("Logout"),
-                                content:
-                                    Text('Are you sure you want to logout? \n'),
-                                actions: [
-                                  TextButton(
-                                      //No Button
-                                      onPressed: () => Navigator.pop(
-                                          context), //return to voting screen
-                                      child: Text("No")),
-                                  TextButton(
-                                      //Yes Button
-                                      onPressed: () {
-                                        BlocProvider.of<AuthenticationBloc>(
-                                                context)
-                                            .add(LoggedOut());
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Logout"),
+                                  content: Text(
+                                      'Are you sure you want to logout? \n'),
+                                  actions: [
+                                    TextButton(
+                                        //No Button
+                                        onPressed: () => Navigator.pop(
+                                            context), //return to voting screen
+                                        child: Text("No")),
+                                    TextButton(
+                                        //Yes Button
+                                        onPressed: () {
+                                          BlocProvider.of<AuthenticationBloc>(
+                                                  context)
+                                              .add(LoggedOut());
 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              //enviar logout a backend
-                                              BlocProvider.of<
-                                                          AuthenticationBloc>(
-                                                      context)
-                                                  .add(LoggedOut());
-                                              return InitialScreen(
-                                                userRepository: userRepository,
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      child: Text("Yes"))
-                                ],
-                              ),
-                            ),
-                          );
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                //enviar logout a backend
+                                                BlocProvider.of<
+                                                            AuthenticationBloc>(
+                                                        context)
+                                                    .add(LoggedOut());
+                                                return InitialScreen(
+                                                  userRepository:
+                                                      userRepository,
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        },
+                                        child: Text("Yes"))
+                                  ],
+                                );
+                              });
                         },
                         child: Text(
                           "Logout",

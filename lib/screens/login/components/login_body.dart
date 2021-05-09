@@ -99,7 +99,7 @@ class _LoginBodyState extends State<LoginBody> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Login",
+                        "Iniciar sesión",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
@@ -164,7 +164,7 @@ class _LoginBodyState extends State<LoginBody> {
                                     child: ElevatedButton(
                                       onPressed: _onLoginButtonPressed,
                                       child: Text(
-                                        "LOGIN",
+                                        "Iniciar sesión",
                                         style: new TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -173,7 +173,7 @@ class _LoginBodyState extends State<LoginBody> {
                                       ),
                                       style: ElevatedButton.styleFrom(
                                         // background color
-                                        primary: Colors.black,
+                                        primary: Colors.green[700],
                                         // foreground color
                                         onPrimary: Colors.black,
                                         shape: RoundedRectangleBorder(
@@ -231,7 +231,7 @@ class _LoginBodyState extends State<LoginBody> {
   //Custom widget that creates username textfield
   Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Username',
+          labelText: 'Nombre de usuario (Username)',
         ),
         controller: _usernameController,
         // maxLength: 25,
@@ -241,7 +241,7 @@ class _LoginBodyState extends State<LoginBody> {
   //Custom widget that creates password textfield
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Password',
+          labelText: 'Contraseña',
         ),
         controller: _passwordController,
         // onSaved: (value) => setState(() => password = value),
