@@ -42,32 +42,13 @@ class UserModel {
         "csrfmiddletoken": csrfmiddlewaretoken,
       };
 
-  // //GET Request
-  // static Future<String> getToken() async {
-  //   //Initial token url
-  //   http.Response response = await http.get(
-  //     Uri.parse("https://scannvote.herokuapp.com/api/token/?format=json"),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //   );
-  //   // http.Response response = await http.get(tokenUrl);
-
-  //   if (response.statusCode == 200) {
-  //     return json.decode(response.body);
-  //   } else {
-  //     // If not successful, display error status code (409)
-  //     throw Exception(response.statusCode);
-  //   }
-  // }
-
-  //POST Request (write static and you can use from here)
+  //POST Request
   static Future<UserModel> createUser(
       String userName,
       String studentNumber,
       String password,
       String passwordConfirmation,
-      TokenModel csrfmiddlewaretoken) async {
+      String csrfmiddlewaretoken) async {
     //Need to finish implementation when url is available
     final String signUpUrl = "https://scannvote.herokuapp.com/api/signup/";
 

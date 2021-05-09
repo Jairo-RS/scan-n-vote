@@ -5,6 +5,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+//This class contains the necessary information to obtain initial token information
 TokenModel tokenModelFromJson(String str) =>
     TokenModel.fromJson(json.decode(str));
 
@@ -27,9 +28,7 @@ class TokenModel {
 
   //GET Request
   static Future<TokenModel> getToken() async {
-    // var tokenUrl = 'https://scannvote.herokuapp.com/api/token/?format=json';
-    var tokenUrl =
-        "https://run.mocky.io/v3/229880fe-920e-436d-a6db-4f8dce661764";
+    var tokenUrl = "http://scannvote.herokuapp.com/api/anon-token/?format=json";
 
     http.Response response = await http.get(
       tokenUrl,
