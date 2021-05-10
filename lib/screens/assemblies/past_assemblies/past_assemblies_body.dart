@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
-import 'package:scan_n_vote/models/past_assemblies_model.dart';
 import 'package:scan_n_vote/screens/assemblies/past_assemblies/past_assemblies_details.dart';
 
 //Class contains all the widgets that will be displayed in PastAssemblies screen
