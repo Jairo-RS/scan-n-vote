@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
@@ -12,13 +15,55 @@ import 'package:scan_n_vote/screens/assemblies/assemblies_screen.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
 import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
+import 'package:http/http.dart' as http;
 
-class HomeBody extends StatelessWidget {
+class HomeBody extends StatefulWidget {
   final UserRepository userRepository;
   final Assemblies currentAssembly;
+
   HomeBody(
       {Key key, @required this.userRepository, @required this.currentAssembly})
       : super(key: key);
+
+  @override
+  _HomeBodyState createState() =>
+      _HomeBodyState(this.userRepository, this.currentAssembly);
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  // ignore: unused_field
+  Future<String> _logoutFuture;
+
+  final UserRepository userRepository;
+  final Assemblies currentAssembly;
+
+  _HomeBodyState(this.userRepository, this.currentAssembly);
+
+  var logoutUrl = "https://scannvote.herokuapp.com/api/logout/";
+
+  //Used to store information about login functionality
+  final FlutterSecureStorage storage = new FlutterSecureStorage();
+
+  // Logout token POST request
+  Future<String> logout(String csrftoken) async {
+    String csrftoken = await storage.read(key: 'set-cookie');
+    final response = await http.post(
+      logoutUrl,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, String>{
+        "csrfmiddlewaretoken": csrftoken,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      // If not successful, display error status code (403)
+      throw Exception(response.statusCode);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,10 +186,17 @@ class HomeBody extends StatelessWidget {
                                         child: Text("No")),
                                     TextButton(
                                         //Yes Button
-                                        onPressed: () {
+                                        onPressed: () async {
+                                          String csrftoken = await storage.read(
+                                              key: "set-cookie");
+
                                           BlocProvider.of<AuthenticationBloc>(
                                                   context)
                                               .add(LoggedOut());
+
+                                          setState(() {
+                                            _logoutFuture = logout(csrftoken);
+                                          });
 
                                           Navigator.push(
                                             context,
