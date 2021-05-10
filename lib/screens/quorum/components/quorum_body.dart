@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
-import 'package:scan_n_vote/models/quorum.dart';
 
 class QuorumBody extends StatefulWidget {
   @override
@@ -12,8 +11,6 @@ class QuorumBody extends StatefulWidget {
 class _QuorumBodyState extends State<QuorumBody> {
   Future<List<Assemblies>> futureAssemblies;
   var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-
-  List<QuorumCount> quorum = const [];
 
   void initState() {
     super.initState();

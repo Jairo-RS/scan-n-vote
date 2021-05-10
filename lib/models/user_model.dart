@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:scan_n_vote/models/token_model.dart';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
@@ -42,14 +41,13 @@ class UserModel {
         "csrfmiddletoken": csrfmiddlewaretoken,
       };
 
-  //POST Request
+  //POST Request for user signup
   static Future<UserModel> createUser(
       String userName,
       String studentNumber,
       String password,
       String passwordConfirmation,
       String csrfmiddlewaretoken) async {
-    //Need to finish implementation when url is available
     final String signUpUrl = "https://scannvote.herokuapp.com/api/signup/";
 
     final response = await http.post(signUpUrl, body: {
@@ -60,6 +58,7 @@ class UserModel {
       "csrfmiddlewaretoken": csrfmiddlewaretoken,
     });
 
+    // Verifying if http request was successfully completed
     if (response.statusCode == 200) {
       final String responseString = response.body;
       return userModelFromJson(responseString);

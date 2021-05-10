@@ -156,6 +156,7 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                         return ListView.builder(
                           shrinkWrap: true,
                           itemCount: assemblies.length,
+                          // ignore: missing_return
                           itemBuilder: (BuildContext context, int index) {
                             Assemblies currentAssembly = assemblies[index];
                             if (currentAssembly.archived == false) {
@@ -205,9 +206,6 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                                           ),
                                         ),
                                         onPressed: () async {
-                                          String user =
-                                              await storage.read(key: 'user');
-                                          print(user);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
