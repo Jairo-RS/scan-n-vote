@@ -339,18 +339,16 @@ class VotingBodyState extends State<VotingBody> {
   // ignore: missing_return
   Future<String> addVote(String choice, int currentMotionPK) async {
     String csrftoken = await storage.read(key: 'set-cookie');
+    String user = await storage.read(key: 'user');
 
     //print("Storage token = " + csrftoken);
 
-    Uri url = Uri.parse //('https://reqres.in/api/users');
-        ("https://scannvote.herokuapp.com/api/motions/" +
-            currentMotionPK.toString() +
-            "/vote");
+    Uri url = Uri.parse("https://scannvote.herokuapp.com/api/motions/" +
+        currentMotionPK.toString() +
+        "/vote");
 
     print("**** $choice *******"); //check voter's choice
     print("**** $currentMotionPK"); //check if on current motion
-
-    String username = "kjblakeley";
 
     //http.post
     final response = await http.post(url,
@@ -361,7 +359,7 @@ class VotingBodyState extends State<VotingBody> {
           <String, String>{
             "choice": choice,
             "csrfmiddlewaretoken": csrftoken,
-            "username": username,
+            "username": user,
           },
         ));
 

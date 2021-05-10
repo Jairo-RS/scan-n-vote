@@ -3,12 +3,16 @@ import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
 import 'package:scan_n_vote/models/voting_model.dart';
+<<<<<<< HEAD
 import 'package:scan_n_vote/models/voting_model_test.dart';
+=======
+>>>>>>> 3b95e1d6e160c303aee51e06d061f160c8774028
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/results/results_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 
+//This class is responsible for building all widgets presented in motions screen
 class MotionsBody extends StatefulWidget {
   final UserRepository userRepository;
   final Assemblies currentAssembly;
@@ -105,8 +109,6 @@ class _MotionsBodyState extends State<MotionsBody> {
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
-    // ignore: unused_local_variable
-    final ScrollController _scrollController = ScrollController();
     return WillPopScope(
       //when back button is pressed return to desired screen
       onWillPop: () => Navigator.push(
@@ -157,9 +159,10 @@ class _MotionsBodyState extends State<MotionsBody> {
             elevation: 0,
             iconTheme: IconThemeData(color: Colors.black),
           ),
+
+          //Main body of the screen
           body: Backdrop(
             child: ListView(
-              // shrinkWrap: true,
               children: <Widget>[
                 Center(
                   child: Text(
@@ -173,11 +176,8 @@ class _MotionsBodyState extends State<MotionsBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
-                // Padding(
-                //   padding: EdgeInsets.only(left: 20, right: 20),
-                //   child: Container(
-                //     height: 325,
-                // child:
+
+                //Building the current motion
                 FutureBuilder(
                   future: motions,
                   // ignore: missing_return
@@ -195,6 +195,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                             "There was an error: ${snapshot.error}",
                           );
                         }
+
                         //snapshot.data holds the results of the future
                         var currentMotion = snapshot.data;
                         return ListView.builder(
@@ -326,8 +327,6 @@ class _MotionsBodyState extends State<MotionsBody> {
                     }
                   },
                 ),
-                //   ),
-                // ),
                 SizedBox(
                   height: size.height * 0.05,
                 ),
@@ -343,8 +342,11 @@ class _MotionsBodyState extends State<MotionsBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
+
+                //Building the list of past motions
                 FutureBuilder(
                   future: motions,
+                  // ignore: missing_return
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
@@ -379,7 +381,8 @@ class _MotionsBodyState extends State<MotionsBody> {
                                 if (widget.currentAssembly.archived == false &&
                                     pastMotion.assemblyID ==
                                         widget.currentAssembly.pk &&
-                                    pastMotion.voteable == false) {
+                                    pastMotion.voteable == false &&
+                                    pastMotion.archived == true) {
                                   return Container(
                                     width: size.width * 0.8,
                                     padding: EdgeInsets.symmetric(
@@ -470,131 +473,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                     }
                   },
                 ),
-                // Padding(
-                //   padding: EdgeInsets.only(left: 25, right: 25),
-                //   child: Container(
-                //     height: 700,
-                //     child: FutureBuilder(
-                //       future: pastMotions,
-                //       // ignore: missing_return
-                //       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                //         switch (snapshot.connectionState) {
-                //           case ConnectionState.none:
-                //           case ConnectionState.waiting:
-                //           case ConnectionState.active:
-                //             return Center(
-                //               child: CircularProgressIndicator(),
-                //             );
-                //           case ConnectionState.done:
-                //             if (snapshot.hasError) {
-                //               return Text(
-                //                 "There was an error: ${snapshot.error}",
-                //               );
-                //             }
-                //             //snapshot.data holds the results of the future
-                //             var pastMotions = snapshot.data;
-                //             return ListView.separated(
-                //               controller: _scrollController,
-                //               // physics: ClampingScrollPhysics(),
-                //               // shrinkWrap: true,
-                //               // reverse: true,
-                //               itemCount: pastMotions.length,
-                //               separatorBuilder:
-                //                   (BuildContext context, int index) {
-                //                 return SizedBox(
-                //                   height: size.height * 0.03,
-                //                 );
-                //               },
-                //               itemBuilder: (BuildContext context, int index) {
-                //                 PastMotions motion = pastMotions[index];
-                //                 if (motion.allAmendments == null) {
-                //                   motion.allAmendments =
-                //                       "Ninguna enmienda se ha hecho.";
-                //                 }
-                //                 return Padding(
-                //                   padding: EdgeInsets.only(left: 5, right: 5),
-                //                   child: Container(
-                //                     width: size.width * 0.8,
-                //                     padding: EdgeInsets.symmetric(
-                //                       horizontal: 10,
-                //                       vertical: 10,
-                //                     ),
-                //                     decoration: BoxDecoration(
-                //                       color: Colors.white,
-                //                       borderRadius: BorderRadius.circular(10),
-                //                       boxShadow: [
-                //                         BoxShadow(
-                //                           color: Colors.grey.withOpacity(0.5),
-                //                           spreadRadius: 2,
-                //                           blurRadius: 5,
-                //                           offset:
-                //                               Offset(0, 3), //Position of shadow
-                //                         )
-                //                       ],
-                //                     ),
-                //                     child: Column(
-                //                       children: [
-                //                         Align(
-                //                           alignment: Alignment.topLeft,
-                //                           child: Text(
-                //                             "Motion:",
-                //                             style: TextStyle(
-                //                               fontWeight: FontWeight.bold,
-                //                               fontSize: 18,
-                //                             ),
-                //                           ),
-                //                         ),
-                //                         Align(
-                //                           alignment: Alignment.topLeft,
-                //                           child: Text(
-                //                             motion.pastMotion + "\n",
-                //                             style: TextStyle(
-                //                               // fontWeight: FontWeight.bold,
-                //                               fontSize: 18,
-                //                             ),
-                //                           ),
-                //                         ),
-                //                         Align(
-                //                           alignment: Alignment.centerLeft,
-                //                           child: Text(
-                //                             "Amendments:",
-                //                             style: TextStyle(
-                //                               fontWeight: FontWeight.bold,
-                //                               fontSize: 18,
-                //                             ),
-                //                           ),
-                //                         ),
-                //                         Align(
-                //                           alignment: Alignment.centerLeft,
-                //                           child: Text(
-                //                             motion.allAmendments.toString() +
-                //                                 "\n",
-                //                             style: TextStyle(
-                //                               fontSize: 18,
-                //                             ),
-                //                           ),
-                //                         ),
-                //                         Align(
-                //                           alignment: Alignment.bottomLeft,
-                //                           child: Text(
-                //                             "Results: " + motion.result,
-                //                             style: TextStyle(
-                //                               fontWeight: FontWeight.bold,
-                //                               fontSize: 18,
-                //                             ),
-                //                           ),
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
-                //                 );
-                //               },
-                //             );
-                //         }
-                //       },
-                //     ),
-                //   ),
-                // ),
+
                 SizedBox(
                   height: size.height * 0.05,
                 ),

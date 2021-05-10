@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class Amendments {
   final int pk;
   final String motion;
@@ -31,9 +34,21 @@ class Amendments {
     );
   }
 
-  //POST Request
-  Future<Amendments> fetchAmendments() async {
-    //Need to finish implementation when url is available
-    return null;
+  //GET request
+  Future<List<Amendments>> fetchAmendments() async {
+    var url = Uri.parse(
+        'https://scannvote.herokuapp.com/api/amendments/?format=json');
+
+    http.Response response = await http.get(url);
+    String content = utf8.decode(response.bodyBytes);
+    List jsonReponse = json.decode(content);
+
+    // Verifying if http request was successfully completed
+    if (response.statusCode == 200) {
+      return jsonReponse.map((job) => new Amendments.fromJson(job)).toList();
+    } else {
+      // If not successful, display error code
+      throw Exception(response.statusCode);
+    }
   }
 }

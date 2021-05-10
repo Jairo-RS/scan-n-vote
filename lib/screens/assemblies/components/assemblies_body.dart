@@ -20,9 +20,8 @@ class AssembliesBody extends StatefulWidget {
         super(key: key);
 
   @override
-  _AssembliesBodyState createState() => _AssembliesBodyState(
-        this.userRepository,
-      );
+  _AssembliesBodyState createState() =>
+      _AssembliesBodyState(this.userRepository);
 }
 
 class _AssembliesBodyState extends State<AssembliesBody> {
@@ -157,6 +156,7 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                         return ListView.builder(
                           shrinkWrap: true,
                           itemCount: assemblies.length,
+                          // ignore: missing_return
                           itemBuilder: (BuildContext context, int index) {
                             Assemblies currentAssembly = assemblies[index];
                             if (currentAssembly.archived == false) {
@@ -205,7 +205,7 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                                             ),
                                           ),
                                         ),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
