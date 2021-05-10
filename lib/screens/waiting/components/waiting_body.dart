@@ -9,7 +9,8 @@ import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 class WaitingBody extends StatelessWidget {
   final UserRepository userRepository;
   final Assemblies currentAssembly;
-  WaitingBody({Key key, @required this.userRepository, this.currentAssembly})
+  WaitingBody(
+      {Key key, @required this.userRepository, @required this.currentAssembly})
       : assert(userRepository != null),
         super(key: key);
 
