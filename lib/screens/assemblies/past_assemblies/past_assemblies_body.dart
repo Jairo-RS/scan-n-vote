@@ -1,5 +1,3 @@
-// import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
@@ -35,7 +33,7 @@ class _PastAssembliesBodyState extends State<PastAssembliesBody> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
-            'Past Assemblies',
+            'Asambleas Pasadas',
             style: TextStyle(fontSize: 30, color: Colors.black),
           ),
           centerTitle: true,
