@@ -37,7 +37,7 @@ class WaitingBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Your vote has been cast',
+                'Su voto ha sido contado',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -50,9 +50,9 @@ class WaitingBody extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 25, right: 25),
                 child: Text(
-                  'Thanks for voting!\n\n'
-                  'Please wait while others \nfinish casting their votes.\n \n'
-                  'Voting results will be \nposted shortly.\n',
+                  'Gracias por votar!\n\n'
+                  'Favor esperar mientras los demás \nestudiantes terminan de votar.\n \n'
+                  'Los resultados de las votaciones \nestarán disponibles brevemente.\n',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class WaitingBody extends StatelessWidget {
                 height: size.height * 0.15,
               ),
               RoundButton(
-                text: "Back to Motions",
+                text: "De Vuelta a Mociones",
                 color: Colors.black87,
                 textColor: Colors.white,
                 press: () {

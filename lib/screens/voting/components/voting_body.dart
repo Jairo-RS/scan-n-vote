@@ -35,14 +35,13 @@ class VotingBodyState extends State<VotingBody> {
   final Assemblies currentAssembly;
   final UserRepository userRepository;
 
-  //maybe delete
-  TokenModel futureToken;
-
   //Used to store information about login functionality
   final FlutterSecureStorage storage = new FlutterSecureStorage();
 
+  //used to determine which is the current assembly
   int currentMotionPK;
 
+  // ignore: unused_field
   String _vote;
 
   VotingBodyState(this.userRepository, this.currentAssembly);
@@ -52,13 +51,10 @@ class VotingBodyState extends State<VotingBody> {
 
   List<Motions> motion = const [];
 
-  // ignore: missing_return
-
   Future loadMotion() async {
     // Reading from a remote server/file
     Uri url =
         Uri.parse('https://scannvote.herokuapp.com/api/motions/?format=json');
-    // 'https://run.mocky.io/v3/a58c1b7a-b688-4d22-8dec-6009a840b1f4');
     http.Response response = await http.get(url);
     String content = response.body;
     // End reading from a remote server/file
@@ -76,20 +72,13 @@ class VotingBodyState extends State<VotingBody> {
   void initState() {
     loadMotion();
     super.initState();
-
-    //maybe delete
-    TokenModel.getToken().then(
-      (data) => setState(() {
-        futureToken = data;
-      }),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
-    //print("First Vote Value: $voteValue "); //used for testing purposes
+    //used for testing purposes
     //print(motion.toString());
 
     return SafeArea(
@@ -236,7 +225,7 @@ class VotingBodyState extends State<VotingBody> {
                   height: size.height * 0.04,
                 ),
                 RoundButton(
-                    text: "Cast Vote",
+                    text: "Votar",
                     color: Colors.black87,
                     press: () {
                       showDialog(
@@ -244,9 +233,9 @@ class VotingBodyState extends State<VotingBody> {
                           builder: (context) {
                             if (voteValue == 0) {
                               return AlertDialog(
-                                title: Text("Cast Vote"),
+                                title: Text("Confirme su voto"),
                                 content: Text(
-                                    'Are you sure you want to vote "A Favor" to the current motion?'),
+                                    '¿Desea confirmar voto "A Favor" a la moción actual?'),
                                 actions: [
                                   TextButton(
                                       //No Button
@@ -257,28 +246,23 @@ class VotingBodyState extends State<VotingBody> {
                                       //Yes Button
                                       onPressed: () async {
                                         final String choice = "0";
-                                        final String csrfmiddlewaretoken =
-                                            await storage.read(
-                                                key: 'set-cookie');
 
                                         final String vote = await addVote(
-                                            choice,
-                                            csrfmiddlewaretoken,
-                                            currentMotionPK);
+                                            choice, currentMotionPK);
 
                                         setState(() {
                                           _vote = vote;
                                         });
                                       },
-                                      child: Text("Yes"))
+                                      child: Text("Si"))
                                 ],
                               );
                             } // end if
                             else if (voteValue == 2) {
                               return AlertDialog(
-                                title: Text("Cast Vote"),
+                                title: Text("Confirme su voto"),
                                 content: Text(
-                                    'Are you sure you want to vote "Abstenidx" to the current motion?'),
+                                    '¿Desea confirmar voto "Abtenidx" a la moción actual?'),
                                 actions: [
                                   TextButton(
                                       //No Button
@@ -289,28 +273,23 @@ class VotingBodyState extends State<VotingBody> {
                                       //Yes Button
                                       onPressed: () async {
                                         final String choice = "2";
-                                        final String csrfmiddlewaretoken =
-                                            await storage.read(
-                                                key: 'set-cookie');
 
                                         final String vote = await addVote(
-                                            choice,
-                                            csrfmiddlewaretoken,
-                                            currentMotionPK);
+                                            choice, currentMotionPK);
 
                                         setState(() {
                                           _vote = vote;
                                         });
                                       },
-                                      child: Text("Yes"))
+                                      child: Text("Si"))
                                 ],
                               );
                             } // end else if
                             else if (voteValue == 1) {
                               return AlertDialog(
-                                title: Text("Cast Vote"),
+                                title: Text("Confirmar su voto"),
                                 content: Text(
-                                    'Are you sure you want to vote \n"En Contra" to the current motion?'),
+                                    '¿Desea confirmar voto "En Contra" a la moción actual?'),
                                 actions: [
                                   TextButton(
                                       //No Button
@@ -321,28 +300,23 @@ class VotingBodyState extends State<VotingBody> {
                                       //Yes Button
                                       onPressed: () async {
                                         final String choice = "1";
-                                        final String csrfmiddlewaretoken =
-                                            await storage.read(
-                                                key: 'set-cookie');
 
                                         final String vote = await addVote(
-                                            choice,
-                                            csrfmiddlewaretoken,
-                                            currentMotionPK);
+                                            choice, currentMotionPK);
 
                                         setState(() {
                                           _vote = vote;
                                         });
                                       },
-                                      child: Text("Yes"))
+                                      child: Text("Si"))
                                 ],
                               );
                             } // end else if
                             else {
                               return AlertDialog(
-                                title: Text("Cast Vote"),
+                                title: Text("Error"),
                                 content: Text(
-                                    'No vote has been cast.\nPlease cast a vote.'),
+                                    'No seleccionó ningun voto.\nFavor escoger una opción antes de votar.'),
                                 actions: [
                                   TextButton(
                                       //OK Button
@@ -363,19 +337,16 @@ class VotingBodyState extends State<VotingBody> {
   }
 
   // ignore: missing_return
-  Future<String> addVote(
-      String choice, String csrftokenRandom, int currentMotionPK) async {
+  Future<String> addVote(String choice, int currentMotionPK) async {
     String csrftoken = await storage.read(key: 'set-cookie');
     String user = await storage.read(key: 'user');
 
-    //print("Random token = " + csrftokenRandom);
-    print("Storage token = " + csrftoken);
+    //print("Storage token = " + csrftoken);
 
     Uri url = Uri.parse("https://scannvote.herokuapp.com/api/motions/" +
         currentMotionPK.toString() +
         "/vote");
 
-    //print("after token = " + csrftoken);
     print("**** $choice *******"); //check voter's choice
     print("**** $currentMotionPK"); //check if on current motion
 
@@ -392,9 +363,11 @@ class VotingBodyState extends State<VotingBody> {
           },
         ));
 
-    print(response.statusCode);
-    print(response.body);
+    //for testing
+    // print("HTTP Response Status Code = " + response.statusCode.toString());
+    // print(response.body);
 
+    // initialize variables to decode code in case of an error in http response
     String str, theCode;
     int statusCode;
 
@@ -409,10 +382,11 @@ class VotingBodyState extends State<VotingBody> {
       final endIndex = str.indexOf(end, startIndex + start.length);
 
       theCode = str.substring(startIndex + start.length, endIndex);
-
-      print("theCode = " + theCode);
+      //for testing
+      // print("theCode = " + theCode);
     } else {
-      print("Status code = 200");
+      //for testing
+      // print("Status code = 200");
     }
 
     //se logro votar correctamente
