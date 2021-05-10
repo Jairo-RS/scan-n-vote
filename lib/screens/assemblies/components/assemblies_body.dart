@@ -36,6 +36,8 @@ class _AssembliesBodyState extends State<AssembliesBody> {
 
   Future<List<Assemblies>> futureAssembly;
 
+  int count = 0;
+
   @override
   void initState() {
     super.initState();
@@ -71,7 +73,8 @@ class _AssembliesBodyState extends State<AssembliesBody> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Are you sure you want to logout?"),
+        title: Text("Terminar Sesión"),
+        content: Text("¿Desea desconectarse de su cuenta?"),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -98,10 +101,9 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                   ),
                 ),
               );
-              // return Navigator.pop(context); //Dismiss AlertDialog
             },
             child: Text(
-              "Yes",
+              "Sí",
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -119,180 +121,204 @@ class _AssembliesBodyState extends State<AssembliesBody> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: SafeArea(
-        child: Backdrop(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Asambleas',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40,
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          //Appbar at the top of screen
+          appBar: AppBar(
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  var _currentAssembly = Assemblies.fetchAssemblies();
+                  setState(() {
+                    futureAssembly = _currentAssembly;
+                  });
+                },
+              ),
+            ],
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+          ),
+          body: Backdrop(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Asambleas',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: size.height * 0.07,
-                ),
-                FutureBuilder(
-                  future: futureAssembly,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                      case ConnectionState.waiting:
-                      case ConnectionState.active:
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case ConnectionState.done:
-                        if (snapshot.hasError) {
-                          return Text(
-                            "There was an error: ${snapshot.error}",
-                          );
-                        }
+                  SizedBox(
+                    height: size.height * 0.07,
+                  ),
 
-                        //snapshot.data holds the results of the future
-                        var assemblies = snapshot.data;
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: assemblies.length,
-                          // ignore: missing_return
-                          itemBuilder: (BuildContext context, int index) {
-                            Assemblies currentAssembly = assemblies[index];
-                            if (currentAssembly.archived == false) {
-                              return Padding(
-                                padding: EdgeInsets.only(left: 30, right: 30),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 5,
-                                        blurRadius: 7,
-                                        offset:
-                                            Offset(0, 3), //Position of shadow
-                                      )
-                                    ],
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topCenter,
-                                        child: Text(
-                                          'Asamblea Actual\n',
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          primary: Colors.green,
-                                          onPrimary: Colors.white,
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 4),
+                  //Builds the current assembly
+                  FutureBuilder(
+                    future: futureAssembly,
+                    // ignore: missing_return
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                        case ConnectionState.waiting:
+                        case ConnectionState.active:
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        case ConnectionState.done:
+                          if (snapshot.hasError) {
+                            return Text(
+                              "There was an error: ${snapshot.error}",
+                            );
+                          }
+
+                          //snapshot.data holds the results of the future
+                          var assemblies = snapshot.data;
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: assemblies.length,
+                            // ignore: missing_return
+                            itemBuilder: (BuildContext context, int index) {
+                              Assemblies currentAssembly = assemblies[index];
+                              if (currentAssembly.archived == false) {
+                                return Padding(
+                                  padding: EdgeInsets.only(left: 30, right: 30),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset:
+                                              Offset(0, 3), //Position of shadow
+                                        )
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topCenter,
                                           child: Text(
-                                            'Enter',
+                                            'Asamblea Actual\n',
                                             style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
-                                        onPressed: () async {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) {
-                                                return HomeScreen(
-                                                  userRepository:
-                                                      userRepository,
-                                                  currentAssembly:
-                                                      currentAssembly,
-                                                );
-                                              },
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.green,
+                                            onPrimary: Colors.white,
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 4),
+                                            child: Text(
+                                              'Enter',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                              ),
                                             ),
-                                          );
-                                        },
-                                      ),
-                                    ],
+                                          ),
+                                          onPressed: () async {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return HomeScreen(
+                                                    userRepository:
+                                                        userRepository,
+                                                    currentAssembly:
+                                                        currentAssembly,
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                );
+                              }
+                            },
+                          );
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: size.height * 0.1,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30, right: 30),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), //Position of shadow
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              'Asambleas Pasadas\n',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green,
+                              onPrimary: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 4),
+                              child: Text(
+                                'Enter',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return PastAssembliesScreen();
+                                  },
                                 ),
                               );
-                            }
-                          },
-                        );
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: size.height * 0.1,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 30, right: 30),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), //Position of shadow
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            'Asambleas Pasadas\n',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            },
                           ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.green,
-                            onPrimary: Colors.white,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 4),
-                            child: Text(
-                              'Enter',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return PastAssembliesScreen();
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
