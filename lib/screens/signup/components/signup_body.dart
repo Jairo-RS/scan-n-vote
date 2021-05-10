@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
@@ -10,7 +8,6 @@ import 'package:scan_n_vote/models/user_model.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/initial/initial_screen.dart';
 import 'package:scan_n_vote/screens/login/login_screen.dart';
-import 'package:http/http.dart' as http;
 
 // Class that contains all the widgets that will be displayed by the Sign up
 // screen

@@ -3,13 +3,18 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
+import 'package:scan_n_vote/models/token_model.dart';
 import 'package:scan_n_vote/models/voting_model.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
+import 'package:scan_n_vote/screens/motions/motions_screen.dart';
+import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,6 +30,12 @@ class VotingBody extends StatefulWidget {
 class VotingBodyState extends State<VotingBody> {
   final UserRepository userRepository;
 
+  //maybe delete
+  TokenModel futureToken;
+
+  //Used to store information about login functionality
+  final FlutterSecureStorage storage = new FlutterSecureStorage();
+
   int currentMotionPK;
 
   VotingModel _vote;
@@ -37,40 +48,6 @@ class VotingBodyState extends State<VotingBody> {
   List<Motions> motion = const [];
 
   // ignore: missing_return
-  Future<VotingModel> addVote(String choice, int currentMotionPK) async {
-    //////////////////////////////////////
-    BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-      // If current state is authenticated, then display Assemblies screen
-      if (state is AuthenticationAuthenticated) {
-        print("IM LOGGED IN");
-      }
-      // If current state is unauthenticated, then display Initial screen
-      if (state is AuthenticationUnauthenticated) {
-        print("IM LOGGED OUT");
-      }
-    });
-    ///////////////////////////////////////
-
-    Uri url = Uri.parse //('https://reqres.in/api/users');
-        ("https://scannvote.herokuapp.com/api/motions/" +
-            currentMotionPK.toString() +
-            "/vote");
-
-    print("**** $choice *******");
-    print("**** $currentMotionPK");
-
-    final response = await http.post(url, body: {"choice": choice});
-
-    print(response.statusCode);
-    print(response.body);
-
-    if (response.statusCode == 200) {
-      final String responseString = response.body;
-      print("SUCCESS!!!!!!!!!!!!!!!!");
-      return votingModelFromJson(responseString);
-    }
-  }
 
   Future loadMotion() async {
     // Reading from a remote server/file
@@ -94,6 +71,13 @@ class VotingBodyState extends State<VotingBody> {
   void initState() {
     loadMotion();
     super.initState();
+
+    //maybe delete
+    TokenModel.getToken().then(
+      (data) => setState(() {
+        futureToken = data;
+      }),
+    );
   }
 
   @override
@@ -268,32 +252,32 @@ class VotingBodyState extends State<VotingBody> {
                                   TextButton(
                                       //Yes Button
                                       onPressed: () async {
-                                        final String choice = "0";
+                                        final int choice = 0;
+                                        // final String csrfmiddlewaretoken =
+                                        //     futureToken.csrfmiddlewaretoken
+                                        //         .toString();
+                                        final String csrfmiddlewaretoken =
+                                            await storage.read(
+                                                key: 'set-cookie');
+                                        print("before token = " +
+                                            csrfmiddlewaretoken);
                                         final VotingModel vote = await addVote(
-                                            choice, currentMotionPK);
+                                            choice,
+                                            csrfmiddlewaretoken,
+                                            currentMotionPK);
 
                                         setState(() {
                                           _vote = vote;
                                         });
 
                                         if (_vote == null) {
-                                          print("no user");
+                                          print("_vote = null");
                                         } else {
                                           print(
                                               "Therefore user voted for: ${_vote.choice}\n");
+                                          print(
+                                              "User's token: ${_vote.csrftoken}\n");
                                         }
-
-                                        //go to next screen
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return WaitingScreen(
-                                                userRepository: userRepository,
-                                              );
-                                            },
-                                          ),
-                                        );
                                       },
                                       child: Text("Yes"))
                                 ],
@@ -313,16 +297,7 @@ class VotingBodyState extends State<VotingBody> {
                                   TextButton(
                                       //Yes Button
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return WaitingScreen(
-                                                userRepository: userRepository,
-                                              );
-                                            },
-                                          ),
-                                        );
+                                        //addVote()
                                       },
                                       child: Text("Yes"))
                                 ],
@@ -342,16 +317,7 @@ class VotingBodyState extends State<VotingBody> {
                                   TextButton(
                                       //Yes Button
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return WaitingScreen(
-                                                userRepository: userRepository,
-                                              );
-                                            },
-                                          ),
-                                        );
+                                        //addVote
                                       },
                                       child: Text("Yes"))
                                 ],
@@ -379,5 +345,208 @@ class VotingBodyState extends State<VotingBody> {
         ),
       ),
     );
+  }
+
+  // ignore: missing_return
+  Future<VotingModel> addVote(
+      int choice, String csrftokenRandom, int currentMotionPK) async {
+    String csrftoken = await storage.read(key: 'set-cookie');
+
+    //print("Random token = " + csrftokenRandom);
+    print("Storage token = " + csrftoken);
+
+    Uri url = Uri.parse //('https://reqres.in/api/users');
+        ("https://scannvote.herokuapp.com/api/motions/" +
+            currentMotionPK.toString() +
+            "/vote");
+
+    //print("after token = " + csrftoken);
+    print("**** $choice *******"); //check voter's choice
+    print("**** $currentMotionPK"); //check if on current motion
+
+    final response = await http.post(url, body: {
+      "choice": choice,
+      "csrfmiddlewaretoken": csrftoken,
+    });
+
+    print(response.statusCode);
+    print(response.body);
+
+    String str, theCode;
+    int statusCode;
+
+    if (response.statusCode != 200) {
+      str = response.body;
+      statusCode = response.statusCode;
+
+      const start = '"code":"';
+      const end = '"}';
+
+      final startIndex = str.indexOf(start);
+      final endIndex = str.indexOf(end, startIndex + start.length);
+
+      theCode = str.substring(startIndex + start.length, endIndex);
+
+      print("theCode = " + theCode);
+    } else {
+      print("Status code = 200");
+    }
+
+    //se logro votar correctamente
+    if (response.statusCode == 200) {
+      //go to next screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return WaitingScreen(
+              userRepository: userRepository,
+            );
+          },
+        ),
+      );
+      final String responseString = response.body;
+
+      print("SUCCESS!!!!!!!!!!!!!!!!");
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return WaitingScreen(userRepository: userRepository);
+          },
+        ),
+      ); //return to voting screen
+
+      return votingModelFromJson(responseString);
+    }
+    //usuario not logged in
+    else if (statusCode == 403 && int.parse(theCode) == 5) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Error! Voto NO contado!"),
+              content: Text(
+                  'Usuario no ha sido inicializado.\nFavor iniciar sesión con su cuenta.\n'),
+              actions: [
+                TextButton(
+                    //OK Button
+                    onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MotionsScreen(
+                                  userRepository: userRepository);
+                            },
+                          ),
+                        ), //return to voting screen
+                    child: Text("OK")),
+              ],
+            );
+          });
+    }
+    //voting unavailable
+    else if (statusCode == 405 && int.parse(theCode) == 0) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Error! Voto NO contado!"),
+              content: Text(
+                  'Todavía no está disponible votar.\nVuelva a intentar pronto.\n'),
+              actions: [
+                TextButton(
+                    //OK Button
+                    onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MotionsScreen(
+                                  userRepository: userRepository);
+                            },
+                          ),
+                        ), //return to voting screen
+                    child: Text("OK")),
+              ],
+            );
+          });
+    }
+    //usuario no presente en asamblea
+    else if (statusCode == 403 && int.parse(theCode) == 1) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Error! Voto NO contado!"),
+              content: Text(
+                  'Su usuario no está marcado como presente en la asamblea.\n'),
+              actions: [
+                TextButton(
+                    //OK Button
+                    onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MotionsScreen(
+                                  userRepository: userRepository);
+                            },
+                          ),
+                        ), //return to voting screen
+                    child: Text("OK")),
+              ],
+            );
+          });
+    }
+    //usuario no selecciono voto
+    else if (statusCode == 400 && int.parse(theCode) == 2) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Error! Voto NO contado!"),
+              content: Text('Al votar, usted no tomó ninguna selección.\n'),
+              actions: [
+                TextButton(
+                    //OK Button
+                    onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MotionsScreen(
+                                  userRepository: userRepository);
+                            },
+                          ),
+                        ), //return to voting screen
+                    child: Text("OK")),
+              ],
+            );
+          });
+    }
+    //usuario ya voto a esta mocion anteriormente
+    else if (statusCode == 403 && int.parse(theCode) == 3) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Error! Voto NO contado!"),
+              content: Text('Usted ya votó para la pasada moción.\n'),
+              actions: [
+                TextButton(
+                    //OK Button
+                    onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MotionsScreen(
+                                  userRepository: userRepository);
+                            },
+                          ),
+                        ), //return to voting screen
+                    child: Text("OK")),
+              ],
+            );
+          });
+    }
   }
 }
