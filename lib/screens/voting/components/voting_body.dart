@@ -9,6 +9,7 @@ import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
+import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
 import 'package:scan_n_vote/models/token_model.dart';
 import 'package:scan_n_vote/models/voting_model.dart';
@@ -20,14 +21,18 @@ import 'package:http/http.dart' as http;
 
 class VotingBody extends StatefulWidget {
   final UserRepository userRepository;
-  VotingBody({Key key, @required this.userRepository})
+  final Assemblies currentAssembly;
+  VotingBody(
+      {Key key, @required this.userRepository, @required this.currentAssembly})
       : assert(userRepository != null),
         super(key: key);
   @override
-  VotingBodyState createState() => VotingBodyState(this.userRepository);
+  VotingBodyState createState() =>
+      VotingBodyState(this.userRepository, this.currentAssembly);
 }
 
 class VotingBodyState extends State<VotingBody> {
+  final Assemblies currentAssembly;
   final UserRepository userRepository;
 
   //maybe delete
@@ -38,9 +43,9 @@ class VotingBodyState extends State<VotingBody> {
 
   int currentMotionPK;
 
-  VotingModel _vote;
+  String _vote;
 
-  VotingBodyState(this.userRepository);
+  VotingBodyState(this.userRepository, this.currentAssembly);
 
   //Used for the radio button values
   int voteValue; //0 = A favor, 1 = En Contra, 2 = Abstenido
@@ -131,7 +136,6 @@ class VotingBodyState extends State<VotingBody> {
                   // ignore: missing_return
                   itemBuilder: (BuildContext context, int index) {
                     Motions theMotion = motion[index];
-
                     if (theMotion.archived == false) {
                       currentMotionPK = theMotion.pk;
                       return SingleChildScrollView(
@@ -252,16 +256,12 @@ class VotingBodyState extends State<VotingBody> {
                                   TextButton(
                                       //Yes Button
                                       onPressed: () async {
-                                        final int choice = 0;
-                                        // final String csrfmiddlewaretoken =
-                                        //     futureToken.csrfmiddlewaretoken
-                                        //         .toString();
+                                        final String choice = "0";
                                         final String csrfmiddlewaretoken =
                                             await storage.read(
                                                 key: 'set-cookie');
-                                        print("before token = " +
-                                            csrfmiddlewaretoken);
-                                        final VotingModel vote = await addVote(
+
+                                        final String vote = await addVote(
                                             choice,
                                             csrfmiddlewaretoken,
                                             currentMotionPK);
@@ -269,15 +269,6 @@ class VotingBodyState extends State<VotingBody> {
                                         setState(() {
                                           _vote = vote;
                                         });
-
-                                        if (_vote == null) {
-                                          print("_vote = null");
-                                        } else {
-                                          print(
-                                              "Therefore user voted for: ${_vote.choice}\n");
-                                          print(
-                                              "User's token: ${_vote.csrftoken}\n");
-                                        }
                                       },
                                       child: Text("Yes"))
                                 ],
@@ -296,8 +287,20 @@ class VotingBodyState extends State<VotingBody> {
                                       child: Text("No")),
                                   TextButton(
                                       //Yes Button
-                                      onPressed: () {
-                                        //addVote()
+                                      onPressed: () async {
+                                        final String choice = "2";
+                                        final String csrfmiddlewaretoken =
+                                            await storage.read(
+                                                key: 'set-cookie');
+
+                                        final String vote = await addVote(
+                                            choice,
+                                            csrfmiddlewaretoken,
+                                            currentMotionPK);
+
+                                        setState(() {
+                                          _vote = vote;
+                                        });
                                       },
                                       child: Text("Yes"))
                                 ],
@@ -316,8 +319,20 @@ class VotingBodyState extends State<VotingBody> {
                                       child: Text("No")),
                                   TextButton(
                                       //Yes Button
-                                      onPressed: () {
-                                        //addVote
+                                      onPressed: () async {
+                                        final String choice = "1";
+                                        final String csrfmiddlewaretoken =
+                                            await storage.read(
+                                                key: 'set-cookie');
+
+                                        final String vote = await addVote(
+                                            choice,
+                                            csrfmiddlewaretoken,
+                                            currentMotionPK);
+
+                                        setState(() {
+                                          _vote = vote;
+                                        });
                                       },
                                       child: Text("Yes"))
                                 ],
@@ -348,8 +363,8 @@ class VotingBodyState extends State<VotingBody> {
   }
 
   // ignore: missing_return
-  Future<VotingModel> addVote(
-      int choice, String csrftokenRandom, int currentMotionPK) async {
+  Future<String> addVote(
+      String choice, String csrftokenRandom, int currentMotionPK) async {
     String csrftoken = await storage.read(key: 'set-cookie');
 
     //print("Random token = " + csrftokenRandom);
@@ -364,10 +379,20 @@ class VotingBodyState extends State<VotingBody> {
     print("**** $choice *******"); //check voter's choice
     print("**** $currentMotionPK"); //check if on current motion
 
-    final response = await http.post(url, body: {
-      "choice": choice,
-      "csrfmiddlewaretoken": csrftoken,
-    });
+    String username = "kjblakeley";
+
+    //http.post
+    final response = await http.post(url,
+        headers: <String, String>{
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(
+          <String, String>{
+            "choice": choice,
+            "csrfmiddlewaretoken": csrftoken,
+            "username": username,
+          },
+        ));
 
     print(response.statusCode);
     print(response.body);
@@ -401,6 +426,7 @@ class VotingBodyState extends State<VotingBody> {
           builder: (context) {
             return WaitingScreen(
               userRepository: userRepository,
+              currentAssembly: currentAssembly,
             );
           },
         ),
@@ -413,12 +439,15 @@ class VotingBodyState extends State<VotingBody> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return WaitingScreen(userRepository: userRepository);
+            return WaitingScreen(
+              userRepository: userRepository,
+              currentAssembly: currentAssembly,
+            );
           },
         ),
       ); //return to voting screen
 
-      return votingModelFromJson(responseString);
+      return responseString;
     }
     //usuario not logged in
     else if (statusCode == 403 && int.parse(theCode) == 5) {
@@ -437,7 +466,9 @@ class VotingBodyState extends State<VotingBody> {
                           MaterialPageRoute(
                             builder: (context) {
                               return MotionsScreen(
-                                  userRepository: userRepository);
+                                userRepository: userRepository,
+                                currentAssembly: currentAssembly,
+                              );
                             },
                           ),
                         ), //return to voting screen
@@ -463,7 +494,9 @@ class VotingBodyState extends State<VotingBody> {
                           MaterialPageRoute(
                             builder: (context) {
                               return MotionsScreen(
-                                  userRepository: userRepository);
+                                userRepository: userRepository,
+                                currentAssembly: currentAssembly,
+                              );
                             },
                           ),
                         ), //return to voting screen
@@ -489,7 +522,9 @@ class VotingBodyState extends State<VotingBody> {
                           MaterialPageRoute(
                             builder: (context) {
                               return MotionsScreen(
-                                  userRepository: userRepository);
+                                userRepository: userRepository,
+                                currentAssembly: currentAssembly,
+                              );
                             },
                           ),
                         ), //return to voting screen
@@ -514,7 +549,9 @@ class VotingBodyState extends State<VotingBody> {
                           MaterialPageRoute(
                             builder: (context) {
                               return MotionsScreen(
-                                  userRepository: userRepository);
+                                userRepository: userRepository,
+                                currentAssembly: currentAssembly,
+                              );
                             },
                           ),
                         ), //return to voting screen
@@ -539,7 +576,9 @@ class VotingBodyState extends State<VotingBody> {
                           MaterialPageRoute(
                             builder: (context) {
                               return MotionsScreen(
-                                  userRepository: userRepository);
+                                userRepository: userRepository,
+                                currentAssembly: currentAssembly,
+                              );
                             },
                           ),
                         ), //return to voting screen

@@ -53,6 +53,7 @@ class UserRepository {
       //Obtains crsf token that is used to determine if user is logged in or
       //logged out
       String rawCookie = response.headers['set-cookie'];
+      // String user = await storage.read(key: response.body);
       if (rawCookie != null) {
         int firstIndex = rawCookie.indexOf('=');
         int secondIndex = rawCookie.indexOf(';');

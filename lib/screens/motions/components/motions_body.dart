@@ -41,7 +41,10 @@ class _MotionsBodyState extends State<MotionsBody> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return VotingScreen(userRepository: userRepository);
+            return VotingScreen(
+              userRepository: userRepository,
+              currentAssembly: currentAssembly,
+            );
           },
         ),
       );
@@ -375,7 +378,8 @@ class _MotionsBodyState extends State<MotionsBody> {
                                 Motions pastMotion = pastMotions[index];
                                 if (widget.currentAssembly.archived == false &&
                                     pastMotion.assemblyID ==
-                                        widget.currentAssembly.pk) {
+                                        widget.currentAssembly.pk &&
+                                    pastMotion.voteable == false) {
                                   return Container(
                                     width: size.width * 0.8,
                                     padding: EdgeInsets.symmetric(
