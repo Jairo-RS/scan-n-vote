@@ -172,11 +172,6 @@ class _MotionsBodyState extends State<MotionsBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
-                // Padding(
-                //   padding: EdgeInsets.only(left: 20, right: 20),
-                //   child: Container(
-                //     height: 325,
-                // child:
                 FutureBuilder(
                   future: motions,
                   // ignore: missing_return
@@ -326,7 +321,6 @@ class _MotionsBodyState extends State<MotionsBody> {
                     }
                   },
                 ),
-
                 SizedBox(
                   height: size.height * 0.05,
                 ),
@@ -344,6 +338,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                 ),
                 FutureBuilder(
                   future: motions,
+                  // ignore: missing_return
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
@@ -469,7 +464,6 @@ class _MotionsBodyState extends State<MotionsBody> {
                     }
                   },
                 ),
-
                 SizedBox(
                   height: size.height * 0.05,
                 ),

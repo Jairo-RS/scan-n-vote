@@ -31,12 +31,12 @@ void main() {
 
   test('less than 9 digits returns error string', () {
     var result = StudentNumberFieldValidator.validate('8441272');
-    expect(result, 'Debe solo entrar dígitos. Formato: xxxxxxxxx');
+    expect(result, 'Inválido: Debe entrar 9 dígitos. Formato: xxxxxxxxx');
   });
 
   test('more than 9 digits returns error string', () {
     var result = StudentNumberFieldValidator.validate('84412724012');
-    expect(result, 'Debe solo entrar dígitos. Formato: xxxxxxxxx');
+    expect(result, 'Inválido: Debe entrar 9 dígitos. Formato: xxxxxxxxx');
   });
 
   test('correct student number will return null', () {

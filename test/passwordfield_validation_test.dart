@@ -5,43 +5,44 @@ import 'package:scan_n_vote/screens/signup/components/signup_body.dart';
 void main() {
   test('empty password returns error string', () {
     var result = PasswordFieldValidator.validate('');
-    expect(result, 'Please enter a password');
+    expect(result, 'Por favor entre una contraseña');
   });
 
   test('password does not contain a lowercase letter returns error string', () {
     var result = PasswordFieldValidator.validate('JAIRO.123');
-    expect(result, 'Must contain at least one lowercase character');
+    expect(result, 'Debe contener al menos un carácter en minúscula');
   });
 
   test('password does not contain an uppercase letter returns error string',
       () {
     var result = PasswordFieldValidator.validate('jairo.123');
-    expect(result, 'Must contain at least one uppercase character');
+    expect(result, 'Debe contener al menos un carácter en mayúscula');
   });
 
   test('password does not contain a digit returns error string', () {
     var result = PasswordFieldValidator.validate('Jairo.rosado!');
-    expect(result, 'Must contain at least one digit');
+    expect(result, 'Debe contener al menos un dígito');
   });
 
   test('password does not contain a special character returns error string',
       () {
     var result = PasswordFieldValidator.validate('JairoRosado1');
-    expect(result, 'Must contain at least one special character');
+    expect(result, 'Debe contener al menos un carácter especial');
   });
 
   test(
       'password passes all validations but is less than 8 characters long returns error string',
       () {
     var result = PasswordFieldValidator.validate('Jairo.1');
-    expect(result, 'Must be between 8 to 16 characters long');
+    expect(result, 'Debe tener entre 8 y 24 caracteres');
   });
 
   test(
       'password passes all validations but is more than 16 characters long returns error string',
       () {
-    var result = PasswordFieldValidator.validate('Jairo.Rosado.Soto.EXAM1');
-    expect(result, 'Must be between 8 to 16 characters long');
+    var result = PasswordFieldValidator.validate(
+        'Jairo.Rosado.Soto.EXAM3.Testing.The_length.');
+    expect(result, 'Debe tener entre 8 y 24 caracteres');
   });
 
   test('password passes all validations returns null', () {
