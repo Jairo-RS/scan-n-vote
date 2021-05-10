@@ -20,9 +20,8 @@ class AssembliesBody extends StatefulWidget {
         super(key: key);
 
   @override
-  _AssembliesBodyState createState() => _AssembliesBodyState(
-        this.userRepository,
-      );
+  _AssembliesBodyState createState() =>
+      _AssembliesBodyState(this.userRepository);
 }
 
 class _AssembliesBodyState extends State<AssembliesBody> {
@@ -205,7 +204,10 @@ class _AssembliesBodyState extends State<AssembliesBody> {
                                             ),
                                           ),
                                         ),
-                                        onPressed: () {
+                                        onPressed: () async {
+                                          String user =
+                                              await storage.read(key: 'user');
+                                          print(user);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

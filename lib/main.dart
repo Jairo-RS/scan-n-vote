@@ -41,7 +41,9 @@ void main() {
         return AuthenticationBloc(userRepository: userRepository)
           ..add(AppStarted());
       },
-      child: MyApp(userRepository: userRepository),
+      child: MyApp(
+        userRepository: userRepository,
+      ),
     ),
   );
 }
@@ -51,8 +53,6 @@ class MyApp extends StatelessWidget {
   final UserRepository userRepository;
 
   MyApp({Key key, @required this.userRepository}) : super(key: key);
-
-  // TO LOGIN: Create an admin account in heroku
 
   // This widget is the root of your application.
   @override
@@ -68,7 +68,9 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           // If current state is authenticated, then display Assemblies screen
           if (state is AuthenticationAuthenticated) {
-            return AssembliesScreen(userRepository: userRepository);
+            return AssembliesScreen(
+              userRepository: userRepository,
+            );
           }
           // If current state is unauthenticated, then display Initial screen
           if (state is AuthenticationUnauthenticated) {

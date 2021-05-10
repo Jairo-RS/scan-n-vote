@@ -236,7 +236,6 @@ class _LoginBodyState extends State<LoginBody> {
           labelText: 'Nombre de usuario (Username)',
         ),
         controller: _usernameController,
-        // maxLength: 25,
       );
 
   //Custom widget that creates password textfield
