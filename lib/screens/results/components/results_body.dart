@@ -44,11 +44,12 @@ class _ResultsBodyState extends State<ResultsBody> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "Vote Results",
+                "Resultados de Votaciones",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 36,
                 ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: size.height * 0.05),
               Container(
@@ -128,7 +129,7 @@ class _ResultsBodyState extends State<ResultsBody> {
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Text(
-                                            'Abstenidos:                         ' +
+                                            'Abstenidxs:                         ' +
                                                 resultsCount.abstained
                                                     .toString() +
                                                 "\n",

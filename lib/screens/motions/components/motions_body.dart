@@ -3,16 +3,11 @@ import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
 import 'package:scan_n_vote/models/voting_model.dart';
-<<<<<<< HEAD
-import 'package:scan_n_vote/models/voting_model_test.dart';
-=======
->>>>>>> 3b95e1d6e160c303aee51e06d061f160c8774028
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/results/results_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 
-//This class is responsible for building all widgets presented in motions screen
 class MotionsBody extends StatefulWidget {
   final UserRepository userRepository;
   final Assemblies currentAssembly;
@@ -109,6 +104,8 @@ class _MotionsBodyState extends State<MotionsBody> {
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
+    // ignore: unused_local_variable
+    final ScrollController _scrollController = ScrollController();
     return WillPopScope(
       //when back button is pressed return to desired screen
       onWillPop: () => Navigator.push(
@@ -159,10 +156,9 @@ class _MotionsBodyState extends State<MotionsBody> {
             elevation: 0,
             iconTheme: IconThemeData(color: Colors.black),
           ),
-
-          //Main body of the screen
           body: Backdrop(
             child: ListView(
+              // shrinkWrap: true,
               children: <Widget>[
                 Center(
                   child: Text(
@@ -176,8 +172,11 @@ class _MotionsBodyState extends State<MotionsBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
-
-                //Building the current motion
+                // Padding(
+                //   padding: EdgeInsets.only(left: 20, right: 20),
+                //   child: Container(
+                //     height: 325,
+                // child:
                 FutureBuilder(
                   future: motions,
                   // ignore: missing_return
@@ -327,6 +326,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                     }
                   },
                 ),
+
                 SizedBox(
                   height: size.height * 0.05,
                 ),
@@ -342,11 +342,8 @@ class _MotionsBodyState extends State<MotionsBody> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
-
-                //Building the list of past motions
                 FutureBuilder(
                   future: motions,
-                  // ignore: missing_return
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
@@ -381,8 +378,7 @@ class _MotionsBodyState extends State<MotionsBody> {
                                 if (widget.currentAssembly.archived == false &&
                                     pastMotion.assemblyID ==
                                         widget.currentAssembly.pk &&
-                                    pastMotion.voteable == false &&
-                                    pastMotion.archived == true) {
+                                    pastMotion.voteable == false) {
                                   return Container(
                                     width: size.width * 0.8,
                                     padding: EdgeInsets.symmetric(
