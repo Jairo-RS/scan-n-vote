@@ -7,7 +7,6 @@ import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
 import 'package:scan_n_vote/screens/results/results_screen.dart';
 import 'package:scan_n_vote/screens/voting/voting_screen.dart';
-import 'package:http/http.dart' as http;
 
 class MotionsBody extends StatefulWidget {
   final UserRepository userRepository;
@@ -67,7 +66,7 @@ class _MotionsBodyState extends State<MotionsBody> {
     return null;
   }
 
-  //FIX THIS METHOD BY ADDING PARAMETERS
+  // ignore: missing_return
   Future<VotingModelTest> voteReady2Results(
       bool voteable, bool archived) async {
     if (voteable == false && archived == false) {

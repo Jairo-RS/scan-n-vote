@@ -7,18 +7,20 @@ VotingModel votingModelFromJson(String str) =>
 String votingModelToJson(VotingModel data) => json.encode(data.toJson());
 
 class VotingModel {
-  String choice;
+  int choice;
+  String csrftoken;
 
-  VotingModel({
-    this.choice,
-  });
+  VotingModel({this.choice, this.csrftoken});
 
   //mapping json data
-  factory VotingModel.fromJson(Map<String, dynamic> json) =>
-      VotingModel(choice: json["choice"]);
+  factory VotingModel.fromJson(Map<String, dynamic> json) => VotingModel(
+        choice: json["choice"],
+        csrftoken: json["csrfmiddlewaretoken"],
+      );
 
   Map<String, dynamic> toJson() => {
         "choice": choice,
+        "csrfmiddlewaretoken": csrftoken,
       };
 
   static Future<List<VotingModel>> browseCode() async {
