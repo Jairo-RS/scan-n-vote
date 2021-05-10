@@ -33,6 +33,7 @@ class AuthenticationBloc
     if (event is LoggedIn) {
       yield AuthenticationLoading();
       await userRepository.persistToken(event.token);
+      await userRepository.saveUser(event.user);
       yield AuthenticationAuthenticated();
     }
     // When loggedout event happens delete token values and present
@@ -40,6 +41,7 @@ class AuthenticationBloc
     if (event is LoggedOut) {
       yield AuthenticationLoading();
       await userRepository.deleteToken();
+      await userRepository.deleteUsername();
       yield AuthenticationUnauthenticated();
     }
   }

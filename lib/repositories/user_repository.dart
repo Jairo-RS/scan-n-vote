@@ -10,6 +10,7 @@ class UserRepository {
   //API urls
   static String mainUrl = "https://scannvote.herokuapp.com";
   var loginUrl = '$mainUrl/api/login/';
+  static String usernameHolder;
 
   //Used to store information about login functionality
   final FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -32,6 +33,17 @@ class UserRepository {
   //Delete token value from key in local storage
   Future<void> deleteToken() async {
     storage.delete(key: 'set-cookie');
+    storage.deleteAll();
+  }
+
+  //Saves username value in local storage
+  Future<void> saveUser(String user) async {
+    await storage.write(key: 'user', value: user);
+  }
+
+  //Delete username value from key in local storage
+  Future<void> deleteUsername() async {
+    storage.delete(key: 'user');
     storage.deleteAll();
   }
 
@@ -64,23 +76,4 @@ class UserRepository {
       throw Exception(response.statusCode);
     }
   }
-
-  // // Logout token post request
-  // Future<String> logout(String csrftoken) async {
-  //   String csrftoken = await storage.read(key: 'set-cookie');
-  //   final response = await http.post(
-  //     csrftoken,
-  //     body: jsonEncode(<String, String>{
-  //       "csrfmiddlewaretoken": csrftoken,
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     final String responseString = response.body;
-  //     return json.decode(responseString);
-  //   } else {
-  //     // If not successful, display error status code (403)
-  //     throw Exception(response.statusCode);
-  //   }
-  // }
 }
