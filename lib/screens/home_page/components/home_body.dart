@@ -101,7 +101,7 @@ class _HomeBodyState extends State<HomeBody> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Bienvenidos Estudiantes!",
+                    "¡Bienvenidos Estudiantes!",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 32,
