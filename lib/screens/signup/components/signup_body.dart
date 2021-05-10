@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/text_field_container.dart';
-import 'package:scan_n_vote/constants.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/token_model.dart';
 import 'package:scan_n_vote/models/user_model.dart';
@@ -25,7 +24,9 @@ class _SignUpBodyState extends State<SignUpBody> {
   final UserRepository userRepository;
   _SignUpBodyState(this.userRepository);
 
+  // ignore: unused_field
   UserModel _user;
+
   TokenModel futureToken;
   bool _disposed = false;
 
@@ -67,7 +68,8 @@ class _SignUpBodyState extends State<SignUpBody> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Tu cuenta ha sido creada exitosamente!\n"),
+          title: Text("Bienvenido a Scan-N-Vote"),
+          content: Text("¡Tu cuenta ha sido creada exitosamente!"),
           actions: [
             TextButton(
               child: Text(
@@ -85,7 +87,6 @@ class _SignUpBodyState extends State<SignUpBody> {
                     ),
                   ),
                 );
-                ;
               },
             ),
           ],
@@ -114,6 +115,8 @@ class _SignUpBodyState extends State<SignUpBody> {
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
         ),
+
+        //Body that contains main widgets being presented
         body: Backdrop(
           //Making screen scrollable
           child: SingleChildScrollView(
@@ -137,7 +140,6 @@ class _SignUpBodyState extends State<SignUpBody> {
                 //Widget that creates a container for all form fields
                 Form(
                   key: _formkey,
-                  // autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: [
                       TextFieldContainer(
@@ -173,6 +175,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                 SizedBox(
                   height: size.height * 0.03,
                 ),
+
                 //Custom widget that creates the sign up button
                 RoundButton(
                   text: "Registrarte",
@@ -184,10 +187,9 @@ class _SignUpBodyState extends State<SignUpBody> {
                     final String password = _passwordController.text;
                     final String passwordConfirmation =
                         _confirmPasswordController.text;
-                    // Future<String> token = UserModel.getToken();
-                    // String csrfmiddlewaretoken = token.toString();
                     var csrfmiddlewaretoken =
                         futureToken.csrfmiddlewaretoken.toString();
+
                     //Verifying validation of all forms
                     final isValid = _formkey.currentState.validate();
                     if (isValid) {
@@ -216,51 +218,6 @@ class _SignUpBodyState extends State<SignUpBody> {
                         ),
                       );
                     }
-                    // //Verifying validation of all forms
-                    // final isValid = _formkey.currentState.validate();
-                    // if (isValid) {
-                    //   final UserModel user = await UserModel.createUser(
-                    //     username,
-                    //     studentNumber,
-                    //     password,
-                    //     passwordConfirmation,
-                    //     csrfmiddlewaretoken,
-                    //   );
-                    //   setState(() {
-                    //     _user = user;
-                    //   });
-                    //   messageDialog(context);
-                    // } else {
-                    //   Flushbar(
-                    //     title: "Credenciales invalidos",
-                    //     message:
-                    //         "Por favor, complete el formulario correctamente.",
-                    //     duration: Duration(seconds: 5),
-                    //   ).show(context);
-                    // }
-
-                    // final isValid = _formkey.currentState.validate();
-                    // if (isValid) {
-                    //   _formkey.currentState.save(); //Executing onSaved
-
-                    // // Testing if information is being stored when sign up
-                    // // button is pressed.
-                    // final message = 'Username: $username\n' +
-                    //     'Student Number: $studentNumber\n' +
-                    //     'Password: $password\n' +
-                    //     'Confirm Password: $passwordConfirmation';
-                    // // For testing: displays stored valid information
-                    // final snackBar = SnackBar(
-                    //   content: Text(
-                    //     message,
-                    //     style: TextStyle(
-                    //       fontSize: 20,
-                    //     ),
-                    //   ),
-                    //   backgroundColor: Colors.green,
-                    // );
-                    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    // }
                   },
                 ),
                 SizedBox(
@@ -275,6 +232,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                         fontSize: 16,
                       ),
                     ),
+
                     // Gives Login text functionality to transition to Login
                     // screen
                     GestureDetector(
@@ -313,24 +271,9 @@ class _SignUpBodyState extends State<SignUpBody> {
   Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Nombre de usuario (Username)',
-          //border: InputBorder.none,
-          // hintText: 'Username',
         ),
         controller: _usernameController,
         validator: UsernameFieldValidator.validate,
-        //Commented for Testing
-        // if (value.isEmpty) {
-        //   return 'Please enter your username';
-        // }
-        // if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
-        //   return 'Invalid Special Character: Acceptable: @/./_/-/+';
-        // }
-        // if (value.length < 6) {
-        //   return 'Enter at least 6 characters';
-        // } else {
-        //   return null;
-        // }
-        // },
         maxLength: 16,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in username field
@@ -341,38 +284,9 @@ class _SignUpBodyState extends State<SignUpBody> {
   Widget buildStudentNumber() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Número de estudiante',
-          // icon: Icon(
-          //   Icons.badge,
-          //   color: Colors.blueGrey,
-          // ),
-          // border: InputBorder.none,
         ),
         controller: _studentNumberController,
         validator: StudentNumberFieldValidator.validate,
-        // COMMENTED FOR TESTING
-        // String pattern = r'[0-9]';
-        // RegExp regExp = new RegExp(pattern);
-        // if (value.isEmpty) {
-        //   return 'Please enter your student number';
-        // }
-        // if (!regExp.hasMatch(value)) {
-        //   return 'Must be only digits. Format: xxxxxxxxx';
-        // }
-        // if (value.contains(new RegExp(r'[a-z]'))) {
-        //   return 'Must be only digits. Format: xxxxxxxxx';
-        // }
-        // if (value.contains(new RegExp(r'[A-Z]'))) {
-        //   return 'Must be only digits. Format: xxxxxxxxx';
-        // }
-        // if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-        //   return 'Must be only digits. Format: xxxxxxxxx';
-        // }
-        // if (value.length < 9 || value.length > 9) {
-        //   return 'Invalid: Must enter 9 digits. Format: xxxxxxxxx';
-        // } else {
-        //   return null;
-        // }
-        // },
         keyboardType: TextInputType.number,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         //Testing: save values in student number field
@@ -383,32 +297,9 @@ class _SignUpBodyState extends State<SignUpBody> {
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
           labelText: 'Contraseña',
-          //border: InputBorder.none,
         ),
         controller: _passwordController,
         validator: PasswordFieldValidator.validate,
-        // COMMENTED FOR TESTING
-        // if (value.isEmpty) {
-        //   return 'Please enter a password';
-        // }
-        // if (!value.contains(new RegExp(r'[a-z]'))) {
-        //   return 'Must contain at least one lowercase character';
-        // }
-        // if (!value.contains(new RegExp(r'[A-Z]'))) {
-        //   return 'Must contain at least one uppercase character';
-        // }
-        // if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
-        //   return 'Must contain at least one digit';
-        // }
-        // if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-        //   return 'Must contain at least one special character';
-        // }
-        // if (value.length < 8 || value.length > 16) {
-        //   return 'Must be between 8 to 16 characters long';
-        // } else {
-        //   return null;
-        // }
-        // },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -425,39 +316,15 @@ class _SignUpBodyState extends State<SignUpBody> {
         validator: (value) {
           PasswordConfirmationFieldValidator.validate(value);
           if (value != _passwordController.text) {
-            return 'Passwords do not match';
+            return 'Las contraseñas no coinciden';
           } else {
             return null;
           }
-          // COMMENTED FOR TESTING
-          //   if (value.isEmpty) {
-          //     return 'Please enter a password';
-          //   }
-          //   if (!value.contains(new RegExp(r'[a-z]'))) {
-          //     return 'Must contain at least one lowercase character';
-          //   }
-          //   if (!value.contains(new RegExp(r'[A-Z]'))) {
-          //     return 'Must contain at least one uppercase character';
-          //   }
-          //   if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
-          //     return 'Must contain at least one digit';
-          //   }
-          //   if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-          //     return 'Must contain at least one special character';
-          //   }
-          //   if (value.length < 8 || value.length > 16) {
-          //     return 'Must be between 8 to 16 characters long';
-          //   }
-          //   if (value != _passwordController.text) {
-          //     return 'Passwords do not match';
-          //   } else {
-          //     return null;
-          //   }
         },
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
         autovalidateMode: AutovalidateMode.disabled,
-        //Testing: save values in confirm password field
+        //Saves value in confirm password field
         onSaved: (value) => setState(() => passwordConfirmation = value),
       );
 }
@@ -466,13 +333,13 @@ class _SignUpBodyState extends State<SignUpBody> {
 class UsernameFieldValidator {
   static String validate(String value) {
     if (value.isEmpty) {
-      return 'Please enter your username';
+      return 'Entre un nombre de usuario (username)';
     }
-    // if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
-    //   return 'Invalid Special Character: Acceptable: @/./_/-/+';
-    // }
+    if (value.contains(new RegExp(r'[~!#$%^&*(),/?":;{}|<>=]'))) {
+      return 'Carácter especial inválido: Aceptable: @/./_ /-/+';
+    }
     if (value.length < 8 || value.length > 16) {
-      return 'Must be between 8 to 16 characters long';
+      return 'Debe tener entre 8 a 16 caracteres de largo';
     } else {
       return null;
     }
@@ -485,22 +352,22 @@ class StudentNumberFieldValidator {
     String pattern = r'[0-9]';
     RegExp regExp = new RegExp(pattern);
     if (value.isEmpty) {
-      return 'Please enter your student number';
+      return 'Por favor entre su número de estudiante';
     }
     if (!regExp.hasMatch(value)) {
-      return 'Must be only digits. Format: xxxxxxxxx';
+      return 'Debe solo entrar dígitos. Formato: xxxxxxxxx';
     }
     if (value.contains(new RegExp(r'[a-z]'))) {
-      return 'Must be only digits. Format: xxxxxxxxx';
+      return 'Debe solo entrar dígitos. Formato: xxxxxxxxx';
     }
     if (value.contains(new RegExp(r'[A-Z]'))) {
-      return 'Must be only digits. Format: xxxxxxxxx';
+      return 'Debe solo entrar dígitos. Formato: xxxxxxxxx';
     }
     if (value.contains(new RegExp(r'[!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-      return 'Must be only digits. Format: xxxxxxxxx';
+      return 'Debe solo entrar dígitos. Formato: xxxxxxxxx';
     }
     if (value.length < 9 || value.length > 9) {
-      return 'Invalid: Must enter 9 digits. Format: xxxxxxxxx';
+      return 'Inválido: Debe entrar 9 dígitos. Formato: xxxxxxxxx';
     } else {
       return null;
     }
@@ -511,22 +378,22 @@ class StudentNumberFieldValidator {
 class PasswordFieldValidator {
   static String validate(String value) {
     if (value.isEmpty) {
-      return 'Please enter a password';
+      return 'Por favor entre una contraseña';
     }
     if (!value.contains(new RegExp(r'[a-z]'))) {
-      return 'Must contain at least one lowercase character';
+      return 'Debe contener al menos un carácter en minúscula';
     }
     if (!value.contains(new RegExp(r'[A-Z]'))) {
-      return 'Must contain at least one uppercase character';
+      return 'Debe contener al menos un carácter en mayúscula';
     }
     if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
-      return 'Must contain at least one digit';
+      return 'Debe contener al menos un dígito';
     }
     if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-      return 'Must contain at least one special character';
+      return 'Debe contener al menos un carácter especial';
     }
     if (value.length < 8 || value.length > 24) {
-      return 'Must be between 8 to 24 characters long';
+      return 'Debe tener entre 8 y 24 caracteres';
     } else {
       return null;
     }
@@ -538,22 +405,22 @@ class PasswordConfirmationFieldValidator {
   // ignore: missing_return
   static String validate(String value) {
     if (value.isEmpty) {
-      return 'Please enter a password';
+      return 'Por favor entre una contraseña';
     }
     if (!value.contains(new RegExp(r'[a-z]'))) {
-      return 'Must contain at least one lowercase character';
+      return 'Debe contener al menos un carácter en minúscula';
     }
     if (!value.contains(new RegExp(r'[A-Z]'))) {
-      return 'Must contain at least one uppercase character';
+      return 'Debe contener al menos un carácter en mayúscula';
     }
     if (!value.contains(new RegExp(r'(?=.*[0-9])'))) {
-      return 'Must contain at least one digit';
+      return 'Debe contener al menos un dígito';
     }
     if (!value.contains(new RegExp(r'[~!@#$%^&*()_+,./?":;{}|<>=-]'))) {
-      return 'Must contain at least one special character';
+      return 'Debe contener al menos un carácter especial';
     }
     if (value.length < 8 || value.length > 24) {
-      return 'Must be between 8 to 24 characters long';
+      return 'Debe tener entre 8 y 24 caracteres';
     }
   }
 }
