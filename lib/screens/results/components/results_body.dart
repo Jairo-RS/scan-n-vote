@@ -44,11 +44,12 @@ class _ResultsBodyState extends State<ResultsBody> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "Vote Results",
+                "Resultados de Votaciones",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 36,
                 ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: size.height * 0.05),
               Container(
@@ -128,7 +129,7 @@ class _ResultsBodyState extends State<ResultsBody> {
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Text(
-                                            'Abstenidos:                         ' +
+                                            'Abstenidxs:                         ' +
                                                 resultsCount.abstained
                                                     .toString() +
                                                 "\n",
@@ -205,17 +206,17 @@ class _ResultsBodyState extends State<ResultsBody> {
     // A favor = En Contra
     else if ((aFavor) == (enContra) && (aFavor) > (abstenido)) {
       result =
-          "No hay decision en mocion por empate a $aFavor votos a favor y en contra\n";
+          "No hay decision en mocion por empate a $aFavor votos a favor y en contra.\n";
     }
     // A favor = abstenido
     else if ((aFavor) == (abstenido) && (aFavor) > (enContra)) {
       result =
-          "No hay decision en mocion por empate a $aFavor votos a favor y abstenidos\n";
+          "No hay decision en mocion por empate a $aFavor votos a favor y abstenidos.\n";
     }
     // Abstenido = en contra
     else if ((enContra) == (abstenido) && (enContra) > (abstenido)) {
       result =
-          "No hay decision en mocion por empate a $enContra votos en contra y abstenidos\n";
+          "No hay decision en mocion por empate a $enContra votos en contra y abstenidos.\n";
     }
     //Triple empate
     else if ((enContra) == (abstenido) && (enContra) == (aFavor)) {

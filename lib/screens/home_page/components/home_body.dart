@@ -101,10 +101,10 @@ class _HomeBodyState extends State<HomeBody> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Welcome Students",
+                    "Bienvenidos Estudiantes!",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 36,
+                      fontSize: 32,
                     ),
                   ),
                   SizedBox(
@@ -116,7 +116,7 @@ class _HomeBodyState extends State<HomeBody> {
                   ),
                   SizedBox(height: size.height * 0.02),
                   RoundButton(
-                    text: "Assembly's Agenda",
+                    text: "Agenda",
                     color: Colors.green,
                     textColor: Colors.white,
                     press: () {
@@ -131,7 +131,7 @@ class _HomeBodyState extends State<HomeBody> {
                     },
                   ),
                   RoundButton(
-                    text: "View Motions",
+                    text: "Mociones",
                     color: Colors.deepPurple,
                     textColor: Colors.white,
                     press: () {
@@ -149,7 +149,7 @@ class _HomeBodyState extends State<HomeBody> {
                     },
                   ),
                   RoundButton(
-                    text: "Quorum Count",
+                    text: "Quórum",
                     color: Colors.purple,
                     textColor: Colors.white,
                     press: () {
@@ -175,9 +175,9 @@ class _HomeBodyState extends State<HomeBody> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text("Logout"),
+                                  title: Text("Terminar Sesión"),
                                   content: Text(
-                                      'Are you sure you want to logout? \n'),
+                                      '¿Desea desconectarse de su cuenta? \n'),
                                   actions: [
                                     TextButton(
                                         //No Button
@@ -215,13 +215,13 @@ class _HomeBodyState extends State<HomeBody> {
                                             ),
                                           );
                                         },
-                                        child: Text("Yes"))
+                                        child: Text("Si"))
                                   ],
                                 );
                               });
                         },
                         child: Text(
-                          "Logout",
+                          "Desconectarse",
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.blue,
