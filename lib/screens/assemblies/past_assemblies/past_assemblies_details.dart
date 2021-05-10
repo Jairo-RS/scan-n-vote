@@ -176,7 +176,6 @@ class _PastAssembliesDetailsScreenState
             SingleChildScrollView(
               child: Column(
                 children: [
-                  //Might need to add something more maybe pastMotion and FutureBuilder
                   if (widget.pastAssembly.archived == true)
                     SizedBox(
                       height: size.height * 0.05,
@@ -281,16 +280,4 @@ class _PastAssembliesDetailsScreenState
       ),
     );
   }
-
-  // Future<void> refreshAgenda() async {
-  //   _refreshIndicatorKey.currentState?.show();
-  //   await Future.delayed(Duration(seconds: 1));
-
-  //   // Future<List<AgendaEntry>> _agendaEntries = AgendaEntry.browse();
-  //   Future<List<Assemblies>> _assemblies = Assemblies.fetchAssemblies();
-  //     setState(() {
-  //       // agendaEntries = _agendaEntries;
-  //       futureAssemblies = _assemblies;
-  //     });
-  // }
 }
