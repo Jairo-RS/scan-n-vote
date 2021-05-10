@@ -1,5 +1,3 @@
-import 'dart:convert' show utf8;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
@@ -19,8 +17,6 @@ class PastAssembliesDetailsScreen extends StatefulWidget {
 class _PastAssembliesDetailsScreenState
     extends State<PastAssembliesDetailsScreen> {
   Future<List<Motions>> futureMotions;
-  // Future<List<Assemblies>> futureAssemblies;
-  // var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -61,6 +57,7 @@ class _PastAssembliesDetailsScreenState
             //First Tab: Motions tab
             FutureBuilder(
               future: futureMotions,
+              // ignore: missing_return
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -109,9 +106,6 @@ class _PastAssembliesDetailsScreenState
                             ),
                             child: Column(
                               children: [
-                                // if (widget.pastAssembly.archived == true &&
-                                //     pastMotion.assemblyID ==
-                                //         widget.pastAssembly.pk)
                                 Text(
                                   "Moción",
                                   style: TextStyle(
@@ -138,11 +132,9 @@ class _PastAssembliesDetailsScreenState
                                   Text(
                                     pastMotion.originalMotion[i].motion,
                                     style: TextStyle(
-                                      // fontWeight: FontWeight.bold,
                                       fontSize: 18,
                                     ),
                                   ),
-
                                 Text(
                                   "\n",
                                 ),
@@ -163,7 +155,6 @@ class _PastAssembliesDetailsScreenState
                                       "Abstenidx: " +
                                       pastMotion.abstained.toString(),
                                   style: TextStyle(
-                                    // fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
                                 ),
@@ -171,7 +162,9 @@ class _PastAssembliesDetailsScreenState
                             ),
                           );
                         } else {
-                          return Text("");
+                          return SizedBox(
+                            height: 0,
+                          );
                         }
                       },
                     );

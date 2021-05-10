@@ -161,6 +161,8 @@ class _LoginBodyState extends State<LoginBody> {
                                       width: size.width * 0.8,
                                       height: size.height * 0.085,
                                     ),
+
+                                    //This is the Login button
                                     child: ElevatedButton(
                                       onPressed: _onLoginButtonPressed,
                                       child: Text(
@@ -235,7 +237,6 @@ class _LoginBodyState extends State<LoginBody> {
         ),
         controller: _usernameController,
         // maxLength: 25,
-        //onSaved: (value) => setState(() => username = value),
       );
 
   //Custom widget that creates password textfield
@@ -244,7 +245,6 @@ class _LoginBodyState extends State<LoginBody> {
           labelText: 'Contraseña',
         ),
         controller: _passwordController,
-        // onSaved: (value) => setState(() => password = value),
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
       );

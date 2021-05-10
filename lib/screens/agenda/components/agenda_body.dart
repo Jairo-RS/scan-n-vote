@@ -44,7 +44,7 @@ class _AgendaBodyState extends State<AgendaBody> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  height: size.height * 0.13,
+                  height: size.height * 0.07,
                 ),
                 Text(
                   'Agenda',
@@ -108,7 +108,7 @@ class _AgendaBodyState extends State<AgendaBody> {
                                   if (assemblies.archived == false) {
                                     return Text(
                                       assemblies.agenda,
-                                      textAlign: TextAlign.center,
+                                      textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,

@@ -30,6 +30,7 @@ class _SignUpBodyState extends State<SignUpBody> {
 
   UserModel _user;
   TokenModel futureToken;
+  bool _disposed = false;
 
   //Variables
   var _formkey = GlobalKey<FormState>();
@@ -47,11 +48,19 @@ class _SignUpBodyState extends State<SignUpBody> {
   @override
   void initState() {
     super.initState();
-    TokenModel.getToken().then(
-      (data) => setState(() {
-        futureToken = data;
-      }),
-    );
+    if (!_disposed) {
+      TokenModel.getToken().then(
+        (data) => setState(() {
+          futureToken = data;
+        }),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 
   // //display message alert
@@ -118,7 +127,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                   height: size.height * 0.08,
                 ),
                 Text(
-                  'Sign up',
+                  'Registrarte',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
@@ -169,9 +178,9 @@ class _SignUpBodyState extends State<SignUpBody> {
                 ),
                 //Custom widget that creates the sign up button
                 RoundButton(
-                  text: "REGISTRARTE",
-                  color: signButtonColor,
-                  textColor: Colors.black,
+                  text: "Registrarte",
+                  color: Colors.purple[700],
+                  textColor: Colors.white,
                   press: () async {
                     final String username = _usernameController.text;
                     final String studentNumber = _studentNumberController.text;
@@ -306,7 +315,7 @@ class _SignUpBodyState extends State<SignUpBody> {
   // Custom widget that creates username field with validations
   Widget buildUsername() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Username',
+          labelText: 'Nombre de usuario (Username)',
           //border: InputBorder.none,
           // hintText: 'Username',
         ),
@@ -334,7 +343,7 @@ class _SignUpBodyState extends State<SignUpBody> {
   // Custom widget that creates student number field with validations
   Widget buildStudentNumber() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Student Number',
+          labelText: 'Número de estudiante',
           // icon: Icon(
           //   Icons.badge,
           //   color: Colors.blueGrey,
@@ -376,7 +385,7 @@ class _SignUpBodyState extends State<SignUpBody> {
   // Custom widget that creates password field with validations
   Widget buildPassword() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Password',
+          labelText: 'Contraseña',
           //border: InputBorder.none,
         ),
         controller: _passwordController,
@@ -413,7 +422,7 @@ class _SignUpBodyState extends State<SignUpBody> {
   //Custom widget used to create password confirmation that compares with password
   Widget buildPasswordConfirmation() => TextFormField(
         decoration: InputDecoration(
-          labelText: 'Confirm Password',
+          labelText: 'Confirmar contraseña',
         ),
         controller: _confirmPasswordController,
         validator: (value) {

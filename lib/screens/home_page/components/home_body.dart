@@ -5,6 +5,7 @@ import 'package:scan_n_vote/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/agenda/agenda_screen.dart';
 import 'package:scan_n_vote/screens/assemblies/assemblies_screen.dart';
@@ -14,7 +15,10 @@ import 'package:scan_n_vote/screens/quorum/quorum_screen.dart';
 
 class HomeBody extends StatelessWidget {
   final UserRepository userRepository;
-  HomeBody({Key key, @required this.userRepository}) : super(key: key);
+  final Assemblies currentAssembly;
+  HomeBody(
+      {Key key, @required this.userRepository, @required this.currentAssembly})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +96,7 @@ class HomeBody extends StatelessWidget {
                           builder: (context) {
                             return MotionsScreen(
                               userRepository: userRepository,
+                              currentAssembly: currentAssembly,
                             );
                           },
                         ),
