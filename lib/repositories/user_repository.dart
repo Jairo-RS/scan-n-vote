@@ -35,6 +35,10 @@ class UserRepository {
     storage.deleteAll();
   }
 
+  // Future<void> saveUser(String user) async {
+  //   await storage.write(key: 'user', value: user);
+  // }
+
   //POST method for login
   // ignore: missing_return
   Future<String> login(String username, String password) async {
@@ -58,6 +62,7 @@ class UserRepository {
         int secondIndex = rawCookie.indexOf(';');
         return rawCookie.substring(firstIndex + 1, secondIndex);
       }
+      return response.body;
     } else {
       // If not successful, display error status code (409)
       throw Exception(response.statusCode);
