@@ -205,17 +205,17 @@ class _ResultsBodyState extends State<ResultsBody> {
     // A favor = En Contra
     else if ((aFavor) == (enContra) && (aFavor) > (abstenido)) {
       result =
-          "No hay decision en mocion por empate a $aFavor votos a favor y en contra\n";
+          "No hay decision en mocion por empate a $aFavor votos a favor y en contra.\n";
     }
     // A favor = abstenido
     else if ((aFavor) == (abstenido) && (aFavor) > (enContra)) {
       result =
-          "No hay decision en mocion por empate a $aFavor votos a favor y abstenidos\n";
+          "No hay decision en mocion por empate a $aFavor votos a favor y abstenidos.\n";
     }
     // Abstenido = en contra
     else if ((enContra) == (abstenido) && (enContra) > (abstenido)) {
       result =
-          "No hay decision en mocion por empate a $enContra votos en contra y abstenidos\n";
+          "No hay decision en mocion por empate a $enContra votos en contra y abstenidos.\n";
     }
     //Triple empate
     else if ((enContra) == (abstenido) && (enContra) == (aFavor)) {

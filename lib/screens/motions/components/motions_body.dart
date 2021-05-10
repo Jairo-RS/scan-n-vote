@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
+import 'package:scan_n_vote/models/voting_model.dart';
 import 'package:scan_n_vote/models/voting_model_test.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/home_page/home_screen.dart';
@@ -35,7 +36,7 @@ class _MotionsBodyState extends State<MotionsBody> {
   }
 
   //To see if voting is ready
-  Future<VotingModelTest> voteReady2Voting(bool voteable, bool archived) async {
+  Future<VotingModel> voteReady2Voting(bool voteable, bool archived) async {
     if (voteable == true && archived == false) {
       Navigator.push(
         context,
@@ -54,8 +55,8 @@ class _MotionsBodyState extends State<MotionsBody> {
           builder: (context) {
             return AlertDialog(
               title: Text("Aviso!"),
-              content: Text(
-                  'Las votaciones aún no han comenzado para esta moción.\n'),
+              content:
+                  Text('Las votaciones no están activas en este momento.\n'),
               actions: [
                 TextButton(
                     //OK Button
@@ -70,8 +71,7 @@ class _MotionsBodyState extends State<MotionsBody> {
   }
 
   // ignore: missing_return
-  Future<VotingModelTest> voteReady2Results(
-      bool voteable, bool archived) async {
+  Future<VotingModel> voteReady2Results(bool voteable, bool archived) async {
     if (voteable == false && archived == false) {
       Navigator.push(
         context,
