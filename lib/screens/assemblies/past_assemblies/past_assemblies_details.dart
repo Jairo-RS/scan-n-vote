@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
 
+//Class that displays all details for all tabs for each past assembly
+//Display motions tab, agenda tab, and quorum tab
 class PastAssembliesDetailsScreen extends StatefulWidget {
   final Assemblies pastAssembly;
 

@@ -108,6 +108,7 @@ class _LoginBodyState extends State<LoginBody> {
                       SizedBox(
                         height: size.height * 0.05,
                       ),
+
                       // Builds container with text fields
                       Form(
                         key: _formkey,

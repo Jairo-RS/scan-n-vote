@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:scan_n_vote/models/original_motion_model.dart';
 import 'package:http/http.dart' as http;
 
+//Class model for all motions
 class Motions {
   final int pk;
   final String motion;
@@ -34,6 +35,7 @@ class Motions {
     List<OriginalMotion> originalMotionList =
         list.map((i) => OriginalMotion.fromJson(i)).toList();
 
+    //Map key to each value
     return Motions(
       pk: json['pk'],
       motion: json['motion_text'],
@@ -47,7 +49,7 @@ class Motions {
     );
   }
 
-  //GET Request
+  //GET Request function for all motions
   static Future<List<Motions>> fetchMotions() async {
     var url =
         Uri.parse('https://scannvote.herokuapp.com/api/motions/?format=json');

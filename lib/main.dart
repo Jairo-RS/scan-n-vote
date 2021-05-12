@@ -12,18 +12,21 @@ import 'constants.dart';
 
 // Class that helps display the transitions, events, and errors
 class SimpleBlocDelegate extends BlocObserver {
+  //Display in debug console during an event
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);
     print(event);
   }
 
+  //Display in debug console during transition
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
     print(transition);
   }
 
+  //Display in debug console during errors
   @override
   void onError(BlocBase bloc, Object error, StackTrace stacktrace) {
     super.onError(bloc, error, stacktrace);

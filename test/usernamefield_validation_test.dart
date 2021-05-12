@@ -5,7 +5,7 @@ import 'package:scan_n_vote/screens/signup/components/signup_body.dart';
 void main() {
   test('empty username return error string', () {
     var result = UsernameFieldValidator.validate('');
-    expect(result, 'Por favor entre su número de estudiante');
+    expect(result, 'Entre un nombre de usuario (username)');
   });
 
   test('username with less than 8 characters return error string', () {
@@ -14,7 +14,7 @@ void main() {
   });
 
   test('username with more than 16 characters return error string', () {
-    var result = UsernameFieldValidator.validate('ThisUsername_istoolong');
+    var result = UsernameFieldValidator.validate('ThisUsername_isverylong');
     expect(result, 'Debe tener entre 8 a 16 caracteres de largo');
   });
 
@@ -24,7 +24,7 @@ void main() {
   });
 
   test('correct username will return null', () {
-    var result = UsernameFieldValidator.validate('UserRS1');
+    var result = UsernameFieldValidator.validate('UserRS12');
     expect(result, null);
   });
 }

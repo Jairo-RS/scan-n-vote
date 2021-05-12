@@ -48,20 +48,25 @@ class _SignUpBodyState extends State<SignUpBody> {
     super.initState();
     if (!_disposed) {
       TokenModel.getToken().then(
-        (data) => setState(() {
-          futureToken = data;
-        }),
+        (data) {
+          if (mounted) {
+            setState(() {
+              futureToken = data;
+            });
+          }
+        },
       );
     }
   }
 
+  //Dispose any information not necessary
   @override
   void dispose() {
     _disposed = true;
     super.dispose();
   }
 
-  // //display message alert
+  // //Display message alert
   void messageDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -78,6 +83,8 @@ class _SignUpBodyState extends State<SignUpBody> {
                   fontSize: 18,
                 ),
               ),
+
+              //Navigate to inital screen during pressed
               onPressed: () {
                 Navigator.push(
                   context,
