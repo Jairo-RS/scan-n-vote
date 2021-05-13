@@ -370,9 +370,9 @@ class _MotionsBodyState extends State<MotionsBody> {
                               },
                               itemBuilder: (BuildContext context, int index) {
                                 Motions pastMotion = pastMotions[index];
-                                if (widget.currentAssembly.archived == false &&
-                                    pastMotion.assemblyID ==
+                                if (pastMotion.assemblyID ==
                                         widget.currentAssembly.pk &&
+                                    pastMotion.archived == true &&
                                     pastMotion.voteable == false) {
                                   return Container(
                                     width: size.width * 0.8,
