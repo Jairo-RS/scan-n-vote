@@ -257,7 +257,7 @@ class _PastAssembliesDetailsScreenState
                     ),
                     child: SingleChildScrollView(
                       child: Text(
-                        "El quórum de esta asamblea fue:\n" +
+                        "El quórum máximo de esta asamblea fue:\n" +
                             widget.pastAssembly.quorum.toString(),
                         style: TextStyle(
                           fontSize: 20,

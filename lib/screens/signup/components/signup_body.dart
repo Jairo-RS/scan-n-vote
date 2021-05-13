@@ -179,7 +179,10 @@ class _SignUpBodyState extends State<SignUpBody> {
                     ],
                   ),
                 ),
+
                 SizedBox(
+                  child: Text(
+                      "Favor no utilizar contraseñas comunes (i.e. 'Password1!')"),
                   height: size.height * 0.03,
                 ),
 
