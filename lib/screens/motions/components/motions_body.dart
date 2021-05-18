@@ -24,6 +24,8 @@ class _MotionsBodyState extends State<MotionsBody> {
   final UserRepository userRepository;
   final Assemblies currentAssembly;
 
+  bool isAmendment;
+
   _MotionsBodyState(this.userRepository, this.currentAssembly);
 
   Future<List<Motions>> motions;
@@ -35,6 +37,7 @@ class _MotionsBodyState extends State<MotionsBody> {
   }
 
   //To see if voting is ready
+  // ignore: missing_return
   Future<VotingModel> voteReady2Voting(bool voteable, bool archived) async {
     if (voteable == true && archived == false) {
       Navigator.push(
@@ -66,11 +69,11 @@ class _MotionsBodyState extends State<MotionsBody> {
             );
           });
     }
-    return null;
   }
 
   // ignore: missing_return
-  Future<VotingModel> voteReady2Results(bool voteable, bool archived) async {
+  Future<VotingModel> voteReady2Results(
+      bool voteable, bool archived, int pk, bool isAmend) async {
     if (voteable == false && archived == false) {
       Navigator.push(
         context,
@@ -198,7 +201,12 @@ class _MotionsBodyState extends State<MotionsBody> {
                           // ignore: missing_return
                           itemBuilder: (BuildContext context, int index) {
                             Motions currMotion = currentMotion[index];
-                            if (currMotion.archived == false)
+                            //if only amendment voteable
+                            if (!currMotion.archived &&
+                                !currMotion.voteable &&
+                                currMotion.originalMotion.isNotEmpty &&
+                                !currMotion.originalMotion[0].archived &&
+                                currMotion.originalMotion[0].voteable) {
                               return Padding(
                                 padding: EdgeInsets.only(left: 25, right: 25),
                                 child: Container(
@@ -282,9 +290,53 @@ class _MotionsBodyState extends State<MotionsBody> {
                                                 ),
                                               ),
                                               onPressed: () {
-                                                voteReady2Voting(
-                                                    currMotion.voteable,
-                                                    currMotion.archived);
+                                                if (!currMotion.archived &&
+                                                    !currMotion.voteable &&
+                                                    currMotion.originalMotion
+                                                        .isNotEmpty &&
+                                                    !currMotion
+                                                        .originalMotion[0]
+                                                        .archived &&
+                                                    currMotion.originalMotion[0]
+                                                        .voteable) {
+                                                  isAmendment = true;
+                                                  voteReady2Voting(
+                                                      currMotion
+                                                          .originalMotion[0]
+                                                          .voteable,
+                                                      currMotion
+                                                          .originalMotion[0]
+                                                          .archived);
+                                                } else if (currMotion
+                                                            .archived ==
+                                                        false &&
+                                                    currMotion.voteable ==
+                                                        true) {
+                                                  isAmendment = false;
+                                                  voteReady2Voting(
+                                                      currMotion.voteable,
+                                                      currMotion.archived);
+                                                } else {
+                                                  isAmendment = null;
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: Text("Error!"),
+                                                          content: Text(
+                                                              "Las votaciones no están abiertas en este momento. Vuelva a intentar luego."),
+                                                          actions: [
+                                                            TextButton(
+                                                                //OK Button
+                                                                onPressed: () =>
+                                                                    Navigator.pop(
+                                                                        context), //return to motions screen
+                                                                child: Text(
+                                                                    "Regresar")),
+                                                          ],
+                                                        );
+                                                      });
+                                                }
                                               }),
                                           SizedBox(
                                             width: size.width * 0.1,
@@ -305,9 +357,80 @@ class _MotionsBodyState extends State<MotionsBody> {
                                               ),
                                             ),
                                             onPressed: () {
-                                              voteReady2Results(
-                                                  currMotion.voteable,
-                                                  currMotion.archived);
+                                              if (!currMotion.archived &&
+                                                  !currMotion.voteable &&
+                                                  currMotion.originalMotion
+                                                      .isNotEmpty &&
+                                                  !currMotion.originalMotion[0]
+                                                      .archived &&
+                                                  !currMotion.originalMotion[0]
+                                                      .voteable) {
+                                                isAmendment = true;
+                                                voteReady2Results(
+                                                    currMotion.originalMotion[0]
+                                                        .voteable,
+                                                    currMotion.originalMotion[0]
+                                                        .archived,
+                                                    currMotion
+                                                        .originalMotion[0].pk,
+                                                    isAmendment);
+                                              } else if (!currMotion.archived &&
+                                                  !currMotion.voteable &&
+                                                  currMotion.originalMotion
+                                                      .isNotEmpty &&
+                                                  !currMotion.originalMotion[0]
+                                                      .archived &&
+                                                  currMotion.originalMotion[0]
+                                                      .voteable) {
+                                                isAmendment = null;
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: Text("Error!"),
+                                                        content: Text(
+                                                            "Los resultados aún no estan listos. Vuelva a intentar luego."),
+                                                        actions: [
+                                                          TextButton(
+                                                              //OK Button
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context), //return to motions screen
+                                                              child: Text(
+                                                                  "Regresar")),
+                                                        ],
+                                                      );
+                                                    });
+                                              } else if (currMotion.archived ==
+                                                      false &&
+                                                  currMotion.voteable ==
+                                                      false) {
+                                                isAmendment = false;
+                                                voteReady2Results(
+                                                    currMotion.voteable,
+                                                    currMotion.archived,
+                                                    currMotion.pk,
+                                                    isAmendment);
+                                              } else {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: Text("Error!"),
+                                                        content: Text(
+                                                            "Los resultados aún no estan listos. Vuelva a intentar luego."),
+                                                        actions: [
+                                                          TextButton(
+                                                              //OK Button
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context), //return to motions screen
+                                                              child: Text(
+                                                                  "Regresar")),
+                                                        ],
+                                                      );
+                                                    });
+                                              }
                                             },
                                           ),
                                         ],
@@ -316,6 +439,244 @@ class _MotionsBodyState extends State<MotionsBody> {
                                   ),
                                 ),
                               );
+                            }
+                            //check for motions
+                            else if (currMotion.archived == false) {
+                              return Padding(
+                                padding: EdgeInsets.only(left: 25, right: 25),
+                                child: Container(
+                                  width: size.width * 0.8,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset:
+                                            Offset(0, 3), //Position of shadow
+                                      )
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Text(
+                                          'Moción actual',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          currMotion.motion + '\n',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Text(
+                                          'Enmiendas',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      for (int i = 0;
+                                          i < currMotion.originalMotion.length;
+                                          i++)
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            currMotion.originalMotion[i].motion,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ),
+                                      Text("\n"),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.blue,
+                                                onPrimary: Colors.white,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 20, right: 20),
+                                                child: Text(
+                                                  'Votar',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                if (!currMotion.archived &&
+                                                    !currMotion.voteable &&
+                                                    currMotion.originalMotion
+                                                        .isNotEmpty &&
+                                                    !currMotion
+                                                        .originalMotion[0]
+                                                        .archived &&
+                                                    currMotion.originalMotion[0]
+                                                        .voteable) {
+                                                  isAmendment = true;
+                                                  voteReady2Voting(
+                                                      currMotion
+                                                          .originalMotion[0]
+                                                          .voteable,
+                                                      currMotion
+                                                          .originalMotion[0]
+                                                          .archived);
+                                                } else if (currMotion
+                                                            .archived ==
+                                                        false &&
+                                                    currMotion.voteable ==
+                                                        true) {
+                                                  isAmendment = false;
+                                                  voteReady2Voting(
+                                                      currMotion.voteable,
+                                                      currMotion.archived);
+                                                } else {
+                                                  isAmendment = null;
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: Text("Error!"),
+                                                          content: Text(
+                                                              "Las votaciones no están abiertas en este momento. Vuelva a intentar luego."),
+                                                          actions: [
+                                                            TextButton(
+                                                                //OK Button
+                                                                onPressed: () =>
+                                                                    Navigator.pop(
+                                                                        context), //return to motions screen
+                                                                child: Text(
+                                                                    "Regresar")),
+                                                          ],
+                                                        );
+                                                      });
+                                                }
+                                              }),
+                                          SizedBox(
+                                            width: size.width * 0.1,
+                                          ),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors.green,
+                                              onPrimary: Colors.white,
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              child: Text(
+                                                'Resultados',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              if (!currMotion.archived &&
+                                                  !currMotion.voteable &&
+                                                  currMotion.originalMotion
+                                                      .isNotEmpty &&
+                                                  !currMotion.originalMotion[0]
+                                                      .archived &&
+                                                  !currMotion.originalMotion[0]
+                                                      .voteable) {
+                                                isAmendment = true;
+                                                voteReady2Results(
+                                                    currMotion.originalMotion[0]
+                                                        .voteable,
+                                                    currMotion.originalMotion[0]
+                                                        .archived,
+                                                    currMotion
+                                                        .originalMotion[0].pk,
+                                                    isAmendment);
+                                              } else if (!currMotion.archived &&
+                                                  !currMotion.voteable &&
+                                                  currMotion.originalMotion
+                                                      .isNotEmpty &&
+                                                  !currMotion.originalMotion[0]
+                                                      .archived &&
+                                                  currMotion.originalMotion[0]
+                                                      .voteable) {
+                                                isAmendment = null;
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: Text("Error!"),
+                                                        content: Text(
+                                                            "Los resultados aún no estan listos. Vuelva a intentar luego."),
+                                                        actions: [
+                                                          TextButton(
+                                                              //OK Button
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context), //return to motions screen
+                                                              child: Text(
+                                                                  "Regresar")),
+                                                        ],
+                                                      );
+                                                    });
+                                              } else if (currMotion.archived ==
+                                                      false &&
+                                                  currMotion.voteable ==
+                                                      false) {
+                                                isAmendment = false;
+                                                voteReady2Results(
+                                                    currMotion.voteable,
+                                                    currMotion.archived,
+                                                    currMotion.pk,
+                                                    isAmendment);
+                                              } else {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: Text("Error!"),
+                                                        content: Text(
+                                                            "Los resultados aún no estan listos. Vuelva a intentar luego."),
+                                                        actions: [
+                                                          TextButton(
+                                                              //OK Button
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context), //return to motions screen
+                                                              child: Text(
+                                                                  "Regresar")),
+                                                        ],
+                                                      );
+                                                    });
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                            //no votable motions nor amendments
+                            else {} //leave blank
                           },
                         );
                     }
