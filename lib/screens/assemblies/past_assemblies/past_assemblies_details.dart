@@ -132,7 +132,7 @@ class _PastAssembliesDetailsScreenState
                                     i < pastMotion.originalMotion.length;
                                     i++)
                                   Text(
-                                    pastMotion.originalMotion[i].motion,
+                                    "○ " + pastMotion.originalMotion[i].motion,
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),
@@ -156,6 +156,13 @@ class _PastAssembliesDetailsScreenState
                                       "\n" +
                                       "Abstenidx: " +
                                       pastMotion.abstained.toString(),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  announceWinner(pastMotion.favor,
+                                      pastMotion.abstained, pastMotion.agaisnt),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -281,5 +288,43 @@ class _PastAssembliesDetailsScreenState
         ),
       ),
     );
+  }
+
+  String announceWinner(int aFavor, int abstenido, int enContra) {
+    String result;
+    //Announce winners
+    //Gano A Favor
+    if (aFavor > enContra && aFavor > abstenido) {
+      result = "Pasa la moción con $aFavor votos a favor.\n";
+    }
+    //Gano En Contra
+    else if (enContra > aFavor && enContra > abstenido) {
+      result = "No pasa la moción con $enContra votos en contra.\n";
+    }
+    //Gano Abstenido
+    else if ((abstenido > enContra) && (abstenido > aFavor)) {
+      result = "No se decide en la moción con $abstenido votos abtenidos.\n";
+    }
+    // Hubo empate
+    // A favor = En Contra
+    else if ((aFavor) == (enContra) && (aFavor) > (abstenido)) {
+      result =
+          "No hay decision en moción por empate a $aFavor votos a favor y en contra.\n";
+    }
+    // A favor = abstenido
+    else if ((aFavor) == (abstenido) && (aFavor) > (enContra)) {
+      result =
+          "No hay decision en moción por empate a $aFavor votos a favor y abstenidos.\n";
+    }
+    // Abstenido = en contra
+    else if ((enContra) == (abstenido) && (enContra) > (abstenido)) {
+      result =
+          "No hay decision en moción por empate a $enContra votos en contra y abstenidos.\n";
+    }
+    //Triple empate
+    else if ((enContra) == (abstenido) && (enContra) == (aFavor)) {
+      result = "Hay un triple empate a $enContra votos.\n";
+    }
+    return result;
   }
 }

@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
+import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
+import 'package:scan_n_vote/repositories/user_repository.dart';
+import 'package:scan_n_vote/screens/motions/motions_screen.dart';
 
 class ResultsBody extends StatefulWidget {
+  final UserRepository userRepository;
+  final Assemblies currentAssembly;
+
+  ResultsBody({
+    Key key,
+    @required this.userRepository,
+    @required this.currentAssembly,
+  })  : assert(userRepository != null),
+        super(key: key);
   @override
-  _ResultsBodyState createState() => _ResultsBodyState();
+  _ResultsBodyState createState() =>
+      _ResultsBodyState(this.userRepository, this.currentAssembly);
 }
 
 class _ResultsBodyState extends State<ResultsBody> {
+  final Assemblies currentAssembly;
+  final UserRepository userRepository;
+
+  _ResultsBodyState(this.userRepository, this.currentAssembly);
+
   List<Motions> results = const [];
 
   Future<List<Motions>> futureAssemblies;
@@ -33,7 +51,18 @@ class _ResultsBodyState extends State<ResultsBody> {
               Icons.arrow_back,
               color: Colors.black,
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return MotionsScreen(
+                    userRepository: userRepository,
+                    currentAssembly: currentAssembly,
+                  );
+                },
+              ),
+            ),
+            // Navigator.of(context).pop(),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -101,93 +130,98 @@ class _ResultsBodyState extends State<ResultsBody> {
                                 itemBuilder: (BuildContext context, int index) {
                                   Motions resultsCount = mociones[index];
                                   //is amendment
-                                  if (!resultsCount.archived &&
-                                      !resultsCount.voteable &&
-                                      resultsCount.originalMotion.isNotEmpty &&
-                                      !resultsCount
-                                          .originalMotion[0].archived &&
-                                      !resultsCount
-                                          .originalMotion[0].voteable) {
-                                    return Column(
-                                      children: [
-                                        SizedBox(height: size.height * 0.02),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            'Enmienda:\n' +
-                                                resultsCount
-                                                    .originalMotion[0].motion +
-                                                "\n",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
+                                  for (int i = 0;
+                                      i < resultsCount.originalMotion.length;
+                                      i++) {
+                                    if (!resultsCount.archived &&
+                                        !resultsCount.voteable &&
+                                        resultsCount
+                                            .originalMotion.isNotEmpty &&
+                                        !resultsCount
+                                            .originalMotion[i].archived &&
+                                        !resultsCount
+                                            .originalMotion[i].voteable) {
+                                      return Column(
+                                        children: [
+                                          SizedBox(height: size.height * 0.02),
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              'Enmienda:\n' +
+                                                  resultsCount.originalMotion[i]
+                                                      .motion +
+                                                  "\n",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            'A Favor:                               ' +
-                                                resultsCount
-                                                    .originalMotion[0].favor
-                                                    .toString() +
-                                                "\n",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              'A Favor:                               ' +
+                                                  resultsCount
+                                                      .originalMotion[i].favor
+                                                      .toString() +
+                                                  "\n",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            'Abstenidxs:                         ' +
-                                                resultsCount
-                                                    .originalMotion[0].abstained
-                                                    .toString() +
-                                                "\n",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              'Abstenidxs:                         ' +
+                                                  resultsCount.originalMotion[i]
+                                                      .abstained
+                                                      .toString() +
+                                                  "\n",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            'En Contra:                            ' +
-                                                resultsCount
-                                                    .originalMotion[0].agaisnt
-                                                    .toString() +
-                                                "\n",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              'En Contra:                            ' +
+                                                  resultsCount
+                                                      .originalMotion[i].agaisnt
+                                                      .toString() +
+                                                  "\n",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            announceWinnerAmend(
-                                                resultsCount
-                                                    .originalMotion[0].favor,
-                                                resultsCount.originalMotion[0]
-                                                    .abstained,
-                                                resultsCount
-                                                    .originalMotion[0].agaisnt),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              announceWinnerAmend(
+                                                  resultsCount
+                                                      .originalMotion[i].favor,
+                                                  resultsCount.originalMotion[i]
+                                                      .abstained,
+                                                  resultsCount.originalMotion[i]
+                                                      .agaisnt),
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    );
+                                        ],
+                                      );
+                                    }
                                   }
                                   // is motion
-                                  else if (resultsCount.archived == false &&
-                                      resultsCount.voteable == false) {
+                                  if (!resultsCount.archived &&
+                                      !resultsCount.voteable) {
                                     return Column(
                                       children: [
                                         SizedBox(height: size.height * 0.02),
