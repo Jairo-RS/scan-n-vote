@@ -495,15 +495,18 @@ class _MotionsBodyState extends State<MotionsBody> {
                                       for (int i = 0;
                                           i < currMotion.originalMotion.length;
                                           i++)
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            currMotion.originalMotion[i].motion,
-                                            style: TextStyle(
-                                              fontSize: 18,
+                                        if (!currMotion
+                                            .originalMotion[i].archived)
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              currMotion
+                                                  .originalMotion[i].motion,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                              ),
                                             ),
                                           ),
-                                        ),
                                       Text("\n"),
                                       Row(
                                         mainAxisAlignment:
