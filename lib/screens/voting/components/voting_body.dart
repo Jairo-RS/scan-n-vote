@@ -2,21 +2,14 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:scan_n_vote/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:scan_n_vote/bloc/authentication_bloc/authentication_event.dart';
-import 'package:scan_n_vote/bloc/authentication_bloc/authentication_state.dart';
 import 'package:scan_n_vote/components/backdrop.dart';
 import 'package:scan_n_vote/components/round_button.dart';
 import 'package:scan_n_vote/models/amendments_model.dart';
 import 'package:scan_n_vote/models/assemblies_model.dart';
 import 'package:scan_n_vote/models/motions_model.dart';
-import 'package:scan_n_vote/models/token_model.dart';
-import 'package:scan_n_vote/models/voting_model.dart';
 import 'package:scan_n_vote/repositories/user_repository.dart';
 import 'package:scan_n_vote/screens/motions/motions_screen.dart';
-import 'package:scan_n_vote/screens/voting/voting_screen.dart';
 import 'package:scan_n_vote/screens/waiting/waiting_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,7 +62,6 @@ class VotingBodyState extends State<VotingBody> {
     List collection = json.decode(content);
     List<Motions> _motions =
         collection.map((json) => Motions.fromJson(json)).toList();
-    // print(content);
 
     setState(() {
       motion = _motions;
@@ -87,8 +79,6 @@ class VotingBodyState extends State<VotingBody> {
   Widget build(BuildContext context) {
     //Used for total height and width of the screen
     Size size = MediaQuery.of(context).size;
-    //used for testing purposes
-    //print(motion.toString());
 
     return SafeArea(
       child: Scaffold(
@@ -99,7 +89,17 @@ class VotingBodyState extends State<VotingBody> {
               Icons.arrow_back,
               color: Colors.black,
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return MotionsScreen(
+                    userRepository: userRepository,
+                    currentAssembly: currentAssembly,
+                  );
+                },
+              ),
+            ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -129,8 +129,7 @@ class VotingBodyState extends State<VotingBody> {
                   itemBuilder: (BuildContext context, int index) {
                     Motions theMotion = motion[index];
                     if (theMotion.archived == false &&
-                        theMotion.voteable == true &&
-                        theMotion.originalMotion.isEmpty) {
+                        theMotion.voteable == true) {
                       isAmendment = false;
                       currentMotionPK = theMotion.pk;
                       return SingleChildScrollView(
@@ -166,46 +165,49 @@ class VotingBodyState extends State<VotingBody> {
                           ],
                         ),
                       );
-                    } else if (theMotion.archived == false &&
-                        theMotion.voteable == false &&
-                        theMotion.originalMotion[0].archived == false &&
-                        theMotion.originalMotion[0].voteable == true) {
-                      isAmendment = true;
-                      currentAmendmentPK = theMotion.originalMotion[0].pk;
-                      return SingleChildScrollView(
-                        child: Column(
-                          //mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "Por favor seleccione su voto \npara la siguiente enmienda:",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.04,
-                            ),
-                            Container(
-                              color: Colors.white,
-                              alignment: Alignment.topCenter,
-                              height: 100,
-                              width: 375,
-                              child: SingleChildScrollView(
-                                child: Text(
-                                  theMotion.originalMotion[0]
-                                      .motion, //displays the motion text
-                                  textAlign: TextAlign.start,
+                    } else {
+                      for (int i = 0;
+                          i < theMotion.originalMotion.length;
+                          i++) {
+                        if (!theMotion.originalMotion[i].archived &&
+                            theMotion.originalMotion[i].voteable) {
+                          isAmendment = true;
+                          currentAmendmentPK = theMotion.originalMotion[i].pk;
+                          return SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  "Por favor seleccione su voto \npara la siguiente enmienda:",
                                   style: TextStyle(
-                                    fontSize: 30,
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
                                 ),
-                              ),
+                                SizedBox(
+                                  height: size.height * 0.04,
+                                ),
+                                Container(
+                                  color: Colors.white,
+                                  alignment: Alignment.topCenter,
+                                  height: 100,
+                                  width: 375,
+                                  child: SingleChildScrollView(
+                                    child: Text(
+                                      theMotion.originalMotion[i]
+                                          .motion, //displays the motion text
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
+                          );
+                        }
+                      }
                     }
                   },
                 ),
@@ -281,136 +283,132 @@ class VotingBodyState extends State<VotingBody> {
                   height: size.height * 0.04,
                 ),
                 RoundButton(
-                    text: "Votar",
-                    color: Colors.black87,
-                    press: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            if (voteValue == 0) {
-                              return AlertDialog(
-                                title: Text("Confirme su voto"),
-                                content: Text(
-                                    '¿Desea confirmar voto "A Favor" a la moción actual?'),
-                                actions: [
-                                  TextButton(
-                                      //No Button
-                                      onPressed: () => Navigator.pop(
-                                          context), //return to voting screen
-                                      child: Text("No")),
-                                  TextButton(
-                                      //Yes Button
-                                      onPressed: () async {
-                                        final String choice = "0";
-                                        //verificar si se esta votando para mocion o amendment
-                                        if (!isAmendment) {
-                                          final String vote =
-                                              await addVoteMotion(
-                                                  choice, currentMotionPK);
-                                          setState(() {
-                                            _vote = vote;
-                                          });
-                                        } else {
-                                          final String amendments =
-                                              await addVoteAmendment(
-                                                  choice, currentAmendmentPK);
-                                          setState(() {
-                                            _amendments = amendments;
-                                          });
-                                        }
-                                      },
-                                      child: Text("Si"))
-                                ],
-                              );
-                            } // end if
-                            else if (voteValue == 2) {
-                              return AlertDialog(
-                                title: Text("Confirme su voto"),
-                                content: Text(
-                                    '¿Desea confirmar voto "Abtenidx" a la moción actual?'),
-                                actions: [
-                                  TextButton(
-                                      //No Button
-                                      onPressed: () => Navigator.pop(
-                                          context), //return to voting screen
-                                      child: Text("No")),
-                                  TextButton(
-                                      //Yes Button
-                                      onPressed: () async {
-                                        final String choice = "2";
+                  text: "Votar",
+                  color: Colors.black87,
+                  press: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        if (voteValue == 0) {
+                          return AlertDialog(
+                            title: Text("Confirme su voto"),
+                            content: Text('¿Desea confirmar voto "A Favor"?'),
+                            actions: [
+                              TextButton(
+                                  //No Button
+                                  onPressed: () => Navigator.pop(
+                                      context), //return to voting screen
+                                  child: Text("No")),
+                              TextButton(
+                                  //Yes Button
+                                  onPressed: () async {
+                                    final String choice = "0";
+                                    //verificar si se esta votando para mocion o amendment
+                                    if (!isAmendment) {
+                                      final String vote = await addVoteMotion(
+                                          choice, currentMotionPK);
+                                      setState(() {
+                                        _vote = vote;
+                                      });
+                                    } else {
+                                      final String amendments =
+                                          await addVoteAmendment(
+                                              choice, currentAmendmentPK);
+                                      setState(() {
+                                        _amendments = amendments;
+                                      });
+                                    }
+                                  },
+                                  child: Text("Si"))
+                            ],
+                          );
+                        } // end if
+                        else if (voteValue == 2) {
+                          return AlertDialog(
+                            title: Text("Confirme su voto"),
+                            content: Text('¿Desea confirmar voto "Abtenidx"?'),
+                            actions: [
+                              TextButton(
+                                  //No Button
+                                  onPressed: () => Navigator.pop(
+                                      context), //return to voting screen
+                                  child: Text("No")),
+                              TextButton(
+                                  //Yes Button
+                                  onPressed: () async {
+                                    final String choice = "2";
 
-                                        if (!isAmendment) {
-                                          final String vote =
-                                              await addVoteMotion(
-                                                  choice, currentMotionPK);
-                                          setState(() {
-                                            _vote = vote;
-                                          });
-                                        } else {
-                                          final String amendments =
-                                              await addVoteAmendment(
-                                                  choice, currentAmendmentPK);
-                                          setState(() {
-                                            _amendments = amendments;
-                                          });
-                                        }
-                                      },
-                                      child: Text("Si"))
-                                ],
-                              );
-                            } // end else if
-                            else if (voteValue == 1) {
-                              return AlertDialog(
-                                title: Text("Confirmar su voto"),
-                                content: Text(
-                                    '¿Desea confirmar voto "En Contra" a la moción actual?'),
-                                actions: [
-                                  TextButton(
-                                      //No Button
-                                      onPressed: () => Navigator.pop(
-                                          context), //return to voting screen
-                                      child: Text("No")),
-                                  TextButton(
-                                      //Yes Button
-                                      onPressed: () async {
-                                        final String choice = "1";
+                                    if (!isAmendment) {
+                                      final String vote = await addVoteMotion(
+                                          choice, currentMotionPK);
+                                      setState(() {
+                                        _vote = vote;
+                                      });
+                                    } else {
+                                      final String amendments =
+                                          await addVoteAmendment(
+                                              choice, currentAmendmentPK);
+                                      setState(() {
+                                        _amendments = amendments;
+                                      });
+                                    }
+                                  },
+                                  child: Text("Si"))
+                            ],
+                          );
+                        } // end else if
+                        else if (voteValue == 1) {
+                          return AlertDialog(
+                            title: Text("Confirmar su voto"),
+                            content: Text('¿Desea confirmar voto "En Contra"?'),
+                            actions: [
+                              TextButton(
+                                  //No Button
+                                  onPressed: () => Navigator.pop(
+                                      context), //return to voting screen
+                                  child: Text("No")),
+                              TextButton(
+                                  //Yes Button
+                                  onPressed: () async {
+                                    final String choice = "1";
 
-                                        if (!isAmendment) {
-                                          final String vote =
-                                              await addVoteMotion(
-                                                  choice, currentMotionPK);
-                                          setState(() {
-                                            _vote = vote;
-                                          });
-                                        } else {
-                                          final String amendments =
-                                              await addVoteAmendment(
-                                                  choice, currentAmendmentPK);
-                                          setState(() {
-                                            _amendments = amendments;
-                                          });
-                                        }
-                                      },
-                                      child: Text("Si"))
-                                ],
-                              );
-                            } // end else if
-                            else {
-                              return AlertDialog(
-                                title: Text("Error"),
-                                content: Text(
-                                    'No seleccionó ningun voto.\nFavor escoger una opción antes de votar.'),
-                                actions: [
-                                  TextButton(
-                                      //OK Button
-                                      onPressed: () => Navigator.pop(
-                                          context), //return to voting screen
-                                      child: Text("OK")),
-                                ],
-                              );
-                            } // end else
-                          }); // end showDialog builder
-                    }),
+                                    if (!isAmendment) {
+                                      final String vote = await addVoteMotion(
+                                          choice, currentMotionPK);
+                                      setState(() {
+                                        _vote = vote;
+                                      });
+                                    } else {
+                                      final String amendments =
+                                          await addVoteAmendment(
+                                              choice, currentAmendmentPK);
+                                      setState(() {
+                                        _amendments = amendments;
+                                      });
+                                    }
+                                  },
+                                  child: Text("Si"))
+                            ],
+                          );
+                        } // end else if
+                        else {
+                          return AlertDialog(
+                            title: Text("Error"),
+                            content: Text(
+                                'No seleccionó ningun voto.\nFavor escoger una opción antes de votar.'),
+                            actions: [
+                              TextButton(
+                                  //OK Button
+                                  onPressed: () => Navigator.pop(
+                                      context), //return to voting screen
+                                  child: Text("OK")),
+                            ],
+                          );
+                        } // end else
+                      },
+                    ); // end showDialog builder
+                  },
+                ),
               ],
             ),
           ),
@@ -424,14 +422,9 @@ class VotingBodyState extends State<VotingBody> {
     String csrftoken = await storage.read(key: 'set-cookie');
     String user = await storage.read(key: 'user');
 
-    print("Storage token = " + csrftoken);
-
     Uri url = Uri.parse("https://scannvote.herokuapp.com/api/motions/" +
         currentMotionPK.toString() +
         "/vote");
-
-    print("**** $choice *******"); //check voter's choice
-    print("**** $currentMotionPK"); //check if on current motion
 
     //http.post
     final response = await http.post(url,
@@ -454,6 +447,7 @@ class VotingBodyState extends State<VotingBody> {
     String str, theCode;
     int statusCode;
 
+    //Used to determine the code response of http.post
     if (response.statusCode != 200) {
       str = response.body;
       statusCode = response.statusCode;
@@ -465,11 +459,6 @@ class VotingBodyState extends State<VotingBody> {
       final endIndex = str.indexOf(end, startIndex + start.length);
 
       theCode = str.substring(startIndex + start.length, endIndex);
-      //for testing
-      // print("theCode = " + theCode);
-    } else {
-      //for testing
-      // print("Status code = 200");
     }
 
     //se logro votar correctamente
@@ -649,14 +638,9 @@ class VotingBodyState extends State<VotingBody> {
     String csrftoken = await storage.read(key: 'set-cookie');
     String user = await storage.read(key: 'user');
 
-    // print("*************** $csrftoken");
-
     Uri url = Uri.parse("https://scannvote.herokuapp.com/api/motions/" +
         currentAmendmentPK.toString() +
         "/vote");
-
-    // print("**** $choice *******"); //check voter's choice
-    // print("**** $currentAmendmentPK"); //check if on current motion
 
     //http.post
     final response = await http.post(url,
@@ -671,14 +655,11 @@ class VotingBodyState extends State<VotingBody> {
           },
         ));
 
-    //for testing
-    // print("HTTP Response Status Code = " + response.statusCode.toString());
-    // print("*****" + response.body);
-
     // initialize variables to decode code in case of an error in http response
     String str, theCode;
     int statusCode;
 
+    //Used to determine the code response of http.post
     if (response.statusCode != 200) {
       str = response.body;
       statusCode = response.statusCode;
@@ -690,11 +671,6 @@ class VotingBodyState extends State<VotingBody> {
       final endIndex = str.indexOf(end, startIndex + start.length);
 
       theCode = str.substring(startIndex + start.length, endIndex);
-      //for testing
-      // print("theCode = " + theCode);
-    } else {
-      //for testing
-      // print("Status code = 200");
     }
 
     //se logro votar correctamente
@@ -847,7 +823,7 @@ class VotingBodyState extends State<VotingBody> {
         builder: (context) {
           return AlertDialog(
             title: Text("Error! Voto NO contado!"),
-            content: Text('Usted ya votó para la pasada moción.\n'),
+            content: Text('Usted ya votó para la pasada enmienda.\n'),
             actions: [
               TextButton(
                   //OK Button
