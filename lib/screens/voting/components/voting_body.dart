@@ -339,12 +339,21 @@ class VotingBodyState extends State<VotingBody> {
                                       onPressed: () async {
                                         final String choice = "2";
 
-                                        final String vote = await addVoteMotion(
-                                            choice, currentMotionPK);
-
-                                        setState(() {
-                                          _vote = vote;
-                                        });
+                                        if (!isAmendment) {
+                                          final String vote =
+                                              await addVoteMotion(
+                                                  choice, currentMotionPK);
+                                          setState(() {
+                                            _vote = vote;
+                                          });
+                                        } else {
+                                          final String amendments =
+                                              await addVoteAmendment(
+                                                  choice, currentAmendmentPK);
+                                          setState(() {
+                                            _amendments = amendments;
+                                          });
+                                        }
                                       },
                                       child: Text("Si"))
                                 ],
@@ -366,12 +375,21 @@ class VotingBodyState extends State<VotingBody> {
                                       onPressed: () async {
                                         final String choice = "1";
 
-                                        final String vote = await addVoteMotion(
-                                            choice, currentMotionPK);
-
-                                        setState(() {
-                                          _vote = vote;
-                                        });
+                                        if (!isAmendment) {
+                                          final String vote =
+                                              await addVoteMotion(
+                                                  choice, currentMotionPK);
+                                          setState(() {
+                                            _vote = vote;
+                                          });
+                                        } else {
+                                          final String amendments =
+                                              await addVoteAmendment(
+                                                  choice, currentAmendmentPK);
+                                          setState(() {
+                                            _amendments = amendments;
+                                          });
+                                        }
                                       },
                                       child: Text("Si"))
                                 ],
@@ -406,7 +424,7 @@ class VotingBodyState extends State<VotingBody> {
     String csrftoken = await storage.read(key: 'set-cookie');
     String user = await storage.read(key: 'user');
 
-    //print("Storage token = " + csrftoken);
+    print("Storage token = " + csrftoken);
 
     Uri url = Uri.parse("https://scannvote.herokuapp.com/api/motions/" +
         currentMotionPK.toString() +
@@ -429,8 +447,8 @@ class VotingBodyState extends State<VotingBody> {
         ));
 
     //for testing
-    // print("HTTP Response Status Code = " + response.statusCode.toString());
-    // print(response.body);
+    print("HTTP Response Status Code = " + response.statusCode.toString());
+    print(response.body);
 
     // initialize variables to decode code in case of an error in http response
     String str, theCode;
@@ -631,14 +649,14 @@ class VotingBodyState extends State<VotingBody> {
     String csrftoken = await storage.read(key: 'set-cookie');
     String user = await storage.read(key: 'user');
 
-    //print("Storage token = " + csrftoken);
+    // print("*************** $csrftoken");
 
-    Uri url = Uri.parse("https://scannvote.herokuapp.com/api/amendments/" +
+    Uri url = Uri.parse("https://scannvote.herokuapp.com/api/motions/" +
         currentAmendmentPK.toString() +
         "/vote");
 
-    print("**** $choice *******"); //check voter's choice
-    print("**** $currentAmendmentPK"); //check if on current motion
+    // print("**** $choice *******"); //check voter's choice
+    // print("**** $currentAmendmentPK"); //check if on current motion
 
     //http.post
     final response = await http.post(url,
@@ -655,8 +673,7 @@ class VotingBodyState extends State<VotingBody> {
 
     //for testing
     // print("HTTP Response Status Code = " + response.statusCode.toString());
-    print(response.statusCode);
-    print(response.body);
+    // print("*****" + response.body);
 
     // initialize variables to decode code in case of an error in http response
     String str, theCode;
